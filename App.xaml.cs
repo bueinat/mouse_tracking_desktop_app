@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 
 namespace mouse_tracking_web_app
 {
@@ -16,14 +10,13 @@ namespace mouse_tracking_web_app
         public Models.MainControllerModel Model { get; internal set; }
         public ViewModels.MainControllerViewModel MainVM { get; internal set; }
 
-
         private void Application_Startup(object sender, StartupEventArgs e)
         {
             Model = new Models.MainControllerModel();
             MainVM = new ViewModels.MainControllerViewModel(Model);
 
             // Create main application window
-            MainWindow mainWindow = new MainWindow();
+            Views.MainWindow mainWindow = new Views.MainWindow();
             mainWindow.Show();
         }
     }
@@ -36,7 +29,6 @@ namespace mouse_tracking_web_app
 //using System.Timers;
 //using MongoDB.Bson;
 //using MongoDB.Driver;
-
 
 //namespace ConsoleApp1
 //{

@@ -15,6 +15,7 @@ namespace mouse_tracking_web_app.DataBase
 
         private bool isConnected = false;
         private IMongoCollection<Video> videoCollection;
+
         public DataBaseHandler(Models.MainControllerModel model)
         {
             this.model = model;
@@ -31,6 +32,7 @@ namespace mouse_tracking_web_app.DataBase
         {
             if (!isConnected)
             {
+                isConnected = true;
                 client = new MongoClient(connectionString);
                 IMongoDatabase database = client.GetDatabase(databaseName);
 

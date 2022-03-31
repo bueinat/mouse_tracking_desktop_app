@@ -1,26 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
-namespace mouse_tracking_web_app
+namespace mouse_tracking_web_app.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
-
+        private Dictionary<string, int> buttonToWindow;
         public ViewModels.MainControllerViewModel vm;
 
         public ViewModels.MainControllerViewModel VM { get; set; }
@@ -30,6 +19,11 @@ namespace mouse_tracking_web_app
             InitializeComponent();
             vm = (Application.Current as App).MainVM;
             DataContext = vm;
+
+            buttonToWindow = new Dictionary<string, int>();
+            buttonToWindow.Add("upload and watch videos", 0);
+            buttonToWindow.Add("analyze experiments", 1);
+            buttonToWindow.Add("export reports", 2);
         }
 
         private void Button_Connect(object sender, RoutedEventArgs e)
@@ -38,5 +32,15 @@ namespace mouse_tracking_web_app
             vm.Connect();
             connecting_button.Content = "connected!";
         }
+
+        private void Go_to_screen_Click(object sender, RoutedEventArgs e)
+        {
+            Button clicked = (Button)sender;
+            TabsWindow tabsWindow = new TabsWindow();
+            tabsWindow.Show();
+            tabsWindow.SetTab(buttonToWindow[clicked.Content.ToString()]);
+            Close();
+        }
+
     }
 }

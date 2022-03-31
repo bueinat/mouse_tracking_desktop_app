@@ -1,0 +1,28 @@
+﻿<Window x:Class="mouse_tracking_web_app.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <StackPanel VerticalAlignment="Center">
+            <Label x:Name="welcome_label" Content="Welcome" HorizontalAlignment="Center" VerticalAlignment="Top"
+                   Margin="10,10" Foreground="#FF276176" FontWeight="Bold" FontSize="40" Height="61" />
+            <Label x:Name="sec_heading" Content="What would you like to do?" HorizontalAlignment="Center"
+                   VerticalAlignment="Top" Margin="10,10" Foreground="#000000" FontWeight="Bold" FontSize="20" />
+            <Button x:Name="connecting_button" Content="connect to database" HorizontalAlignment="Center"
+                    VerticalAlignment="Center" Background="#FFCBEAD7" Width="120" Height="25" Margin="10,10"
+                    Click="Button_Connect" />
+            <Button x:Name="go_to_screen1" Content="upload and watch videos" HorizontalAlignment="Center"
+                    VerticalAlignment="Center" Background="#FFD6EBF2" Width="170" Height="25" Margin="10,10"
+                    Click="Go_to_screen_Click" />
+            <Button x:Name="go_to_screen2" Content="analyze experiments" HorizontalAlignment="Center"
+                    VerticalAlignment="Center" Background="#FFD6EBF2" Width="170" Height="25" Margin="10,10"
+                    Click="Go_to_screen_Click" />
+            <Button x:Name="go_to_screen3" Content="export reports" HorizontalAlignment="Center"
+                    VerticalAlignment="Center" Background="#FFD6EBF2" Width="170" Height="25" Margin="10,10"
+                    Click="Go_to_screen_Click" />
+        </StackPanel>
+    </Grid>
+</Window>
