@@ -1,0 +1,15 @@
+﻿<Window x:Class="mouse_tracking_web_app.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:mouse_tracking_web_app"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Label x:Name="welcome_label" Content="Welcome" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" Foreground="#FF276176" FontWeight="Bold" FontSize="40" Height="61"/>
+        <Label x:Name="sec_heading" Content="What would you like to do?" HorizontalAlignment="Center" Margin="0,100,0,0" VerticalAlignment="Top" Foreground="#000000" FontWeight="Bold" FontSize="20"/>
+        <Button x:Name="connecting_button" Content="connect to database" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center" Background="#FFCBEAD7" Width="120" Height="25" Click="Button_Connect"/>
+
+    </Grid>
+</Window>
