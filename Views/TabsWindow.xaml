@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:uc="clr-namespace:mouse_tracking_web_app.Views"
         xmlns:local="clr-namespace:mouse_tracking_web_app.Views"
         mc:Ignorable="d"
         Title="TabsWindow" Height="450" Width="800">
@@ -13,7 +14,7 @@
         </Grid.ColumnDefinitions>
         <TabControl x:Name="tabs" Grid.Column="0">
             <TabItem Header="Videos">
-                <Label Content="Content goes here..." />
+                <uc:VideoView Title="Enter title:" MaxLength="30" />
             </TabItem>
             <TabItem Header="Analyze" />
             <TabItem Header="Export" />

@@ -9,7 +9,7 @@ namespace mouse_tracking_web_app.Views
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Dictionary<string, int> buttonToWindow;
+        private readonly Dictionary<string, int> buttonToWindow;
         public ViewModels.MainControllerViewModel vm;
 
         public ViewModels.MainControllerViewModel VM { get; set; }
@@ -20,10 +20,12 @@ namespace mouse_tracking_web_app.Views
             vm = (Application.Current as App).MainVM;
             DataContext = vm;
 
-            buttonToWindow = new Dictionary<string, int>();
-            buttonToWindow.Add("upload and watch videos", 0);
-            buttonToWindow.Add("analyze experiments", 1);
-            buttonToWindow.Add("export reports", 2);
+            buttonToWindow = new Dictionary<string, int>
+            {
+                { "upload and watch videos", 0 },
+                { "analyze experiments", 1 },
+                { "export reports", 2 }
+            };
         }
 
         private void Button_Connect(object sender, RoutedEventArgs e)
@@ -41,6 +43,5 @@ namespace mouse_tracking_web_app.Views
             tabsWindow.SetTab(buttonToWindow[clicked.Content.ToString()]);
             Close();
         }
-
     }
 }

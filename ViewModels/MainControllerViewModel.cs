@@ -8,9 +8,15 @@ namespace mouse_tracking_web_app.ViewModels
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public MainControllerViewModel(Models.MainControllerModel model)
+        public string VM_VideoName
         {
-            this.model = model;
+            //get { return model.VideoName; }
+            set { model.VideoName = value; }
+        }
+
+        public MainControllerViewModel(Models.MainControllerModel mainController)
+        {
+            this.model = mainController;
             model.PropertyChanged +=
             delegate (object sender, PropertyChangedEventArgs e)
             {
