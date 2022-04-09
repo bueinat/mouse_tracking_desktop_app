@@ -2,6 +2,8 @@
 using MongoDB.Bson.Serialization.Attributes;
 using System.Collections.Generic;
 
+// TODO: set names properly
+
 namespace mouse_tracking_web_app.DataBase
 {
     public class Analysis
@@ -17,7 +19,6 @@ namespace mouse_tracking_web_app.DataBase
         public List<float> ax { get; set; }
         public List<float> ay { get; set; }
 
-        // [BsonSerializer(typeof(BsonArraySerializer))]
         [BsonElement("curviness")]
         [BsonRepresentation(BsonType.Decimal128, AllowTruncation = true)]
         public List<float> Curviness { get; set; }

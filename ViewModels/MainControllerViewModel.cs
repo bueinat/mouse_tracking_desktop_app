@@ -4,19 +4,11 @@ namespace mouse_tracking_web_app.ViewModels
 {
     public class MainControllerViewModel : INotifyPropertyChanged
     {
-        private Models.MainControllerModel model;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public string VM_VideoName
-        {
-            //get { return model.VideoName; }
-            set { model.VideoName = value; }
-        }
+        private readonly Models.MainControllerModel model;
 
         public MainControllerViewModel(Models.MainControllerModel mainController)
         {
-            this.model = mainController;
+            model = mainController;
             model.PropertyChanged +=
             delegate (object sender, PropertyChangedEventArgs e)
             {
@@ -24,14 +16,33 @@ namespace mouse_tracking_web_app.ViewModels
             };
         }
 
-        public void NotifyPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public bool VM_IsLoading { 
+            get
+            {
+                return model.IsLoading;
+            }
+            set
+            {
+                model.IsLoading = value;
+                
+            }
         }
 
+        public string VM_VideoName
+        {
+            get { return model.VideoName; }
+            set => model.VideoName = value;
+        }
         public void Connect()
         {
             model.DBHandler.Connect();
+        }
+
+        public void NotifyPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

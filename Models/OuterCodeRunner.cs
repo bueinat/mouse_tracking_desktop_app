@@ -1,11 +1,13 @@
 ﻿using IronPython.Hosting;
 using Microsoft.Scripting.Hosting;
+using RunProcessAsTask;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace mouse_tracking_web_app.Models
 {
@@ -13,7 +15,7 @@ namespace mouse_tracking_web_app.Models
     {
         public static DirectoryInfo TryGetSolutionDirectoryInfo(string currentPath = null)
         {
-            var directory = new DirectoryInfo(
+            DirectoryInfo directory = new DirectoryInfo(
                 currentPath ?? Directory.GetCurrentDirectory());
             while (directory != null && !directory.GetFiles("*.sln").Any())
             {
@@ -31,7 +33,7 @@ namespace mouse_tracking_web_app.Models
         {
             this.model = model;
             model.PropertyChanged +=
-            delegate (Object sender, PropertyChangedEventArgs e)
+            delegate (object sender, PropertyChangedEventArgs e)
             {
                 NotifyPropertyChanged("OCR_" + e.PropertyName);
             };
@@ -39,24 +41,12 @@ namespace mouse_tracking_web_app.Models
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public string PatchParameter(string parameter, int serviceid)
+        public void NotifyPropertyChanged(string propertyName)
         {
-            var engine = Python.CreateEngine(); // Extract Python language engine from their grasp
-            var scope = engine.CreateScope(); // Introduce Python namespace (scope)
-            var d = new Dictionary<string, object>
-            {
-                {"serviceid", serviceid},
-                {"parameter", parameter}
-            }; // Add some sample parameters. Notice that there is no need in specifically setting the object type, interpreter will do that part for us in the script properly with high probability
-
-            scope.SetVariable("params", d); // This will be the name of the dictionary in python script, initialized with previously created .NET Dictionary
-            ScriptSource source = engine.CreateScriptSourceFromFile("C:\\Users\\buein\\Downloads\\test_code.py"); // Load the script
-            object result = source.Execute(scope);
-            parameter = scope.GetVariable<string>("parameter"); // To get the finally set variable 'parameter' from the python script
-            return parameter;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public string RunCmd(string scriptName, List<string> argv)
+        public async Task<string> RunCmd(string scriptName, List<string> argv)
         {
             string startupPath = VisualStudioProvider.TryGetSolutionDirectoryInfo().FullName;
 
@@ -72,66 +62,27 @@ namespace mouse_tracking_web_app.Models
             // Create new process start info
             ProcessStartInfo start = new ProcessStartInfo(pythonPath)
             {
-                // make sure we can read the output from stdout
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 CreateNoWindow = true,
-
-                // start python app with 3 arguments
-                // 1st arguments is pointer to itself,
-                // 2nd and 3rd are actual arguments we want to send
                 Arguments = args
             };
-            Console.WriteLine(args);
 
-            using (Process process = Process.Start(start))
+            ProcessResults processResults = await ProcessEx.RunAsync(start);
+
+            Console.WriteLine("run successful");
+            return JoinStringArray(processResults.StandardOutput);
+        }
+
+        private string JoinStringArray(string[] stringArr)
+        {
+            string s = "";
+            for (int i = 0; i < stringArr.Length; i++)
             {
-                using (StreamReader reader = process.StandardOutput)
-                {
-                    string stderr = process.StandardError.ReadToEnd();  // Here are the exceptions from our Python script
-                    Console.WriteLine(stderr);
-                    string result = reader.ReadToEnd();                 // Here is the result of StdOut(for example: print "test")
-                    return result;
-                }
+                s = i == 0 ? stringArr[i] : s + "\r\n" + stringArr[i];
             }
-        }
-
-        public void RunScriptWithCMDArgs(string scriptName, List<string> argv)
-        {
-            ScriptEngine engine = Python.CreateEngine();
-            ScriptScope scope = engine.CreateScope();
-            engine.GetSysModule().SetVariable("argv", argv);
-            string startupPath = VisualStudioProvider.TryGetSolutionDirectoryInfo().FullName;
-            ICollection<string> Paths = SetPaths(engine); //THIS SETS THE PYTHON LIBRARY PATHS
-            engine.SetSearchPaths(Paths);
-
-            //string startupPath = Path.getModulePath();
-            //Assembly.getExecutiveAssebly.getdirectory path
-            engine.ExecuteFile(@"C:/Users/buein/Downloads/test_code.py", scope);
-            engine.ExecuteFile($"{startupPath}\\{scriptName}", scope);
-        }
-
-        public void NotifyPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        private static ICollection<string> SetPaths(ScriptEngine engine)
-        {
-            var Paths = engine.GetSearchPaths();
-            Paths.Add(@"C:\Users\buein\anaconda3");
-            Paths.Add(@"C:\Users\buein\anaconda3\python37.zip");
-            Paths.Add(@"C:\Users\buein\anaconda3\DLLs");
-            Paths.Add(@"C:\Users\buein\anaconda3\Lib");
-            Paths.Add(@"C:\Users\buein\anaconda3");
-            Paths.Add(@"C:\Users\buein\anaconda3\Lib\site-packages");
-            Paths.Add(@"C:\Users\buein\anaconda3\Lib\site-packages\win32");
-            Paths.Add(@"C:\Users\buein\anaconda3\Lib\site-packages\win32\lib");
-            Paths.Add(@"C:\Users\buein\anaconda3\Lib\site-packages\Pythonwin");
-            Paths.Add(@"C:\Users\buein\anaconda3\Lib\site-packages\IPython\extensions");
-            //Paths.Add(@"C:\Users\lee.williams.ipython");
-            return Paths;
+            return s;
         }
     }
 }

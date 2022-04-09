@@ -1,18 +1,16 @@
 ﻿using Microsoft.Win32;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace mouse_tracking_web_app.Views
-{
+namespace mouse_tracking_web_app.Views {
     /// <summary>
     /// Interaction logic for VideoView.xaml
     /// </summary>
     public partial class VideoView : UserControl
     {
         public ViewModels.MainControllerViewModel vm;
-        public ViewModels.MainControllerViewModel VM { get; set; }
-        private OpenFileDialog uploadVideoDialog;
-
+        private readonly OpenFileDialog uploadVideoDialog;
         public VideoView()
         {
             InitializeComponent();
@@ -21,18 +19,18 @@ namespace mouse_tracking_web_app.Views
             DataContext = vm;
             uploadVideoDialog = new OpenFileDialog
             {
-                Filter = "Video Files(*.mp4;*.avi)|*.mp4;*.avi|All files (*.*)|*.*"
+                Filter = "Video Files (*.mp4;*.avi)|*.mp4;*.avi|All files (*.*)|*.*"
             };
         }
 
-        public string Title { get; set; }
-
-        public int MaxLength { get; set; }
-
-        //private void ProcessVideoButtonClicked(object sender, RoutedEventArgs e)
-        //{
-        //    vm.ProcessVideo();
-        //}
+        public ViewModels.MainControllerViewModel VM { get; set; }
+        private async void ProcessVideoButtonClicked(object sender, RoutedEventArgs e)
+        {
+            await Task.Delay(1);
+            BtnProcessVideo.Content = "Processing...";
+            videoName.Text = uploadVideoDialog.FileName;
+            BtnProcessVideo.Content = "Process";
+        }
 
         private void UploadVideoButtonClicked(object sender, RoutedEventArgs e)
         {
@@ -40,11 +38,6 @@ namespace mouse_tracking_web_app.Views
             {
                 videoName1.Text = System.IO.Path.GetFileName(uploadVideoDialog.FileName);
             }
-        }
-
-        private void ProcessVideoButtonClicked(object sender, RoutedEventArgs e)
-        {
-            videoName.Text = uploadVideoDialog.FileName;
         }
     }
 }

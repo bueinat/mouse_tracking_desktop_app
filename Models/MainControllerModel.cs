@@ -1,20 +1,15 @@
 ﻿using System.Collections.Generic;
 
 using System.ComponentModel;
+using System.Threading.Tasks;
 
 namespace mouse_tracking_web_app.Models
 {
     public class MainControllerModel : INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        private bool isLoading = false;
 
-        public string VideoName
-        {
-            set => ProcessVideo(value); // this is something like a lambda function in C#
-        }
-
-        public DataBase.DataBaseHandler DBHandler { get; }
-        public OuterCodeRunner CodeRunner { get; }
+        private string videoName;
 
         public MainControllerModel()
         {
@@ -22,14 +17,55 @@ namespace mouse_tracking_web_app.Models
             CodeRunner = new OuterCodeRunner(this);
         }
 
-        public void ProcessVideo(string videoPath)
+        public event PropertyChangedEventHandler PropertyChanged;
+        public OuterCodeRunner CodeRunner { get; }
+
+        public DataBase.DataBaseHandler DBHandler { get; }
+
+        public bool IsLoading
         {
-            string script = @"OutsideCode\ProcessVideoScript.py"; // @"C:\Users\buein\Downloads\test_code.py";
+            get
+            {
+                return isLoading;
+            }
+            set
+            {
+                isLoading = value;
+                NotifyPropertyChanged("IsLoading");
+            }
+        }
+        public string VideoName
+        {
+            get
+            {
+                return videoName;
+            }
+            set
+            {
+                videoName = value;
+                ProcessVideo(value);
+            }
+        }
+        public void NotifyPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public async Task ProcessVideo(string videoPath)
+        {
+            IsLoading = true;
+            await Task.Delay(2000);
+            string script = @"OutsideCode\ProcessVideoScript.py";
             List<string> argv = new List<string>
             {
                 videoPath
             };
-            _ = CodeRunner.RunCmd(script, argv);
+            string result = await CodeRunner.RunCmd(script, argv);
+            //task.Wait();
+            //string result = task.Result;
+            //return result;
+
+            IsLoading = false;
         }
     }
 }
