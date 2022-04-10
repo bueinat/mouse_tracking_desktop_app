@@ -11,7 +11,7 @@
          d:DesignHeight="300" d:DesignWidth="400">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-        <converters:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" />
+        <converters:AddErrorPrefix x:Key="AddErrorPrefix" />
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -26,6 +26,7 @@
         <GroupBox Header="Upload and Process Video" Margin="10" Padding="10" Grid.ColumnSpan="2" Grid.Row="0">
             <Grid>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="2*" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
@@ -38,13 +39,16 @@
                 <TextBox Margin="0,0" Height="22" Grid.Row="0" Grid.Column="1" Width="0" x:Name="videoName"
                          Text="{Binding VM_VideoName, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" />
                 <TextBox Margin="10,10" Height="22" Grid.Row="0" Grid.Column="1" x:Name="videoName1"  IsReadOnly="True" />
-                <StackPanel Orientation="Vertical" Grid.Row="1" Grid.ColumnSpan="2">
-                    <Button Margin="0, 5" Height="22" Width="80" x:Name="BtnProcessVideo" Background="#FFCBEAD7"
-                            Click="ProcessVideoButtonClicked" Content="Process" />
-                    <fa:ImageAwesome Icon="CircleOutlineNotch" Height="10" Spin="True" 
-                                     Visibility="{Binding VM_IsLoading, Converter={StaticResource InverseBooleanToVisibilityConverter}}"/>
-                </StackPanel>
+                <Button Height="22" Width="80" x:Name="BtnProcessVideo" Background="#FFCBEAD7"
+                            Click="ProcessVideoButtonClicked" Content="Process" Grid.ColumnSpan="2" Grid.Row="1"/>
+                <fa:ImageAwesome Icon="CircleOutlineNotch" Height="10" Spin="True" Grid.ColumnSpan="2" Grid.Row="2"
+                                     Visibility="{Binding VM_IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                <TextBlock Text="{Binding VM_ErrorMessage}" Grid.Row="2" Grid.ColumnSpan="2" Foreground="DarkRed" TextWrapping="Wrap"
+                           Visibility="{Binding VM_HasErrorMessage, Converter={StaticResource BooleanToVisibilityConverter}}"/>
             </Grid>
+        </GroupBox>
+        <GroupBox Header="Show Video" Margin="10" Padding="10" Grid.ColumnSpan="2" Grid.Row="1">
+            <Image Source="{Binding VM_FramePath}" />
         </GroupBox>
     </Grid>
 </UserControl>

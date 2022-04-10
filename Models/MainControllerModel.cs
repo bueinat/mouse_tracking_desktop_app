@@ -7,20 +7,49 @@ namespace mouse_tracking_web_app.Models
 {
     public class MainControllerModel : INotifyPropertyChanged
     {
+        private string errorMessage = "";
+        private string framePath = "../Images/default_image.png";
         private bool isLoading = false;
-
+        private bool pause;
         private string videoName;
-
+        private string videoPath;
         public MainControllerModel()
         {
             DBHandler = new DataBase.DataBaseHandler(this);
             CodeRunner = new OuterCodeRunner(this);
+            FI = new FramesIterator(this);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
         public OuterCodeRunner CodeRunner { get; }
 
         public DataBase.DataBaseHandler DBHandler { get; }
+
+        public string ErrorMessage
+        {
+            get => errorMessage;
+            set
+            {
+                errorMessage = value;
+                NotifyPropertyChanged("ErrorMessage");
+                NotifyPropertyChanged("HasErrorMessage");
+            }
+        }
+
+        public FramesIterator FI { get; }
+
+        public string FramePath
+        {
+            get => framePath;
+            set
+            {
+                framePath = value;
+                NotifyPropertyChanged("FramePath");
+            }
+        }
+
+        public bool HasErrorMessage => !string.IsNullOrEmpty(ErrorMessage);
 
         public bool IsLoading
         {
@@ -34,38 +63,79 @@ namespace mouse_tracking_web_app.Models
                 NotifyPropertyChanged("IsLoading");
             }
         }
+        public bool Pause
+        {
+            get => pause;
+            set
+            {
+                pause = value;
+                NotifyPropertyChanged("pause");
+            }
+        }
+
+        public bool Stop { get; set; }
+
         public string VideoName
         {
-            get
-            {
-                return videoName;
-            }
+            get => videoName;
             set
             {
                 videoName = value;
-                ProcessVideo(value);
+                NotifyPropertyChanged("VideoName");
+                _ = ProcessVideo(value);
             }
         }
+
+        public string VideoPath
+        {
+            get => videoPath;
+            set
+            {
+                videoPath = value;
+                NotifyPropertyChanged("VideoPath");
+            }
+        }
+
         public void NotifyPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        public Dictionary<string, string> ProcessResult(string[] rawResult)
+        {
+            Dictionary<string, string> result = new Dictionary<string, string>();
+            for (int i = 0; i < rawResult.Length; i++)
+            {
+                if (rawResult[i].StartsWith("e"))
+                    result["ErrorMessage"] = rawResult[i].Substring(7);
+                if (rawResult[i].StartsWith("video path"))
+                    result["VideoPath"] = rawResult[i].Substring(12);
+            }
+            return result;
+        }
+
         public async Task ProcessVideo(string videoPath)
         {
             IsLoading = true;
-            await Task.Delay(2000);
+            ErrorMessage = string.Empty;
+            //await Task.Delay(2000);
             string script = @"OutsideCode\ProcessVideoScript.py";
             List<string> argv = new List<string>
             {
                 videoPath
             };
-            string result = await CodeRunner.RunCmd(script, argv);
-            //task.Wait();
-            //string result = task.Result;
-            //return result;
-
+            string[] rawResult = await CodeRunner.RunCmd(script, argv);
+            Dictionary<string, string> processedResult = ProcessResult(rawResult);
+            if (processedResult.ContainsKey("ErrorMessage"))
+                ErrorMessage = processedResult["ErrorMessage"];
+            if (processedResult.ContainsKey("VideoPath"))
+                VideoPath = processedResult["VideoPath"];
             IsLoading = false;
+            FI.Run();
+        }
+        public void StopMethod()
+        {
+            Stop = true;
         }
     }
 }

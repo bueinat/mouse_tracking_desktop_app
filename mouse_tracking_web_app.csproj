@@ -171,6 +171,7 @@
     <Compile Include="DataBase\Analysis.cs" />
     <Compile Include="DataBase\DataBaseHandler.cs" />
     <Compile Include="DataBase\Video.cs" />
+    <Compile Include="Models\FramesIterator.cs" />
     <Compile Include="Models\OuterCodeRunner.cs" />
     <Compile Include="ViewModels\MainControllerViewModel.cs" />
     <Compile Include="Views\TabsWindow.xaml.cs">
@@ -238,6 +239,7 @@
     <Content Include="Core\Compression\Snappy\lib\win\snappy32.dll" />
     <Content Include="Core\Compression\Snappy\lib\win\snappy64.dll" />
     <Content Include="Core\Compression\Zstandard\lib\win\libzstd.dll" />
+    <Resource Include="Images\default_image.png" />
     <Content Include="mongocrypt.dll" />
     <Content Include="OutsideCode\ProcessVideoScript.py" />
     <Content Include="OutsideCode\utilityFunctions.py" />

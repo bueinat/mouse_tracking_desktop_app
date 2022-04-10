@@ -18,15 +18,23 @@ namespace mouse_tracking_web_app.ViewModels
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public bool VM_IsLoading { 
+        public string VM_ErrorMessage
+        {
             get
             {
-                return model.IsLoading;
+                return model.ErrorMessage;
             }
             set
             {
-                model.IsLoading = value;
-                
+                model.ErrorMessage = value;
+            }
+        }
+
+        public bool VM_HasErrorMessage
+        {
+            get
+            {
+                return model.HasErrorMessage;
             }
         }
 
@@ -35,6 +43,19 @@ namespace mouse_tracking_web_app.ViewModels
             get { return model.VideoName; }
             set => model.VideoName = value;
         }
+
+        public string VM_FramePath
+        {
+            get { return model.FramePath; }
+            set => model.FramePath = value;
+        }
+
+        public bool VM_IsLoading
+        {
+            get => model.IsLoading;
+            set => model.IsLoading = value;
+        }
+
         public void Connect()
         {
             model.DBHandler.Connect();

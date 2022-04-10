@@ -1,7 +1,4 @@
-﻿using IronPython.Hosting;
-using Microsoft.Scripting.Hosting;
-using RunProcessAsTask;
-using System;
+﻿using RunProcessAsTask;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -46,7 +43,7 @@ namespace mouse_tracking_web_app.Models
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public async Task<string> RunCmd(string scriptName, List<string> argv)
+        public async Task<string[]> RunCmd(string scriptName, List<string> argv)
         {
             string startupPath = VisualStudioProvider.TryGetSolutionDirectoryInfo().FullName;
 
@@ -71,8 +68,8 @@ namespace mouse_tracking_web_app.Models
 
             ProcessResults processResults = await ProcessEx.RunAsync(start);
 
-            Console.WriteLine("run successful");
-            return JoinStringArray(processResults.StandardOutput);
+            return processResults.StandardOutput;
+            //return JoinStringArray(processResults.StandardOutput);
         }
 
         private string JoinStringArray(string[] stringArr)

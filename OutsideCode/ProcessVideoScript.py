@@ -48,6 +48,8 @@ try:
     os.makedirs(archive_path, exist_ok=True)
     video_name = VIDEO_PATH.split('\\')[-1].split('.')[0]
     data_path = f"{archive_path}\\{video_name}"
+    frames_path = f".\\archive\\{video_name}\\frames"
+    print(f"video path: {os.getcwd()}\\archive\\{video_name}")
     try:
         os.mkdir(data_path)
     except FileExistsError:
@@ -56,6 +58,7 @@ try:
     shutil.copy2(VIDEO_PATH, data_path)
     frames_path = f".\\archive\\{video_name}\\frames"
     video_to_frames(VIDEO_PATH, frames_path)
+    print(f"frames path: {os.getcwd()}{frames_path[1:]}")
 
     # %%
     # extracting data from video
@@ -193,4 +196,4 @@ try:
     video.update(analysis=ana.id)
     video.save()
 except Exception as e:
-    print(e)
+    print(f"error: {e.__class__.__name__}: {e}")

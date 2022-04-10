@@ -19,6 +19,11 @@ namespace mouse_tracking_web_app
             Views.MainWindow mainWindow = new Views.MainWindow();
             mainWindow.Show();
         }
+
+        private void Application_Exit(object sender, ExitEventArgs e)
+        {
+            Model.StopMethod();
+        }
     }
 }
 
