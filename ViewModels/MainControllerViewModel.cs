@@ -20,34 +20,28 @@ namespace mouse_tracking_web_app.ViewModels
 
         public string VM_ErrorMessage
         {
-            get
-            {
-                return model.ErrorMessage;
-            }
-            set
-            {
-                model.ErrorMessage = value;
-            }
+            get => model.ErrorMessage;
+            set => model.ErrorMessage = value;
         }
 
-        public bool VM_HasErrorMessage
-        {
-            get
-            {
-                return model.HasErrorMessage;
-            }
-        }
+        public bool VM_HasErrorMessage => model.HasErrorMessage;
 
         public string VM_VideoName
         {
-            get { return model.VideoName; }
+            get => model.VideoName;
             set => model.VideoName = value;
         }
 
         public string VM_FramePath
         {
-            get { return model.FramePath; }
+            get => model.FramePath;
             set => model.FramePath = value;
+        }
+
+        public int VM_FramesNumber
+        {
+            get => model.FramesNumber;
+            set => model.FramesNumber = value;
         }
 
         public bool VM_IsLoading

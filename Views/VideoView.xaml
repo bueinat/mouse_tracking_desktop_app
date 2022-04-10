@@ -17,206 +17,10 @@
                 <ResourceDictionary Source="/CustomStyles/VideoSlider.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+            <converters:PercentToTimeConverter x:Key="PercentToTimeConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <!--<UserControl.Resources>
-        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-        <converters:AddErrorPrefix x:Key="AddErrorPrefix" />
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/CustomStyles/VideoSlider.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-
-    </UserControl.Resources>-->
-
-    <!--<Style x:Key="SliderThumbStyle" TargetType="Thumb">
-            <Setter Property="SnapsToDevicePixels" Value="true" />
-            <Setter Property="OverridesDefaultStyle" Value="false" />
-            <Setter Property="Height" Value="18" />
-            <Setter Property="Width" Value="18" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Thumb">
-                        <Ellipse
-                            Name="Ellipse"
-                            Fill="OrangeRed"
-                            Stroke="Black"
-                            StrokeThickness="1" />
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Ellipse" Property="Fill" Value="Orange" />
-                            </Trigger>
-                            <Trigger Property="IsEnabled" Value="false">
-                                <Setter TargetName="Ellipse" Property="Fill" Value="Gray" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style x:Key="AppSliderStyle" TargetType="Slider">
-            <Setter Property="OverridesDefaultStyle" Value="true" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Slider">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="auto" />
-                                <RowDefinition Name="row" Height="auto" />
-                                <RowDefinition Height="auto" />
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="auto" />
-                                <ColumnDefinition Name="column" Width="*" />
-                                <ColumnDefinition Width="auto" />
-                            </Grid.ColumnDefinitions>
-                            <Border
-                                Name="PART_Border"
-                                Grid.Row="1"
-                                Grid.Column="1"
-                                Width="{TemplateBinding Width}"
-                                Height="{TemplateBinding Height}"
-                                Padding="2"
-                                HorizontalAlignment="Stretch"
-                                VerticalAlignment="Center"
-                                Background="GreenYellow"
-                                BorderBrush="Black"
-                                BorderThickness="1" />
-                            <Track
-                                Name="PART_Track"
-                                Grid.Row="1"
-                                Grid.Column="1"
-                                Width="{TemplateBinding Width}"
-                                Height="{TemplateBinding Height}"
-                                HorizontalAlignment="Stretch"
-                                VerticalAlignment="Center">
-                                <Track.Thumb>
-                                    <Thumb Style="{StaticResource SliderThumbStyle}" />
-                                </Track.Thumb>
-                            </Track>
-                        </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-        <Style x:Key="SliderRepeatButton" TargetType="RepeatButton">
-            <Setter Property="SnapsToDevicePixels" Value="true" />
-            <Setter Property="OverridesDefaultStyle" Value="true" />
-            <Setter Property="IsTabStop" Value="false" />
-            <Setter Property="Focusable" Value="false" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="RepeatButton">
-                        <Border
-                            Height="3"
-                            Background="Black"
-                            BorderBrush="Black"
-                            BorderThickness="1" />
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style x:Key="SliderRepeatButton1" TargetType="RepeatButton">
-            <Setter Property="SnapsToDevicePixels" Value="true" />
-            <Setter Property="OverridesDefaultStyle" Value="true" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="RepeatButton">
-                        <Border
-                            Height="3"
-                            Background="Green"
-                            BorderBrush="YellowGreen"
-                            BorderThickness="1"
-                            SnapsToDevicePixels="True" />
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-    -->
-    <!--<Style x:Key="SliderThumb" TargetType="Thumb">
-        <Setter Property="SnapsToDevicePixels" Value="true" />
-        <Setter Property="OverridesDefaultStyle" Value="true" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="Thumb">
-                    <Ellipse
-                        Width="10"
-                        Height="10"
-                        Fill="Green" />
-    -->
-    <!--<Ellipse Height="10" Width="10">
-                        <Ellipse.Fill>
-                            <ImageBrush ImageSource="Screenshot_5.png"></ImageBrush>
-                        </Ellipse.Fill>
-                    </Ellipse>-->
-    <!--
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>-->
-    <!--
-
-        <Style x:Key="SliderThumb" TargetType="Thumb">
-            <Setter Property="SnapsToDevicePixels" Value="true" />
-            <Setter Property="OverridesDefaultStyle" Value="true" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Thumb">
-    -->
-    <!--  Add name to ellipse to use in  controltemplate triggers  -->
-    <!--
-                        <Ellipse
-                            x:Name="Ellipse"
-                            Width="10"
-                            Height="10"
-                            Fill="Green" />
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="true">
-                                <Setter TargetName="Ellipse" Property="Fill" Value="#FF63C863" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-        <ControlTemplate x:Key="Slider" TargetType="Slider">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" MinHeight="{TemplateBinding MinHeight}" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Track x:Name="PART_Track" Grid.Row="1">
-                    <Track.DecreaseRepeatButton>
-                        <RepeatButton Command="Slider.DecreaseLarge" Style="{StaticResource SliderRepeatButton1}" />
-                    </Track.DecreaseRepeatButton>
-                    <Track.Thumb>
-                        <Thumb Style="{StaticResource SliderThumb}" />
-                    </Track.Thumb>
-                    <Track.IncreaseRepeatButton>
-                        <RepeatButton Command="Slider.IncreaseLarge" Style="{StaticResource SliderRepeatButton}" />
-                    </Track.IncreaseRepeatButton>
-                </Track>
-            </Grid>
-        </ControlTemplate>
-
-        <Style x:Key="Horizontal_Slider" TargetType="Slider">
-            <Setter Property="Focusable" Value="False" />
-            <Setter Property="SnapsToDevicePixels" Value="true" />
-            <Setter Property="OverridesDefaultStyle" Value="true" />
-            <Style.Triggers>
-                <Trigger Property="Orientation" Value="Horizontal">
-                    <Setter Property="MinHeight" Value="21" />
-                    <Setter Property="MinWidth" Value="104" />
-                    <Setter Property="Template" Value="{StaticResource Slider}" />
-                </Trigger>
-            </Style.Triggers>
-        </Style>-->
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="3*" />
@@ -304,23 +108,27 @@
                     <Image Source="{Binding VM_FramePath}" />
                 </Border>
                 <StackPanel Orientation="Horizontal">
-                    <!--<Slider
-                        x:Name="VideoTimeController"
-                        Width="150"
-                        Maximum="200"
-                        Minimum="0"
-                        Orientation="Horizontal"
-                        Value="50" />-->
-
                     <Slider
                         x:Name="VideoTimeController"
-                        Width="200"
+                        Width="100"
                         VerticalAlignment="Center"
-                        Maximum="200"
+                        Maximum="100"
                         Minimum="0"
                         Style="{StaticResource ResourceKey=Horizontal_Slider}"
-                        Value="100" />
-                    <TextBlock Text="{Binding ElementName=VideoTimeController, Path=Value}" />
+                        Value="0" />
+                    <TextBlock
+                        Name="textBlockMessage"
+                        Width="50"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Top">
+                        <TextBlock.Text>
+                            <MultiBinding Converter="{StaticResource PercentToTimeConverter}">
+                                <Binding Path="VM_FramesNumber" />
+                                <Binding ElementName="VideoTimeController" Path="Value" />
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+
                 </StackPanel>
             </StackPanel>
         </GroupBox>

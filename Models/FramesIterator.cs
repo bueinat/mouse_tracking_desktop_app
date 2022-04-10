@@ -8,7 +8,7 @@ namespace mouse_tracking_web_app.Models
     {
         private readonly MainControllerModel model;
         private int frameNum;
-        private readonly float baseSpeed = 1000 / 24;
+        private readonly float baseSpeed = 1000 / 45;
 
         public double Speed { get; set; }
 

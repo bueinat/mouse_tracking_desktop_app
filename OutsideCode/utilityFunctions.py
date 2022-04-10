@@ -45,6 +45,7 @@ def video_to_frames(video_path, frames_path, video_name=None, include_video_name
             raise Exception(f'frame {count} was not written')
         success, image = vidcap.read()
         count += 1
+    return count
 # %%
 
 

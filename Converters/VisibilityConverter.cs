@@ -40,4 +40,31 @@ namespace mouse_tracking_web_app.Converters
             throw new NotImplementedException();
         }
     }
+
+    //[ValueConversion(typeof(int), typeof(string))]
+    public class PercentToTimeConverter : IMultiValueConverter
+    {
+
+        public object Convert(object[] value, Type targetType, object parameter, CultureInfo culture)
+        {
+            int nframes = (int)(value[0]);
+            double percent = (double)(value[1]);
+            double frame_number = percent / 100.0 * nframes;
+            int frame_rate = 45;
+            double time = frame_number / frame_rate;
+            int minutes = (int)(time / 60);
+            int seconds = (int)(time % 60);
+            int millis = (int)(time % 1 * 100);
+            return string.Format("{0:00}:{0:00}:{0:00}", minutes, seconds, millis);
+            //return $"{minutes}:{seconds}:{millis}";
+        }
+
+
+        object[] IMultiValueConverter.ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    
 }

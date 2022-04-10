@@ -42,7 +42,6 @@ try:
     MAXD = 10
     VIDEO_NAME = VIDEO_PATH.split('\\')[-1].split('.')[0]
 
-    # print("initializing and creating files...")
     # os.chdir('cv')
     archive_path = f".\\archive"
     os.makedirs(archive_path, exist_ok=True)
@@ -50,6 +49,8 @@ try:
     data_path = f"{archive_path}\\{video_name}"
     frames_path = f".\\archive\\{video_name}\\frames"
     print(f"video path: {os.getcwd()}\\archive\\{video_name}")
+    video_path = f"{os.getcwd()}\\archive\\{video_name}"
+    print(f"nframes: {len(os.listdir(frames_path))}")
     try:
         os.mkdir(data_path)
     except FileExistsError:
@@ -57,12 +58,12 @@ try:
             f'a video named {video_name} already exists in archive. You can use it or give the new video a different name')
     shutil.copy2(VIDEO_PATH, data_path)
     frames_path = f".\\archive\\{video_name}\\frames"
-    video_to_frames(VIDEO_PATH, frames_path)
+    nframes = video_to_frames(VIDEO_PATH, frames_path)
     print(f"frames path: {os.getcwd()}{frames_path[1:]}")
+    print(f"nframes: {nframes}")
 
     # %%
     # extracting data from video
-    # print("finding path...")
     if FUNCTION_NAME == 'rat_path':
         frames, rat_rects, alims = rat_path(VIDEO_PATH)
 
@@ -111,7 +112,6 @@ try:
     
         raw_data = dfnose[['real_x', 'real_y']].rename(columns={'real_x': 'x', 'real_y': 'y'})
 
-    # print("processing read data...")
     raw_data.index.name = 'timestep'
     raw_data['time'] = raw_data.index
     path = raw_data.set_index('x').y
@@ -136,24 +136,18 @@ try:
         aireal_dist, win_size, raw_data.x, raw_data.y)
     raw_data["rdist"] = raw_data.r.rolling(win_size).sum()
 
-    # print("check in")
     # %% [markdown]
     # ### Upload data to server
 
     # %%
     # the commented line is used for server storage, but we prefer saving on this computer.
     # cluster = "mongodb+srv://john:1234@cluster0.9txls.mongodb.net/real_test?retryWrites=true&w=majority" 
-    # print("connecting to database...", end=" ")
     # in order to run this, you have first to run MongoDB server using:
     # `C:\Program Files\MongoDB\Server\5.0\bin\mongo.exe`
     cluster = "mongodb://127.0.0.1:27017/test_dbs"    
     mnge.register_connection(alias='core', host=cluster)
-    # print("connected")
-    
-    # print("check in")
 
     # %%
-    # print("creating database objects...")
     video = Video()
     video.name = VIDEO_PATH.split('\\')[-1] # VIDEO_NAME # VIDEO_PATH.split('/')[-1]
     # video.length = VideoFileClip(VIDEO_PATH).duration
@@ -169,7 +163,6 @@ try:
                                 for i in uploadabale_data.index]
     uploadabale_data.index -= 1
 
-    # print("check in")
     ### I read dummy predictions
     pred_df = pandas.read_csv('C:/Users/buein/OneDrive - Bar-Ilan University/שנה ג/פרוייקט שנתי/mouse_tracking/cv/videos/examples/testing_project_deepethogram/DATA/odor28/odor28_predictions.csv',
                               index_col=0).drop('background',1).astype(bool)[1:]
@@ -188,8 +181,7 @@ try:
 
     for c in uploadabale_data.columns:
         exec(f"ana.{c} = list(uploadabale_data['{c}'])")
-    
-    # print("check in")
+
     ana.video = video.id
     video.analysis = ana
     ana.save()

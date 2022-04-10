@@ -7,12 +7,14 @@ namespace mouse_tracking_web_app.Models
 {
     public class MainControllerModel : INotifyPropertyChanged
     {
+        // TODO: unite all frames stuff into one class / dictionary
         private string errorMessage = "";
         private string framePath = "../Images/default_image.png";
         private bool isLoading = false;
         private bool pause;
         private string videoName;
         private string videoPath;
+        private int framesNumber = 0;
         public MainControllerModel()
         {
             DBHandler = new DataBase.DataBaseHandler(this);
@@ -46,6 +48,16 @@ namespace mouse_tracking_web_app.Models
             {
                 framePath = value;
                 NotifyPropertyChanged("FramePath");
+            }
+        }
+
+        public int FramesNumber
+        {
+            get => framesNumber;
+            set
+            {
+                framesNumber = value;
+                NotifyPropertyChanged("FramesNumber");
             }
         }
 
@@ -110,6 +122,8 @@ namespace mouse_tracking_web_app.Models
                     result["ErrorMessage"] = rawResult[i].Substring(7);
                 if (rawResult[i].StartsWith("video path"))
                     result["VideoPath"] = rawResult[i].Substring(12);
+                if (rawResult[i].StartsWith("nframes"))
+                    result["FramesNumber"] = rawResult[i].Substring(9);
             }
             return result;
         }
@@ -130,6 +144,8 @@ namespace mouse_tracking_web_app.Models
                 ErrorMessage = processedResult["ErrorMessage"];
             if (processedResult.ContainsKey("VideoPath"))
                 VideoPath = processedResult["VideoPath"];
+            if (processedResult.ContainsKey("FramesNumber"))
+                FramesNumber = int.Parse(processedResult["FramesNumber"]);
             IsLoading = false;
             FI.Run();
         }

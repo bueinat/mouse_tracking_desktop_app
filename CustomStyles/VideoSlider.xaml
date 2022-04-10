@@ -105,28 +105,6 @@
         </Setter>
     </Style>
 
-    <!--<Style x:Key="SliderThumb" TargetType="Thumb">
-        <Setter Property="SnapsToDevicePixels" Value="true" />
-        <Setter Property="OverridesDefaultStyle" Value="true" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="Thumb">
-                    <Ellipse
-                        Width="10"
-                        Height="10"
-                        Fill="Green" />
-    -->
-    <!--<Ellipse Height="10" Width="10">
-                        <Ellipse.Fill>
-                            <ImageBrush ImageSource="Screenshot_5.png"></ImageBrush>
-                        </Ellipse.Fill>
-                    </Ellipse>-->
-    <!--
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>-->
-
     <Style x:Key="SliderThumb" TargetType="Thumb">
         <Setter Property="SnapsToDevicePixels" Value="true" />
         <Setter Property="OverridesDefaultStyle" Value="true" />
