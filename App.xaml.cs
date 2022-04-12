@@ -9,11 +9,14 @@ namespace mouse_tracking_web_app
     {
         public Models.MainControllerModel Model { get; internal set; }
         public ViewModels.MainControllerViewModel MainVM { get; internal set; }
+        public ViewModels.VideoControllerViewModel VCVM { get; internal set; }
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
             Model = new Models.MainControllerModel();
             MainVM = new ViewModels.MainControllerViewModel(Model);
+            VCVM = new ViewModels.VideoControllerViewModel(Model.VC);
+
 
             // Create main application window
             Views.MainWindow mainWindow = new Views.MainWindow();

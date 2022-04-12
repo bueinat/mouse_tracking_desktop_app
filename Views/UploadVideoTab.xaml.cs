@@ -6,13 +6,13 @@ using System.Windows.Controls;
 namespace mouse_tracking_web_app.Views
  {
     /// <summary>
-    /// Interaction logic for VideoView.xaml
+    /// Interaction logic for UploadVideoTab.xaml
     /// </summary>
-    public partial class VideoView : UserControl
+    public partial class UploadVideoTab : UserControl
     {
         public ViewModels.MainControllerViewModel vm;
         private readonly OpenFileDialog uploadVideoDialog;
-        public VideoView()
+        public UploadVideoTab()
         {
             InitializeComponent();
             //this.DataContext = this;

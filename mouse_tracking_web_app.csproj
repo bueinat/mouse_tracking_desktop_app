@@ -171,14 +171,18 @@
     <Compile Include="DataBase\Analysis.cs" />
     <Compile Include="DataBase\DataBaseHandler.cs" />
     <Compile Include="DataBase\Video.cs" />
-    <Compile Include="Models\FramesIterator.cs" />
+    <Compile Include="Models\VideoControllerModel.cs" />
     <Compile Include="Models\OuterCodeRunner.cs" />
     <Compile Include="ViewModels\MainControllerViewModel.cs" />
+    <Compile Include="ViewModels\VideoControllerViewModel.cs" />
     <Compile Include="Views\TabsWindow.xaml.cs">
       <DependentUpon>TabsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\VideoView.xaml.cs">
-      <DependentUpon>VideoView.xaml</DependentUpon>
+    <Compile Include="Views\UploadVideoTab.xaml.cs">
+      <DependentUpon>UploadVideoTab.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\VideoController.xaml.cs">
+      <DependentUpon>VideoController.xaml</DependentUpon>
     </Compile>
     <Page Include="CustomStyles\VideoSlider.xaml">
       <SubType>Designer</SubType>
@@ -200,7 +204,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\VideoView.xaml">
+    <Page Include="Views\UploadVideoTab.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\VideoController.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

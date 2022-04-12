@@ -9,17 +9,18 @@ namespace mouse_tracking_web_app.Models
     {
         // TODO: unite all frames stuff into one class / dictionary
         private string errorMessage = "";
+
         private string framePath = "../Images/default_image.png";
+        private int framesNumber = 0;
         private bool isLoading = false;
         private bool pause;
         private string videoName;
         private string videoPath;
-        private int framesNumber = 0;
         public MainControllerModel()
         {
             DBHandler = new DataBase.DataBaseHandler(this);
             CodeRunner = new OuterCodeRunner(this);
-            FI = new FramesIterator(this);
+            VC = new VideoControllerModel(this);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -27,6 +28,7 @@ namespace mouse_tracking_web_app.Models
         public OuterCodeRunner CodeRunner { get; }
 
         public DataBase.DataBaseHandler DBHandler { get; }
+        public VideoControllerModel VC { get; }
 
         public string ErrorMessage
         {
@@ -38,8 +40,6 @@ namespace mouse_tracking_web_app.Models
                 NotifyPropertyChanged("HasErrorMessage");
             }
         }
-
-        public FramesIterator FI { get; }
 
         public string FramePath
         {
@@ -75,13 +75,14 @@ namespace mouse_tracking_web_app.Models
                 NotifyPropertyChanged("IsLoading");
             }
         }
+
         public bool Pause
         {
             get => pause;
             set
             {
                 pause = value;
-                NotifyPropertyChanged("pause");
+                NotifyPropertyChanged("Pause");
             }
         }
 
@@ -147,8 +148,9 @@ namespace mouse_tracking_web_app.Models
             if (processedResult.ContainsKey("FramesNumber"))
                 FramesNumber = int.Parse(processedResult["FramesNumber"]);
             IsLoading = false;
-            FI.Run();
+            VC.Run();
         }
+
         public void StopMethod()
         {
             Stop = true;

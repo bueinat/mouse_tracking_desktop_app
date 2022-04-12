@@ -1,10 +1,19 @@
 ﻿using System.ComponentModel;
+using System.Collections.Generic;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace mouse_tracking_web_app.ViewModels
 {
     public class MainControllerViewModel : INotifyPropertyChanged
     {
         private readonly Models.MainControllerModel model;
+        private VideoControllerViewModel vc_vm;
+        public VideoControllerViewModel VM_VideoControllerViewModel
+        {
+            get => vc_vm;
+            set => vc_vm = value;
+        }
 
         public MainControllerViewModel(Models.MainControllerModel mainController)
         {
@@ -14,6 +23,7 @@ namespace mouse_tracking_web_app.ViewModels
             {
                 NotifyPropertyChanged("VM_" + e.PropertyName);
             };
+            VM_VideoControllerViewModel = (Application.Current as App).VCVM;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

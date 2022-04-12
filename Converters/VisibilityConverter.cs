@@ -41,12 +41,37 @@ namespace mouse_tracking_web_app.Converters
         }
     }
 
+    [ValueConversion(typeof(string), typeof(int))]
+    public class PathToNumCoverter : IValueConverter
+    {
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            string[] subs = ((string)value).Split('\\');
+            if (subs.Length > 1)
+            {
+                subs = subs[subs.Length - 1].Split('.');
+                string num = subs[0].Substring(5);
+                return int.Parse(num);
+            }
+            return 0;
+        }
+
+
+        // this is the one causing exception
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     //[ValueConversion(typeof(int), typeof(string))]
     public class PercentToTimeConverter : IMultiValueConverter
     {
 
         public object Convert(object[] value, Type targetType, object parameter, CultureInfo culture)
         {
+            return "sss";
             int nframes = (int)(value[0]);
             double percent = (double)(value[1]);
             double frame_number = percent / 100.0 * nframes;
@@ -62,6 +87,11 @@ namespace mouse_tracking_web_app.Converters
 
         object[] IMultiValueConverter.ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
+            object[] arr = new object[3];
+            arr[0] = (object)0;
+            arr[1] = (object)1;
+            arr[2] = (object)2;
+            return arr;
             throw new NotImplementedException();
         }
     }
