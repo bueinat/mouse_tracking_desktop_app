@@ -19,11 +19,7 @@ namespace mouse_tracking_web_app.ViewModels
             };
         }
 
-        public string VM_VC_FramePath
-        {
-            get => Model.VC_FramePath;
-            //set => Model.VC_FramePath = value;
-        }
+        public string VM_VC_FramePath => Model.VC_FramePath;
 
         public int VM_VC_FramesNumber
         {
@@ -37,10 +33,13 @@ namespace mouse_tracking_web_app.ViewModels
             set => Model.VC_FrameNum = value;
         }
 
-        public string VM_VC_FramesPath
+        public bool VM_VC_Pause
         {
-            get => Model.VC_FramesPath;
+            get => Model.VC_Pause;
+            set => Model.VC_Pause = value;
         }
+
+        public string VM_VC_FramesPath => Model.VC_FramesPath;
 
         public void NotifyPropertyChanged(string propertyName)
         {

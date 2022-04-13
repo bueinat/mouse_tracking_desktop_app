@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using System.IO;
 using System.Threading;
 
 namespace mouse_tracking_web_app.Models
@@ -114,7 +113,6 @@ namespace mouse_tracking_web_app.Models
                 {
                     if (!VC_Pause)
                     {
-                        //if (File.Exists(VC_FramePath))
                         if (VC_FrameNum < VC_FramesNumber - 1)
                             VC_FrameNum++;
 

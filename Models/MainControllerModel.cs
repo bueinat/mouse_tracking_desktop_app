@@ -16,6 +16,7 @@ namespace mouse_tracking_web_app.Models
         private bool pause;
         private string videoName;
         private string videoPath;
+
         public MainControllerModel()
         {
             DBHandler = new DataBase.DataBaseHandler(this);

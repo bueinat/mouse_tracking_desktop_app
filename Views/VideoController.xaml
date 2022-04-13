@@ -1,11 +1,11 @@
 ﻿<UserControl
     x:Class="mouse_tracking_web_app.Views.VideoController"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:converters="clr-namespace:mouse_tracking_web_app.Converters"
+    xmlns:fa="http://schemas.fontawesome.io/icons/"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:mouse_tracking_web_app.Views"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:converters="clr-namespace:mouse_tracking_web_app.Converters"
     xmlns:viewmodels="clr-namespace:mouse_tracking_web_app.ViewModels"
     d:DataContext="{d:DesignInstance Type=viewmodels:VideoControllerViewModel}"
     d:DesignHeight="300"
@@ -15,12 +15,15 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/CustomStyles/VideoSlider.xaml" />
+                <ResourceDictionary Source="/CustomStyles/HiddenButton.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
             <converters:PercentToTimeConverter x:Key="PercentToTimeConverter" />
             <converters:PathToNumCoverter x:Key="PathToNumCoverter" />
             <converters:EnableDefaultImage x:Key="EnableDefaultImage" />
+            <converters:BooleanToIcon x:Key="BooleanToIcon" />
             <BitmapImage x:Key="DefaultImage" UriSource="../Images/default_image.png" />
+            <!--  This style is used for buttons, to remove the WPF default 'animated' mouse over effect  -->
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
@@ -32,22 +35,43 @@
             Header="Show Video">
             <Grid>
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="auto" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="9*" />
                     <RowDefinition Height="*" />
+                    <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
-                <Border Grid.Row="0" Grid.ColumnSpan="2">
+                <Border Grid.Row="0" Grid.ColumnSpan="3">
                     <Image Source="{Binding VM_VC_FramePath, Converter={StaticResource EnableDefaultImage}}" Stretch="UniformToFill" />
                 </Border>
+                <fa:FontAwesome
+                    x:Name="FAIcon"
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    VerticalAlignment="Center"
+                    FontSize="20"
+                    Foreground="#6DA7AD"
+                    Icon="{Binding ElementName=PlayPauseButton, Path=Content, Converter={StaticResource BooleanToIcon}}" />
+                <Button
+                    x:Name="PlayPauseButton"
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Width="10"
+                    Background="{x:Null}"
+                    BorderBrush="{x:Null}"
+                    Click="PlayPauseButtonClicked"
+                    Content="{Binding VM_VC_Pause, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                    Foreground="{x:Null}"
+                    Style="{StaticResource HiddenButtonStyle}" />
                 <Slider
                     x:Name="VideoTimeController"
                     Grid.Row="1"
-                    Grid.Column="0"
-                    Margin="0,0,15,0"
+                    Grid.Column="1"
+                    Margin="5"
                     VerticalAlignment="Center"
+                    IsMoveToPointEnabled="True"
                     Maximum="{Binding VM_VC_FramesNumber}"
                     Minimum="0"
                     Style="{StaticResource ResourceKey=Horizontal_Slider}"
@@ -55,19 +79,11 @@
                 <TextBlock
                     Name="textBlockMessage"
                     Grid.Row="1"
-                    Grid.Column="1"
+                    Grid.Column="2"
                     Margin="2"
                     VerticalAlignment="Center"
                     Text="{Binding ElementName=VideoTimeController, Path=Value, Converter={StaticResource PercentToTimeConverter}}" />
-                <!--<TextBlock.Text>
-                        <MultiBinding Converter="{StaticResource PercentToTimeConverter}">
-                            <Binding Path="VM_VC_FramesNumber" />
-                            <Binding ElementName="VideoTimeController" Path="Value" />
-                        </MultiBinding>
-                    </TextBlock.Text>-->
-
             </Grid>
         </GroupBox>
-
     </Grid>
 </UserControl>

@@ -17,7 +17,6 @@ namespace mouse_tracking_web_app
             MainVM = new ViewModels.MainControllerViewModel(Model);
             VCVM = new ViewModels.VideoControllerViewModel(Model.VC);
 
-
             // Create main application window
             Views.MainWindow mainWindow = new Views.MainWindow();
             mainWindow.Show();

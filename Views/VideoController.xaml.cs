@@ -16,5 +16,10 @@ namespace mouse_tracking_web_app.Views
             InitializeComponent();
             DataContext = vm;
         }
+
+        private void PlayPauseButtonClicked(object sender, RoutedEventArgs e)
+        {
+            PlayPauseButton.Content = !(bool)PlayPauseButton.Content;
+        }
     }
 }

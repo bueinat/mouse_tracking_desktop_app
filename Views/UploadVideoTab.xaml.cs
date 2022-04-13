@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 
 namespace mouse_tracking_web_app.Views
- {
+{
     /// <summary>
     /// Interaction logic for UploadVideoTab.xaml
     /// </summary>
@@ -12,6 +12,7 @@ namespace mouse_tracking_web_app.Views
     {
         public ViewModels.MainControllerViewModel vm;
         private readonly OpenFileDialog uploadVideoDialog;
+
         public UploadVideoTab()
         {
             InitializeComponent();
@@ -25,6 +26,7 @@ namespace mouse_tracking_web_app.Views
         }
 
         public ViewModels.MainControllerViewModel VM { get; set; }
+
         private async void ProcessVideoButtonClicked(object sender, RoutedEventArgs e)
         {
             await Task.Delay(1);

@@ -10,12 +10,40 @@ namespace mouse_tracking_web_app.Converters
     [ValueConversion(typeof(bool), typeof(Visibility))]
     public class InverseBooleanToVisibilityConverter : IValueConverter
     {
-
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return (bool)value ? Visibility.Visible : (object)Visibility.Collapsed;
         }
 
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    [ValueConversion(typeof(bool), typeof(string))]
+    public class BooleanToIcon : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is null)
+                value = false;
+            return (bool)value ? "PlayCircleOutline" : "PauseCircleOutline";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return (string)value == "PlayCircleOutline";
+        }
+    }
+
+    [ValueConversion(typeof(string), typeof(string))]
+    public class AddErrorPrefix : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return "Error Message: " + (string)value;
+        }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -24,25 +52,8 @@ namespace mouse_tracking_web_app.Converters
     }
 
     [ValueConversion(typeof(string), typeof(string))]
-    public class AddErrorPrefix : IValueConverter
-    {
-
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return "Error Message: " + (string)value;
-        }
-
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    //[ValueConversion(typeof(string), typeof(string))]
     public class EnableDefaultImage : IValueConverter
     {
-
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             //return value;
@@ -50,7 +61,6 @@ namespace mouse_tracking_web_app.Converters
                 return value;
             return "../Images/default_image.png";
         }
-
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -95,7 +105,6 @@ namespace mouse_tracking_web_app.Converters
     [ValueConversion(typeof(double), typeof(string))]
     public class PercentToTimeConverter : IValueConverter
     {
-
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             double frame_number = (double)value; // percent / 100.0 * nframes;
@@ -113,6 +122,4 @@ namespace mouse_tracking_web_app.Converters
             throw new NotImplementedException();
         }
     }
-
-    
 }

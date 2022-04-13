@@ -1,7 +1,5 @@
 ﻿using System.ComponentModel;
-using System.Collections.Generic;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace mouse_tracking_web_app.ViewModels
 {
@@ -9,6 +7,7 @@ namespace mouse_tracking_web_app.ViewModels
     {
         private readonly Models.MainControllerModel model;
         private VideoControllerViewModel vc_vm;
+
         public VideoControllerViewModel VM_VideoControllerViewModel
         {
             get => vc_vm;
