@@ -22,13 +22,19 @@ namespace mouse_tracking_web_app.ViewModels
         public string VM_VC_FramePath
         {
             get => Model.VC_FramePath;
-            set => Model.VC_FramePath = value;
+            //set => Model.VC_FramePath = value;
         }
 
         public int VM_VC_FramesNumber
         {
             get => Model.VC_FramesNumber;
             set => Model.VC_FramesNumber = value;
+        }
+
+        public int VM_VC_FrameNum
+        {
+            get => Model.VC_FrameNum;
+            set => Model.VC_FrameNum = value;
         }
 
         public string VM_VC_FramesPath

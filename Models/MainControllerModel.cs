@@ -11,7 +11,7 @@ namespace mouse_tracking_web_app.Models
         private string errorMessage = "";
 
         private string framePath = "../Images/default_image.png";
-        private int framesNumber = 0;
+        private int framesNumber = 1;
         private bool isLoading = false;
         private bool pause;
         private string videoName;

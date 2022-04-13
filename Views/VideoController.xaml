@@ -19,6 +19,8 @@
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
             <converters:PercentToTimeConverter x:Key="PercentToTimeConverter" />
             <converters:PathToNumCoverter x:Key="PathToNumCoverter" />
+            <converters:EnableDefaultImage x:Key="EnableDefaultImage" />
+            <BitmapImage x:Key="DefaultImage" UriSource="../Images/default_image.png" />
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
@@ -30,15 +32,15 @@
             Header="Show Video">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="9*" />
                     <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="auto" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="9*" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <Border Grid.Row="0" Grid.ColumnSpan="2">
-                    <Image Source="{Binding VM_VC_FramePath}" Stretch="UniformToFill" />
+                    <Image Source="{Binding VM_VC_FramePath, Converter={StaticResource EnableDefaultImage}}" Stretch="UniformToFill" />
                 </Border>
                 <Slider
                     x:Name="VideoTimeController"
@@ -46,22 +48,24 @@
                     Grid.Column="0"
                     Margin="0,0,15,0"
                     VerticalAlignment="Center"
-                    Maximum="100"
+                    Maximum="{Binding VM_VC_FramesNumber}"
                     Minimum="0"
                     Style="{StaticResource ResourceKey=Horizontal_Slider}"
-                    Value="{Binding VM_VC_FramePath, Converter={StaticResource PathToNumCoverter}}" />
+                    Value="{Binding VM_VC_FrameNum}" />
                 <TextBlock
                     Name="textBlockMessage"
                     Grid.Row="1"
                     Grid.Column="1"
-                    VerticalAlignment="Center">
-                    <TextBlock.Text>
+                    Margin="2"
+                    VerticalAlignment="Center"
+                    Text="{Binding ElementName=VideoTimeController, Path=Value, Converter={StaticResource PercentToTimeConverter}}" />
+                <!--<TextBlock.Text>
                         <MultiBinding Converter="{StaticResource PercentToTimeConverter}">
                             <Binding Path="VM_VC_FramesNumber" />
                             <Binding ElementName="VideoTimeController" Path="Value" />
                         </MultiBinding>
-                    </TextBlock.Text>
-                </TextBlock>
+                    </TextBlock.Text>-->
+
             </Grid>
         </GroupBox>
 

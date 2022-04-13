@@ -7,8 +7,19 @@ namespace mouse_tracking_web_app.Models
     public class VideoControllerModel : INotifyPropertyChanged
     {
         private readonly MainControllerModel model;
-        private int frameNum;
+        private int frameNum = 0;
         private readonly float baseSpeed = 1000 / 45;
+
+        public int VC_FrameNum
+        {
+            get => frameNum;
+            set
+            {
+                frameNum = value;
+                NotifyPropertyChanged("VC_FrameNum");
+                NotifyPropertyChanged("VC_FramePath");
+            }
+        }
 
         public double Speed { get; set; }
 
@@ -40,19 +51,21 @@ namespace mouse_tracking_web_app.Models
             set
             {
                 model.VideoPath = value;
-                frameNum = 0;
+                VC_FrameNum = 0;
                 NotifyPropertyChanged("VC_VideoPath");
+                NotifyPropertyChanged("VC_FramesPath");
+                NotifyPropertyChanged("VC_FrameNum");
             }
         }
 
-        public string VC_FramePath
-        {
-            get => model.FramePath;
-            set {
-                model.FramePath = value;
-                NotifyPropertyChanged("VC_FramePath");
-            }
-        }
+        //public string VC_FramePath
+        //{
+        //    get => model.FramePath;
+        //    set {
+        //        model.FramePath = value;
+        //        NotifyPropertyChanged("VC_FramePath");
+        //    }
+        //}
 
         public int VC_FramesNumber
         {
@@ -65,6 +78,7 @@ namespace mouse_tracking_web_app.Models
         }
 
         public string VC_FramesPath => VC_VideoPath + "\\frames";
+        public string VC_FramePath => $"{VC_FramesPath}\\frame{VC_FrameNum}.jpg";
 
         public VideoControllerModel(MainControllerModel model)
         {
@@ -100,16 +114,9 @@ namespace mouse_tracking_web_app.Models
                 {
                     if (!VC_Pause)
                     {
-                        // ReadLine(); // this should be changed
-                        VC_FramePath = $"{VC_FramesPath}\\frame{frameNum}.jpg";
-                        if (File.Exists(VC_FramePath))
-                            frameNum++;
-                        else
-                        {
-                            frameNum--;
-                            VC_FramePath = $"{VC_FramesPath}\\frame{frameNum}.jpg";
-                            VC_Pause = true;
-                        }
+                        //if (File.Exists(VC_FramePath))
+                        if (VC_FrameNum < VC_FramesNumber - 1)
+                            VC_FrameNum++;
 
                         Thread.Sleep((int)(baseSpeed / Speed));// read the data in 10Hz
                     }
