@@ -13,7 +13,7 @@ namespace mouse_tracking_web_app.Models
         private string framePath = "../Images/default_image.png";
         private int framesNumber = 1;
         private bool isLoading = false;
-        private bool pause;
+        private bool pause = true;
         private string videoName;
         private string videoPath;
 
@@ -134,7 +134,6 @@ namespace mouse_tracking_web_app.Models
         {
             IsLoading = true;
             ErrorMessage = string.Empty;
-            //await Task.Delay(2000);
             string script = @"OutsideCode\ProcessVideoScript.py";
             List<string> argv = new List<string>
             {
