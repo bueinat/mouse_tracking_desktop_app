@@ -106,14 +106,14 @@ namespace mouse_tracking_web_app.Models
             }
         }
 
-        public int VC_TimeStep => VC_Analysis.TimeStep[VC_StepCounter];
-        public float VC_X => VC_Analysis.X[VC_StepCounter];
-        public float VC_Y => VC_Analysis.Y[VC_StepCounter];
-        public float VC_VelocityX => VC_Analysis.VelocityX[VC_StepCounter];
-        public float VC_VelocityY => VC_Analysis.VelocityY[VC_StepCounter];
-        public float VC_AccelerationX => VC_Analysis.AccelerationX[VC_StepCounter];
-        public float VC_AccelerationY => VC_Analysis.AccelerationY[VC_StepCounter];
-        public float VC_Curviness => VC_Analysis.Curviness[VC_StepCounter];
+        public int VC_TimeStep => (VC_Analysis is null) ? 0 : VC_Analysis.TimeStep[VC_StepCounter];
+        public float VC_X => (VC_Analysis is null) ? 0 : VC_Analysis.X[VC_StepCounter];
+        public float VC_Y => (VC_Analysis is null) ? 0 : VC_Analysis.Y[VC_StepCounter];
+        public float VC_VelocityX => (VC_Analysis is null) ? 0 : VC_Analysis.VelocityX[VC_StepCounter];
+        public float VC_VelocityY => (VC_Analysis is null) ? 0 : VC_Analysis.VelocityY[VC_StepCounter];
+        public float VC_AccelerationX => (VC_Analysis is null) ? 0 : VC_Analysis.AccelerationX[VC_StepCounter];
+        public float VC_AccelerationY => (VC_Analysis is null) ? 0 : VC_Analysis.AccelerationY[VC_StepCounter];
+        public float VC_Curviness => (VC_Analysis is null) ? 0 : VC_Analysis.Curviness[VC_StepCounter];
 
         public string VC_FramePath
         {
@@ -125,9 +125,9 @@ namespace mouse_tracking_web_app.Models
             }
         }
 
-        public bool VC_IsSniffing => VC_Analysis.IsSniffing[VC_StepCounter];
-        public bool VC_IsDrinking => VC_Analysis.IsDrinking[VC_StepCounter];
-        public bool VC_IsNoseCasting => VC_Analysis.IsNoseCasting[VC_StepCounter];
+        public bool VC_IsSniffing => !(VC_Analysis is null) && VC_Analysis.IsSniffing[VC_StepCounter];
+        public bool VC_IsDrinking => !(VC_Analysis is null) && VC_Analysis.IsDrinking[VC_StepCounter];
+        public bool VC_IsNoseCasting => !(VC_Analysis is null) && VC_Analysis.IsNoseCasting[VC_StepCounter];
 
         //public int VC_NFrames => VC_Analysis.TimeStep.Count;
         public int VC_NFrames
@@ -139,19 +139,6 @@ namespace mouse_tracking_web_app.Models
                 NotifyPropertyChanged("VC_NFrames");
             }
         }
-
-        //public int VC_FrameNum
-        //{
-        //    get => frameNum;
-        //    set
-        //    {
-        //        frameNum = value;
-        //        NotifyPropertyChanged("VC_FrameNum");
-        //        NotifyPropertyChanged("VC_FramePath");
-        //    }
-        //}
-
-        //public string VC_FramePath => $"{VC_FramesPath}\\frame{VC_FrameNum}.jpg";
 
         public string VC_FramesPath => VC_VideoPath + "\\frames";
 

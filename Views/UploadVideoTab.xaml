@@ -22,8 +22,8 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="3*" />
-            <RowDefinition Height="4*" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -50,6 +50,7 @@
                     x:Name="BtnUploadsVideo"
                     Grid.Row="0"
                     Grid.Column="0"
+                    Width="80"
                     Height="22"
                     Margin="5,10,5,5"
                     Background="#FFD6EBF2"
@@ -99,6 +100,11 @@
         <usercontrols:VideoController
             Grid.Row="1"
             Grid.Column="0"
+            d:DataContext="{d:DesignInstance Type=viewmodels:VideoControllerViewModel}"
+            Visibility="{Binding VMVC_IsVideoLoaded, Converter={StaticResource BooleanToVisibilityConverter}}" />
+        <usercontrols:CurrentDataPresentor
+            Grid.Row="1"
+            Grid.Column="1"
             d:DataContext="{d:DesignInstance Type=viewmodels:VideoControllerViewModel}"
             Visibility="{Binding VMVC_IsVideoLoaded, Converter={StaticResource BooleanToVisibilityConverter}}" />
     </Grid>
