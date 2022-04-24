@@ -33,6 +33,8 @@ namespace mouse_tracking_web_app.ViewModels
             set => model.ErrorMessage = value;
         }
 
+        public bool VM_IsVideoLoaded => model.IsVideoLoaded;
+
         public bool VM_HasErrorMessage => model.HasErrorMessage;
 
         public string VM_VideoName

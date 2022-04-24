@@ -15,31 +15,52 @@ namespace mouse_tracking_web_app.ViewModels
             model.PropertyChanged +=
             delegate (object sender, PropertyChangedEventArgs e)
             {
-                NotifyPropertyChanged("VM_" + e.PropertyName);
+                NotifyPropertyChanged("VM" + e.PropertyName);
             };
         }
+        public bool VMVC_IsVideoLoaded => Model.VC_IsVideoLoaded;
+        public int VMVC_TimeStep => Model.VC_TimeStep;
+        public float VMVC_X => Model.VC_X;
+        public float VMVC_Y => Model.VC_Y;
+        public float VMVC_VelocityX => Model.VC_VelocityX;
+        public float VMVC_VelocityY => Model.VC_VelocityY;
+        public float VMVC_AccelerationX => Model.VC_AccelerationX;
+        public float VMVC_AccelerationY => Model.VC_AccelerationY;
+        public float VMVC_Curviness => Model.VC_Curviness;
+        public string VMVC_FramePath => Model.VC_FramePath;
+        public bool VMVC_IsSniffing => Model.VC_IsSniffing;
+        public bool VMVC_IsDrinking => Model.VC_IsDrinking;
+        public bool VMVC_IsNoseCasting => Model.VC_IsNoseCasting;
 
-        public string VM_VC_FramePath => Model.VC_FramePath;
+        //public string VMVC_FramePath => Model.VC_FramePath;
 
-        public int VM_VC_FramesNumber
-        {
-            get => Model.VC_FramesNumber;
-            set => Model.VC_FramesNumber = value;
-        }
+        //public int VMVC_FramesNumber
+        //{
+        //    get => Model.VC_NFrames;
+        //    set => Model.VC_NFrames = value;
+        //}
 
-        public int VM_VC_FrameNum
+        public int VMVC_NFrames => Model.VC_NFrames;
+
+        public int VMVC_FrameNum
         {
             get => Model.VC_FrameNum;
             set => Model.VC_FrameNum = value;
         }
 
-        public bool VM_VC_Pause
+        public int VMVC_StepCounter
+        {
+            get => Model.VC_StepCounter;
+            set => Model.VC_StepCounter = value;
+        }
+
+        public bool VMVC_Pause
         {
             get => Model.VC_Pause;
             set => Model.VC_Pause = value;
         }
 
-        public string VM_VC_FramesPath => Model.VC_FramesPath;
+        public string VMVC_FramesPath => Model.VC_FramesPath;
 
         public void NotifyPropertyChanged(string propertyName)
         {

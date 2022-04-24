@@ -1,12 +1,14 @@
-﻿using MongoDB.Driver;
-using System;
+﻿using MongoDB.Bson;
+using MongoDB.Driver;
 using System.ComponentModel;
 
 namespace mouse_tracking_web_app.DataBase
 {
     public class DataBaseHandler : INotifyPropertyChanged
     {
+        // TODO: move those to appsetting file
         private readonly string connectionString = "mongodb://127.0.0.1:27017";
+
         private readonly string databaseName = "test_dbs";
 
         private readonly Models.MainControllerModel model;
@@ -20,7 +22,7 @@ namespace mouse_tracking_web_app.DataBase
         {
             this.model = model;
             model.PropertyChanged +=
-            delegate (Object sender, PropertyChangedEventArgs e)
+            delegate (object sender, PropertyChangedEventArgs e)
             {
                 NotifyPropertyChanged("DBH_" + e.PropertyName);
             };
@@ -44,6 +46,25 @@ namespace mouse_tracking_web_app.DataBase
         public void NotifyPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public Video GetVideoByID(string videoID)
+        {
+            ObjectId id = ObjectId.Parse(videoID);
+            Video video = videoCollection.Find(x => x.ID == id).FirstOrDefault();
+            return video;
+        }
+
+        public Analysis GetAnalysisByID(ObjectId analysis)
+        {
+            return analysisCollection.Find(x => x.ID == analysis).FirstOrDefault();
+        }
+
+        public Analysis GetAnalysisByVideo(string videoID)
+        {
+            ObjectId id = ObjectId.Parse(videoID);
+            Video video = videoCollection.Find(x => x.ID == id).FirstOrDefault();
+            return analysisCollection.Find(x => x.ID == video.Analysis).FirstOrDefault();
         }
     }
 }

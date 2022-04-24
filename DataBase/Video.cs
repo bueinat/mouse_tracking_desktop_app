@@ -9,11 +9,15 @@ namespace mouse_tracking_web_app.DataBase
         [BsonElement("_id")]
         public ObjectId ID { get; set; }
 
-        public DateTime registered_date { get; set; }
+        [BsonElement("registered_date")]
+        public DateTime RegisteredDate { get; set; }
 
         [BsonElement("name")]
         [BsonRepresentation(BsonType.String)]
         public string Name { get; set; }
+
+        [BsonElement("nframes")]
+        public int NFrames { get; set; }
 
         [BsonElement("length")]
         public int Length { get; set; }

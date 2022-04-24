@@ -10,6 +10,7 @@
 # * change the archive path
 # * show error in dialog
 # * manage to also add the suffix
+# * start with frame0
 
 # %%
 import numpy as np
@@ -48,9 +49,11 @@ try:
     video_name = VIDEO_PATH.split('\\')[-1].split('.')[0]
     data_path = f"{archive_path}\\{video_name}"
     frames_path = f".\\archive\\{video_name}\\frames"
+    print(f"archive path: {os.getcwd()}")
     print(f"video path: {os.getcwd()}\\archive\\{video_name}")
     video_path = f"{os.getcwd()}\\archive\\{video_name}"
     print(f"nframes: {len(os.listdir(frames_path))}")
+    print("video id: 625862ccddd13c6e2add1ec3")
     try:
         os.mkdir(data_path)
     except FileExistsError:
@@ -152,9 +155,12 @@ try:
     video.name = VIDEO_PATH.split('\\')[-1] # VIDEO_NAME # VIDEO_PATH.split('/')[-1]
     # video.length = VideoFileClip(VIDEO_PATH).duration
     video.length = 10.1
+    video.nframes = len(os.listdir(frames_path))
     video.description = "dummy video\nthis is just meant for testing."
     video.link_to_data = f"@WORKING_PATH\\{data_path[2:]}"
     video.save()
+
+    print(f"video id: {video.id}")
 
     # %%
     uploadabale_data = raw_data[['x', 'y', 'vx', 'vy', 'ax', 'ay']]
@@ -162,6 +168,10 @@ try:
     uploadabale_data['path'] = [f"@WORKING_PATH\\{frames_path[2:]}\\frame{i}.jpg"
                                 for i in uploadabale_data.index]
     uploadabale_data.index -= 1
+    
+    # uploadabale_data.index -= 1
+    # uploadabale_data['path'] = [f"@WORKING_PATH\\{frames_path[2:]}\\frame{i-uploadabale_data.index[0]}.jpg"
+    #                             for i in uploadabale_data.index]
 
     ### I read dummy predictions
     pred_df = pandas.read_csv('C:/Users/buein/OneDrive - Bar-Ilan University/שנה ג/פרוייקט שנתי/mouse_tracking/cv/videos/examples/testing_project_deepethogram/DATA/odor28/odor28_predictions.csv',

@@ -11,22 +11,42 @@ namespace mouse_tracking_web_app.DataBase
         [BsonElement("_id")]
         public ObjectId ID { get; set; }
 
-        public List<int> timestep { get; set; }
-        public List<float> x { get; set; }
-        public List<float> y { get; set; }
-        public List<float> vx { get; set; }
-        public List<float> vy { get; set; }
-        public List<float> ax { get; set; }
-        public List<float> ay { get; set; }
+        [BsonElement("timestep")]
+        public List<int> TimeStep { get; set; }
+
+        [BsonElement("x")]
+        public List<float> X { get; set; }
+
+        [BsonElement("y")]
+        public List<float> Y { get; set; }
+
+        [BsonElement("vx")]
+        public List<float> VelocityX { get; set; }
+
+        [BsonElement("vy")]
+        public List<float> VelocityY { get; set; }
+
+        [BsonElement("ax")]
+        public List<float> AccelerationX { get; set; }
+
+        [BsonElement("ay")]
+        public List<float> AccelerationY { get; set; }
 
         [BsonElement("curviness")]
         [BsonRepresentation(BsonType.Decimal128, AllowTruncation = true)]
         public List<float> Curviness { get; set; }
 
-        public List<string> path { get; set; }
-        public List<bool> is_sniffing { get; set; }
-        public List<bool> is_drinking { get; set; }
-        public List<bool> is_nose_casting { get; set; }
+        [BsonElement("path")]
+        public List<string> Path { get; set; }
+
+        [BsonElement("is_sniffing")]
+        public List<bool> IsSniffing { get; set; }
+
+        [BsonElement("is_drinking")]
+        public List<bool> IsDrinking { get; set; }
+
+        [BsonElement("is_nose_casting")]
+        public List<bool> IsNoseCasting { get; set; }
 
         [BsonElement("video")]
         public ObjectId Video { get; set; }

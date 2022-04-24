@@ -5,16 +5,16 @@ using System.Windows.Controls;
 namespace mouse_tracking_web_app.Views
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for IntroWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class IntroWindow : Window
     {
         private readonly Dictionary<string, int> buttonToWindow;
         public ViewModels.MainControllerViewModel vm;
 
         public ViewModels.MainControllerViewModel VM { get; set; }
 
-        public MainWindow()
+        public IntroWindow()
         {
             InitializeComponent();
             vm = (Application.Current as App).MainVM;
@@ -28,12 +28,12 @@ namespace mouse_tracking_web_app.Views
             };
         }
 
-        private void Button_Connect(object sender, RoutedEventArgs e)
-        {
-            connecting_button.Content = "connecting...";
-            vm.Connect();
-            connecting_button.Content = "connected!";
-        }
+        //private void Button_Connect(object sender, RoutedEventArgs e)
+        //{
+        //    connecting_button.Content = "connecting...";
+        //    vm.Connect();
+        //    connecting_button.Content = "connected!";
+        //}
 
         private void Go_to_screen_Click(object sender, RoutedEventArgs e)
         {

@@ -14,22 +14,32 @@ namespace mouse_tracking_web_app.Models
         private int framesNumber = 1;
         private bool isLoading = false;
         private bool pause = true;
-        private string videoName;
+        private string videoName = "";
         private string videoPath;
+        private string videoID;
 
         public MainControllerModel()
         {
             DBHandler = new DataBase.DataBaseHandler(this);
+            DBHandler.Connect();
             CodeRunner = new OuterCodeRunner(this);
             VC = new VideoControllerModel(this);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        //public string VideoID
+        //{
+        //    get => videoID;
+        //    set
+        //    {
+        //        videoID = value;
+        //        NotifyPropertyChanged("VideoID");
+        //    }
+        //}
         public OuterCodeRunner CodeRunner { get; }
 
         public DataBase.DataBaseHandler DBHandler { get; }
-        public VideoControllerModel VC { get; }
 
         public string ErrorMessage
         {
@@ -64,12 +74,11 @@ namespace mouse_tracking_web_app.Models
 
         public bool HasErrorMessage => !string.IsNullOrEmpty(ErrorMessage);
 
+        public bool IsVideoLoaded => !string.IsNullOrEmpty(VideoName);
+
         public bool IsLoading
         {
-            get
-            {
-                return isLoading;
-            }
+            get => isLoading;
             set
             {
                 isLoading = value;
@@ -88,6 +97,7 @@ namespace mouse_tracking_web_app.Models
         }
 
         public bool Stop { get; set; }
+        public VideoControllerModel VC { get; }
 
         public string VideoName
         {
@@ -107,8 +117,11 @@ namespace mouse_tracking_web_app.Models
             {
                 videoPath = value;
                 NotifyPropertyChanged("VideoPath");
+                NotifyPropertyChanged("IsVideoLoaded");
             }
         }
+
+        public string ArchivePath { get; set; }
 
         public void NotifyPropertyChanged(string propertyName)
         {
@@ -124,8 +137,12 @@ namespace mouse_tracking_web_app.Models
                     result["ErrorMessage"] = rawResult[i].Substring(7);
                 if (rawResult[i].StartsWith("video path"))
                     result["VideoPath"] = rawResult[i].Substring(12);
+                if (rawResult[i].StartsWith("archive path"))
+                    result["ArchivePath"] = rawResult[i].Substring(13);
                 if (rawResult[i].StartsWith("nframes"))
                     result["FramesNumber"] = rawResult[i].Substring(9);
+                if (rawResult[i].StartsWith("video id"))
+                    result["VideoID"] = rawResult[i].Substring(10);
             }
             return result;
         }
@@ -147,7 +164,12 @@ namespace mouse_tracking_web_app.Models
                 VideoPath = processedResult["VideoPath"];
             if (processedResult.ContainsKey("FramesNumber"))
                 FramesNumber = int.Parse(processedResult["FramesNumber"]);
+            if (processedResult.ContainsKey("VideoID"))
+                videoID = processedResult["VideoID"];
+            if (processedResult.ContainsKey("ArchivePath"))
+                ArchivePath = processedResult["ArchivePath"];
             IsLoading = false;
+            VC.InitializeVideo(videoID);
             VC.Run();
         }
 

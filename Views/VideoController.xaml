@@ -44,7 +44,7 @@
                     <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
                 <Border Grid.Row="0" Grid.ColumnSpan="3">
-                    <Image Source="{Binding VM_VC_FramePath, Converter={StaticResource EnableDefaultImage}}" Stretch="UniformToFill" />
+                    <Image Source="{Binding VMVC_FramePath, Converter={StaticResource EnableDefaultImage}}" Stretch="UniformToFill" />
                 </Border>
                 <fa:FontAwesome
                     x:Name="FAIcon"
@@ -62,7 +62,7 @@
                     Background="White"
                     BorderBrush="{x:Null}"
                     Click="PlayPauseButtonClicked"
-                    Content="{Binding VM_VC_Pause, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                    Content="{Binding VMVC_Pause, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                     Foreground="{x:Null}"
                     Style="{StaticResource HiddenButtonStyle}" />
                 <Slider
@@ -72,10 +72,10 @@
                     Margin="5"
                     VerticalAlignment="Center"
                     IsMoveToPointEnabled="True"
-                    Maximum="{Binding VM_VC_FramesNumber}"
+                    Maximum="{Binding VMVC_NFrames}"
                     Minimum="0"
                     Style="{StaticResource ResourceKey=Horizontal_Slider}"
-                    Value="{Binding VM_VC_FrameNum}" />
+                    Value="{Binding VMVC_StepCounter, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
                 <TextBlock
                     Name="textBlockMessage"
                     Grid.Row="1"

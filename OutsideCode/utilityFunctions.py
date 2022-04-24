@@ -267,6 +267,7 @@ class Analysis(mnge.Document):
 class Video(mnge.Document):
     registered_date = mnge.DateTimeField(default=datetime.datetime.now)
     name = mnge.StringField(required=True)
+    nframes = mnge.IntField(reqiured=True)
     length = mnge.IntField(required=True)
     description = mnge.StringField(required=True)
     link_to_data = mnge.StringField(required=True)

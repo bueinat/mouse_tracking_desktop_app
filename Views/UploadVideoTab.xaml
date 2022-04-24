@@ -38,8 +38,8 @@
             Header="Upload and Process Video">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="3*" />
-                    <RowDefinition Height="2*" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
@@ -51,7 +51,7 @@
                     Grid.Row="0"
                     Grid.Column="0"
                     Height="22"
-                    Margin="5,5"
+                    Margin="5,10,5,5"
                     Background="#FFD6EBF2"
                     Click="UploadVideoButtonClicked"
                     Content="Upload" />
@@ -61,7 +61,6 @@
                     Grid.Column="1"
                     Width="0"
                     Height="22"
-                    Margin="0,0"
                     IsReadOnly="True"
                     Text="{Binding VM_VideoName, UpdateSourceTrigger=PropertyChanged}" />
                 <TextBox
@@ -69,7 +68,7 @@
                     Grid.Row="0"
                     Grid.Column="1"
                     Height="22"
-                    Margin="5,5"
+                    Margin="5,10,5,5"
                     IsReadOnly="True" />
                 <Button
                     x:Name="BtnProcessVideo"
@@ -77,6 +76,7 @@
                     Grid.ColumnSpan="2"
                     Width="80"
                     Height="22"
+                    Margin="5,5"
                     Background="#FFCBEAD7"
                     Click="ProcessVideoButtonClicked"
                     Content="Process" />
@@ -96,6 +96,10 @@
                     Visibility="{Binding VM_HasErrorMessage, Converter={StaticResource BooleanToVisibilityConverter}}" />
             </Grid>
         </GroupBox>
-        <usercontrols:VideoController Grid.Row="1" Grid.Column="0" />
+        <usercontrols:VideoController
+            Grid.Row="1"
+            Grid.Column="0"
+            d:DataContext="{d:DesignInstance Type=viewmodels:VideoControllerViewModel}"
+            Visibility="{Binding VMVC_IsVideoLoaded, Converter={StaticResource BooleanToVisibilityConverter}}" />
     </Grid>
 </UserControl>
