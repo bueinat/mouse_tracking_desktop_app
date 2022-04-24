@@ -25,10 +25,9 @@
             Header="Info Panel">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="40*" />
-                    <ColumnDefinition Width="21*" />
-                    <ColumnDefinition Width="61*" />
-                    <ColumnDefinition Width="121*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="2*" />
                     <ColumnDefinition Width="auto" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
@@ -44,85 +43,65 @@
                 <TextBlock
                     Grid.Row="0"
                     Grid.Column="0"
-                    Grid.ColumnSpan="3"
-                    Margin="0,8,60.334,8.667"
                     VerticalAlignment="Center"
                     FontWeight="Bold"
                     Foreground="#476D76"
                     Text="timestep:" />
                 <TextBlock
                     Grid.Row="0"
-                    Grid.Column="2"
-                    Grid.ColumnSpan="2"
-                    Margin="0.333,8,120,8.667"
+                    Grid.Column="1"
                     VerticalAlignment="Center"
                     Foreground="#646464"
                     Text="{Binding VMVC_TimeStep}" />
                 <TextBlock
                     Grid.Row="1"
                     Grid.Column="0"
-                    Grid.ColumnSpan="3"
-                    Margin="0,8.333,60.334,7.667"
                     VerticalAlignment="Center"
                     FontWeight="Bold"
                     Foreground="#476D76"
                     Text="x:" />
                 <TextBlock
                     Grid.Row="1"
-                    Grid.Column="2"
-                    Grid.ColumnSpan="2"
-                    Margin="0.333,8.333,120,7.667"
+                    Grid.Column="1"
                     VerticalAlignment="Center"
                     Foreground="#646464"
                     Text="{Binding VMVC_X}" />
                 <TextBlock
                     Grid.Row="2"
                     Grid.Column="0"
-                    Grid.ColumnSpan="3"
-                    Margin="0,8.333,60.334,7.667"
                     VerticalAlignment="Center"
                     FontWeight="Bold"
                     Foreground="#476D76"
                     Text="y:" />
                 <TextBlock
                     Grid.Row="2"
-                    Grid.Column="2"
-                    Grid.ColumnSpan="2"
-                    Margin="0.333,8.333,120,7.667"
+                    Grid.Column="1"
                     VerticalAlignment="Center"
                     Foreground="#646464"
                     Text="{Binding VMVC_Y}" />
                 <TextBlock
                     Grid.Row="3"
                     Grid.Column="0"
-                    Grid.ColumnSpan="3"
-                    Margin="0,8.333,60.334,7.667"
                     VerticalAlignment="Center"
                     FontWeight="Bold"
                     Foreground="#476D76"
                     Text="vx:" />
                 <TextBlock
                     Grid.Row="3"
-                    Grid.Column="2"
-                    Grid.ColumnSpan="2"
-                    Margin="0.333,8.333,120,7.667"
+                    Grid.Column="1"
                     VerticalAlignment="Center"
                     Foreground="#646464"
                     Text="{Binding VMVC_VelocityX, Converter={StaticResource FillnaConverter}}" />
                 <TextBlock
                     Grid.Row="4"
                     Grid.Column="0"
-                    Grid.ColumnSpan="3"
-                    Margin="0,8.333,60.334,7.667"
                     VerticalAlignment="Center"
                     FontWeight="Bold"
                     Foreground="#476D76"
                     Text="vy:" />
                 <TextBlock
                     Grid.Row="4"
-                    Grid.Column="2"
-                    Grid.ColumnSpan="2"
-                    Margin="0.333,8.333,120,7.667"
+                    Grid.Column="1"
                     VerticalAlignment="Center"
                     Foreground="#646464"
                     Text="{Binding VMVC_VelocityY, Converter={StaticResource FillnaConverter}}" />
@@ -130,99 +109,79 @@
                 <TextBlock
                     Grid.Row="5"
                     Grid.Column="0"
-                    Grid.ColumnSpan="3"
-                    Margin="0,8.333,60.334,7.667"
                     VerticalAlignment="Center"
                     FontWeight="Bold"
                     Foreground="#476D76"
                     Text="ax:" />
                 <TextBlock
                     Grid.Row="5"
-                    Grid.Column="2"
-                    Grid.ColumnSpan="2"
-                    Margin="0.333,8.333,120,7.667"
+                    Grid.Column="1"
                     VerticalAlignment="Center"
                     Foreground="#646464"
                     Text="{Binding VMVC_AccelerationX, Converter={StaticResource FillnaConverter}}" />
                 <TextBlock
                     Grid.Row="6"
                     Grid.Column="0"
-                    Grid.ColumnSpan="3"
-                    Margin="0,8.333,60.334,7.667"
                     VerticalAlignment="Center"
                     FontWeight="Bold"
                     Foreground="#476D76"
                     Text="ay:" />
                 <TextBlock
                     Grid.Row="6"
-                    Grid.Column="2"
-                    Grid.ColumnSpan="2"
-                    Margin="0.333,8.333,120,7.667"
+                    Grid.Column="1"
                     VerticalAlignment="Center"
                     Foreground="#646464"
                     Text="{Binding VMVC_AccelerationY, Converter={StaticResource FillnaConverter}}" />
                 <TextBlock
                     Grid.Row="7"
                     Grid.Column="0"
-                    Grid.ColumnSpan="3"
-                    Margin="0,8.333,60.334,7.667"
                     VerticalAlignment="Center"
                     FontWeight="Bold"
                     Foreground="#476D76"
                     Text="curviness:  " />
                 <TextBlock
                     Grid.Row="7"
-                    Grid.Column="2"
-                    Grid.ColumnSpan="3"
-                    Margin="0.333,8.333,25,7.667"
+                    Grid.Column="1"
+                    Grid.ColumnSpan="2"
                     VerticalAlignment="Center"
                     Foreground="#646464"
                     Text="{Binding VMVC_Curviness, Converter={StaticResource FillnaConverter}}" />
                 <TextBlock
                     Grid.Row="0"
                     Grid.Column="2"
-                    Grid.ColumnSpan="2"
-                    Margin="60.333,8,0,8.667"
                     VerticalAlignment="Center"
                     FontWeight="Bold"
                     Foreground="#476D76"
                     Text="is sniffing:" />
                 <TextBlock
                     Grid.Row="0"
-                    Grid.Column="4"
-                    Margin="0,8,0,8.667"
+                    Grid.Column="3"
                     VerticalAlignment="Center"
                     Foreground="{Binding VMVC_IsSniffing, Converter={StaticResource BoolToColorConverter}}"
                     Text="{Binding VMVC_IsSniffing}" />
                 <TextBlock
                     Grid.Row="1"
                     Grid.Column="2"
-                    Grid.ColumnSpan="2"
-                    Margin="60.333,8.333,0,7.667"
                     VerticalAlignment="Center"
                     FontWeight="Bold"
                     Foreground="#476D76"
                     Text="is drinking:" />
                 <TextBlock
                     Grid.Row="1"
-                    Grid.Column="4"
-                    Margin="0,8.333,0,7.667"
+                    Grid.Column="3"
                     VerticalAlignment="Center"
                     Foreground="{Binding VMVC_IsDrinking, Converter={StaticResource BoolToColorConverter}}"
                     Text="{Binding VMVC_IsDrinking}" />
                 <TextBlock
                     Grid.Row="2"
                     Grid.Column="2"
-                    Grid.ColumnSpan="2"
-                    Margin="60.333,8.333,0,7.667"
                     VerticalAlignment="Center"
                     FontWeight="Bold"
                     Foreground="#476D76"
                     Text="is nose casting:" />
                 <TextBlock
                     Grid.Row="2"
-                    Grid.Column="4"
-                    Margin="0,8.333,0,7.667"
+                    Grid.Column="3"
                     VerticalAlignment="Center"
                     Foreground="{Binding VMVC_IsNoseCasting, Converter={StaticResource BoolToColorConverter}}"
                     Text="{Binding VMVC_IsNoseCasting}" />
