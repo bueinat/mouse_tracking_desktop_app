@@ -94,8 +94,8 @@ namespace mouse_tracking_web_app.Models
                 return int.Parse(fileName.Split('.')[0].Substring(5));
             }
             return 0;
-
         }
+
         public int VC_FrameNum
         {
             get => frameNum;
@@ -105,6 +105,7 @@ namespace mouse_tracking_web_app.Models
                 NotifyPropertyChanged("VC_FrameNum");
             }
         }
+
         public int VC_TimeStep => VC_Analysis.TimeStep[VC_StepCounter];
         public float VC_X => VC_Analysis.X[VC_StepCounter];
         public float VC_Y => VC_Analysis.Y[VC_StepCounter];

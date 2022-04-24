@@ -18,6 +18,7 @@ namespace mouse_tracking_web_app.ViewModels
                 NotifyPropertyChanged("VM" + e.PropertyName);
             };
         }
+
         public bool VMVC_IsVideoLoaded => Model.VC_IsVideoLoaded;
         public int VMVC_TimeStep => Model.VC_TimeStep;
         public float VMVC_X => Model.VC_X;
