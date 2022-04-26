@@ -8,13 +8,13 @@ namespace mouse_tracking_web_app.Views
     /// </summary>
     public partial class VideoController : UserControl
     {
-        private readonly ViewModels.VideoControllerViewModel vm;
+        //private readonly ViewModels.VideoControllerViewModel vm;
 
         public VideoController()
         {
-            vm = (Application.Current as App).VCVM;
+            //vm = (Application.Current as App).VCVM;
             InitializeComponent();
-            DataContext = vm;
+            DataContext = (Application.Current as App).VCVM; ;
         }
 
         private void PlayPauseButtonClicked(object sender, RoutedEventArgs e)

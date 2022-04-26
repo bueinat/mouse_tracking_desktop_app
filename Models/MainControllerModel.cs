@@ -7,16 +7,12 @@ namespace mouse_tracking_web_app.Models
 {
     public class MainControllerModel : INotifyPropertyChanged
     {
-        // TODO: unite all frames stuff into one class / dictionary
         private string errorMessage = "";
 
-        private string framePath = "../Images/default_image.png";
-        private int framesNumber = 1;
         private bool isLoading = false;
         private bool pause = true;
-        private string videoName = "";
-        private string videoPath;
         private string videoID;
+        private string videoName = "";
 
         public MainControllerModel()
         {
@@ -28,6 +24,7 @@ namespace mouse_tracking_web_app.Models
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public string ArchivePath { get; set; }
         public OuterCodeRunner CodeRunner { get; }
 
         public DataBase.DataBaseHandler DBHandler { get; }
@@ -43,29 +40,7 @@ namespace mouse_tracking_web_app.Models
             }
         }
 
-        public string FramePath
-        {
-            get => framePath;
-            set
-            {
-                framePath = value;
-                NotifyPropertyChanged("FramePath");
-            }
-        }
-
-        public int FramesNumber
-        {
-            get => framesNumber;
-            set
-            {
-                framesNumber = value;
-                NotifyPropertyChanged("FramesNumber");
-            }
-        }
-
         public bool HasErrorMessage => !string.IsNullOrEmpty(ErrorMessage);
-
-        public bool IsVideoLoaded => !string.IsNullOrEmpty(VideoName);
 
         public bool IsLoading
         {
@@ -76,6 +51,8 @@ namespace mouse_tracking_web_app.Models
                 NotifyPropertyChanged("IsLoading");
             }
         }
+
+        public bool IsVideoLoaded => !string.IsNullOrEmpty(VideoName);
 
         public bool Pause
         {
@@ -101,19 +78,6 @@ namespace mouse_tracking_web_app.Models
             }
         }
 
-        public string VideoPath
-        {
-            get => videoPath;
-            set
-            {
-                videoPath = value;
-                NotifyPropertyChanged("VideoPath");
-                NotifyPropertyChanged("IsVideoLoaded");
-            }
-        }
-
-        public string ArchivePath { get; set; }
-
         public void NotifyPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -126,12 +90,12 @@ namespace mouse_tracking_web_app.Models
             {
                 if (rawResult[i].StartsWith("e"))
                     result["ErrorMessage"] = rawResult[i].Substring(7);
-                if (rawResult[i].StartsWith("video path"))
-                    result["VideoPath"] = rawResult[i].Substring(12);
+                //if (rawResult[i].StartsWith("video path"))
+                //    result["VideoPath"] = rawResult[i].Substring(12);
                 if (rawResult[i].StartsWith("archive path"))
                     result["ArchivePath"] = rawResult[i].Substring(13);
-                if (rawResult[i].StartsWith("nframes"))
-                    result["FramesNumber"] = rawResult[i].Substring(9);
+                //if (rawResult[i].StartsWith("nframes"))
+                //    result["FramesNumber"] = rawResult[i].Substring(9);
                 if (rawResult[i].StartsWith("video id"))
                     result["VideoID"] = rawResult[i].Substring(10);
             }
@@ -151,10 +115,6 @@ namespace mouse_tracking_web_app.Models
             Dictionary<string, string> processedResult = ProcessResult(rawResult);
             if (processedResult.ContainsKey("ErrorMessage"))
                 ErrorMessage = processedResult["ErrorMessage"];
-            if (processedResult.ContainsKey("VideoPath"))
-                VideoPath = processedResult["VideoPath"];
-            if (processedResult.ContainsKey("FramesNumber"))
-                FramesNumber = int.Parse(processedResult["FramesNumber"]);
             if (processedResult.ContainsKey("VideoID"))
                 videoID = processedResult["VideoID"];
             if (processedResult.ContainsKey("ArchivePath"))

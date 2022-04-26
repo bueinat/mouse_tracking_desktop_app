@@ -10,37 +10,28 @@ namespace mouse_tracking_web_app.Views
     /// </summary>
     public partial class UploadVideoTab : UserControl
     {
-        public ViewModels.MainControllerViewModel vm;
         private readonly OpenFileDialog uploadVideoDialog;
 
         public UploadVideoTab()
         {
             InitializeComponent();
-            //this.DataContext = this;
-            vm = (Application.Current as App).MainVM;
-            DataContext = vm;
+            DataContext = (Application.Current as App).MainVM; ;
             uploadVideoDialog = new OpenFileDialog
             {
                 Filter = "Video Files (*.mp4;*.avi)|*.mp4;*.avi|All files (*.*)|*.*"
             };
         }
 
-        public ViewModels.MainControllerViewModel VM { get; set; }
-
         private async void ProcessVideoButtonClicked(object sender, RoutedEventArgs e)
         {
             await Task.Delay(1);
-            BtnProcessVideo.Content = "Processing...";
             videoName.Text = uploadVideoDialog.FileName;
-            BtnProcessVideo.Content = "Process";
         }
 
         private void UploadVideoButtonClicked(object sender, RoutedEventArgs e)
         {
             if (uploadVideoDialog.ShowDialog() == true)
-            {
-                videoName1.Text = System.IO.Path.GetFileName(uploadVideoDialog.FileName);
-            }
+                videoNameNoPath.Text = System.IO.Path.GetFileName(uploadVideoDialog.FileName);
         }
     }
 }

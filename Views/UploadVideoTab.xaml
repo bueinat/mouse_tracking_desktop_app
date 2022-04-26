@@ -63,7 +63,7 @@
                     IsReadOnly="True"
                     Text="{Binding VM_VideoName, UpdateSourceTrigger=PropertyChanged}" />
                 <TextBox
-                    x:Name="videoName1"
+                    x:Name="videoNameNoPath"
                     Grid.Row="0"
                     Grid.Column="1"
                     Height="22"
