@@ -20,6 +20,12 @@ namespace mouse_tracking_web_app.Views
         private void PlayPauseButtonClicked(object sender, RoutedEventArgs e)
         {
             PlayPauseButton.Content = !(bool)PlayPauseButton.Content;
+            if (VideoTimeSlider.Value == VideoTimeSlider.Maximum)
+            {
+                VideoTimeSlider.Value = 0;
+                PlayPauseButton.Content = !(bool)PlayPauseButton.Content;
+            }
+                
         }
     }
 }

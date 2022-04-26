@@ -15,8 +15,6 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-            <converters:PercentToTimeConverter x:Key="PercentToTimeConverter" />
-            <converters:PathToNumCoverter x:Key="PathToNumCoverter" />
         </ResourceDictionary>
     </UserControl.Resources>
 

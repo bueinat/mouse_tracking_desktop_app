@@ -22,21 +22,12 @@ namespace mouse_tracking_web_app.Models
         {
             DBHandler = new DataBase.DataBaseHandler(this);
             DBHandler.Connect();
-            CodeRunner = new OuterCodeRunner(this);
+            CodeRunner = new OuterCodeRunner();
             VC = new VideoControllerModel(this);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        //public string VideoID
-        //{
-        //    get => videoID;
-        //    set
-        //    {
-        //        videoID = value;
-        //        NotifyPropertyChanged("VideoID");
-        //    }
-        //}
         public OuterCodeRunner CodeRunner { get; }
 
         public DataBase.DataBaseHandler DBHandler { get; }

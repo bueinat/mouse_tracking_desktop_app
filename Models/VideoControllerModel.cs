@@ -57,14 +57,14 @@ namespace mouse_tracking_web_app.Models
 
         public double Speed { get; set; }
 
-        public DataBase.Analysis VC_Analysis
+        public Analysis VC_Analysis
         {
             get => analysisData;
             set
             {
                 analysisData = value;
                 NotifyPropertyChanged("VC_Analysis");
-                VC_NFrames = VC_Analysis.TimeStep.Count;
+                VC_NFrames = VC_Analysis.TimeStep.Count - 1;
                 //NotifyPropertyChanged("VC_Nframes");
 
                 VC_FrameNum = ConvertFramePathToNum(VC_Analysis.Path[VC_StepCounter]);
@@ -105,7 +105,7 @@ namespace mouse_tracking_web_app.Models
                 NotifyPropertyChanged("VC_FrameNum");
             }
         }
-
+        // BUG
         public int VC_TimeStep => (VC_Analysis is null) ? 0 : VC_Analysis.TimeStep[VC_StepCounter];
         public float VC_X => (VC_Analysis is null) ? 0 : VC_Analysis.X[VC_StepCounter];
         public float VC_Y => (VC_Analysis is null) ? 0 : VC_Analysis.Y[VC_StepCounter];
@@ -197,7 +197,7 @@ namespace mouse_tracking_web_app.Models
                 {
                     if (!VC_Pause)
                     {
-                        if (VC_StepCounter < VC_NFrames - 1)
+                        if (VC_StepCounter < VC_NFrames)
                             VC_StepCounter++;
                         else
                             VC_Pause = true;
