@@ -20,6 +20,7 @@
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
             <converters:PercentToTimeConverter x:Key="PercentToTimeConverter" />
             <converters:EnableDefaultImage x:Key="EnableDefaultImage" />
+            <converters:SpeedToIndexConverter x:Key="SpeedToIndexConverter" />
             <converters:BooleanToIcon x:Key="BooleanToIcon" />
             <BitmapImage x:Key="DefaultImage" UriSource="../Images/default_image.png" />
             <!--  This style is used for buttons, to remove the WPF default 'animated' mouse over effect  -->
@@ -37,12 +38,13 @@
                     <ColumnDefinition Width="auto" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="auto" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
                     <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
-                <Border Grid.Row="0" Grid.ColumnSpan="3">
+                <Border Grid.Row="0" Grid.ColumnSpan="4">
                     <Image Source="{Binding VMVC_FramePath, Converter={StaticResource EnableDefaultImage}}" Stretch="Uniform" />
                 </Border>
                 <fa:FontAwesome
@@ -82,6 +84,21 @@
                     Margin="2"
                     VerticalAlignment="Center"
                     Text="{Binding ElementName=VideoTimeSlider, Path=Value, Converter={StaticResource PercentToTimeConverter}}" />
+                <ComboBox
+                    Grid.Row="1"
+                    Grid.Column="3"
+                    Height="20"
+                    VerticalAlignment="Center"
+                    SelectedIndex="{Binding VMVC_Speed, Converter={StaticResource SpeedToIndexConverter}}">
+                    <ComboBoxItem>x0.25</ComboBoxItem>
+                    <ComboBoxItem>x0.50</ComboBoxItem>
+                    <ComboBoxItem>x1.00</ComboBoxItem>
+                    <ComboBoxItem>x1.50</ComboBoxItem>
+                    <ComboBoxItem>x2.00</ComboBoxItem>
+                    <ToolTipService.ToolTip>
+                        <TextBlock FontSize="10" Text="playing speed" />
+                    </ToolTipService.ToolTip>
+                </ComboBox>
             </Grid>
         </GroupBox>
     </Grid>

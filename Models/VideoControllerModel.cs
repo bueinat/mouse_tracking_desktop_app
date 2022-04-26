@@ -12,6 +12,7 @@ namespace mouse_tracking_web_app.Models
         private string framePath = "../Images/default_image.png";
         private int nframes = 1;
         private int stepCounter;
+        private double speed;
         public VideoControllerModel(MainControllerModel model)
         {
             this.model = model;
@@ -21,12 +22,20 @@ namespace mouse_tracking_web_app.Models
                 NotifyPropertyChanged("VC_" + e.PropertyName);
             };
             VC_Stop = true;
-            Speed = 1;
+            VC_Speed = 1;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public double Speed { get; set; }
+        public double VC_Speed
+        {
+            get => speed;
+            set
+            {
+                speed = value;
+                NotifyPropertyChanged("VC_Speed");
+            }
+        }
 
         public float VC_AccelerationX => (VC_Analysis is null) ? 0 : VC_Analysis.AccelerationX[VC_StepCounter];
 
@@ -171,7 +180,7 @@ namespace mouse_tracking_web_app.Models
                         else
                             VC_Pause = true;
 
-                        Thread.Sleep((int)(baseSpeed / Speed));
+                        Thread.Sleep((int)(baseSpeed / VC_Speed));
                     }
                 }
             }).Start();

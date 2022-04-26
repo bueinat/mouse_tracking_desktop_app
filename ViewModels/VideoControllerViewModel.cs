@@ -34,6 +34,12 @@ namespace mouse_tracking_web_app.ViewModels
             set => Model.VC_Pause = value;
         }
 
+        public double VMVC_Speed
+        {
+            get => Model.VC_Speed;
+            set => Model.VC_Speed = value;
+        }
+
         public int VMVC_StepCounter
         {
             get => Model.VC_StepCounter;

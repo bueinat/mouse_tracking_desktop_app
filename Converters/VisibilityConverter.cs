@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -96,4 +97,46 @@ namespace mouse_tracking_web_app.Converters
             throw new NotImplementedException();
         }
     }
+
+    //[ValueConversion(typeof(string), typeof(int))]
+    public class SpeedToIndexConverter : IValueConverter
+    {
+        private readonly List<string> speeds = new List<string>
+            {
+                "0.25",
+                "0.50",
+                "1.00",
+                "1.50",
+                "2.00"
+            };
+
+    // convert speed from vm to index of option in dropdown menu
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            
+            double speed = (double)value;
+            switch (speed)
+            {
+                case 0.25:
+                    return 0;
+                case 0.5:
+                    return 1;
+                case 1.0:
+                    return 2;
+                case 1.5:
+                    return 3;
+                case 2.0:
+                    return 4;
+                default:
+                    return 2;
+            }
+        }
+
+    // convert index to speed
+    object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return double.Parse(speeds[(int)value]);
+            //throw new NotImplementedException();
+        }
+}
 }
