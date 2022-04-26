@@ -8,11 +8,9 @@ namespace mouse_tracking_web_app.Views
     /// </summary>
     public partial class VideoController : UserControl
     {
-        //private readonly ViewModels.VideoControllerViewModel vm;
 
         public VideoController()
         {
-            //vm = (Application.Current as App).VCVM;
             InitializeComponent();
             DataContext = (Application.Current as App).VCVM; ;
         }

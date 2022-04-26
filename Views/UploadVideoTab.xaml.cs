@@ -15,10 +15,10 @@ namespace mouse_tracking_web_app.Views
         public UploadVideoTab()
         {
             InitializeComponent();
-            DataContext = (Application.Current as App).MainVM; ;
+            DataContext = (Application.Current as App).MainVM;
             uploadVideoDialog = new OpenFileDialog
             {
-                Filter = "Video Files (*.mp4;*.avi)|*.mp4;*.avi|All files (*.*)|*.*"
+                Filter = "Video Files (*.mp4; *.avi)|*.mp4;*.avi|All files (*.*)|*.*"
             };
         }
 
