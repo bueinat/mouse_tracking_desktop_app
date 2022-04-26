@@ -74,6 +74,7 @@ namespace mouse_tracking_web_app.Models
             {
                 videoName = value;
                 NotifyPropertyChanged("VideoName");
+                NotifyPropertyChanged("IsVideoLoaded");
                 _ = ProcessVideo(value);
             }
         }
