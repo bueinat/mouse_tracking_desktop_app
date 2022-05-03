@@ -10,7 +10,8 @@
     d:DesignWidth="800"
     mc:Ignorable="d">
     <Grid x:Name="mainGrid" Loaded="OnLoad">
-        <Rectangle Width="200" Fill="LightGray" />
+        <Rectangle Fill="LightGray" />
+        <TextBlock x:Name="textBlock" Text="initial text" />
     </Grid>
 
 </UserControl>

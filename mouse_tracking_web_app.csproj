@@ -195,7 +195,7 @@
     <Compile Include="Views\UserControls\VideoController.xaml.cs">
       <DependentUpon>VideoController.xaml</DependentUpon>
     </Compile>
-    <Page Include="CustomStyles\HiddenButton.xaml">
+    <Page Include="CustomStyles\ButtonsStyles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

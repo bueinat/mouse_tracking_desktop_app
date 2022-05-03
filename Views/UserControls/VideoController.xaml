@@ -16,7 +16,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/CustomStyles/VideoSlider.xaml" />
-                <ResourceDictionary Source="/CustomStyles/HiddenButton.xaml" />
+                <ResourceDictionary Source="/CustomStyles/ButtonsStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
             <converters:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" />

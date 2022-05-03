@@ -38,22 +38,31 @@ namespace mouse_tracking_web_app.Views
         private void OnLoad(object sender, RoutedEventArgs e)
         {
             //int marginCount = 0;
-            Rectangle rect;
+            Button button;
             double normFactor = ActualWidth / MaxLength;
             if (!(TimesList is null))
             {
                 foreach (Tuple<int, int> timeRange in TimesList)
                 {
-                    rect = new Rectangle
+                    button = new Button
                     {
                         Width = (timeRange.Item2 - timeRange.Item1) * normFactor,
-                        Fill = new SolidColorBrush(Colors.Navy), // TODO: pass this color as well
+                        Background = new SolidColorBrush(Colors.Navy), // TODO: pass this color as well
                         Margin = new Thickness(timeRange.Item1 * normFactor, 0, 0, 0),
-                        HorizontalAlignment = HorizontalAlignment.Left
+                        HorizontalAlignment = HorizontalAlignment.Left,
+                        Style = FindResource("NoHoverButton") as Style
                     };
-                    _ = mainGrid.Children.Add(rect);
+                    button.Click += TimeRangeClicked;
+                    _ = mainGrid.Children.Add(button);
                 }
             }
+        }
+
+        // TODO: create some property and tie it to this
+        private void TimeRangeClicked(object sender, RoutedEventArgs e)
+        {
+            //(Button)sender.Margin
+            textBlock.Text = $"button clicked {((Button)sender).Margin.Left}";
         }
 
 
@@ -101,6 +110,7 @@ namespace mouse_tracking_web_app.Views
               typeof(ColoredTimeBar), new PropertyMetadata(0));
 
         #endregion
+
 
         //#region TimesList DP
 
