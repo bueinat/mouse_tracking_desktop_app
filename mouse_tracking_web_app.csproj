@@ -179,6 +179,9 @@
     <Compile Include="Views\CurrentDataPresentor.xaml.cs">
       <DependentUpon>CurrentDataPresentor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\FeaturesPanel.xaml.cs">
+      <DependentUpon>FeaturesPanel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\TabsWindow.xaml.cs">
       <DependentUpon>TabsWindow.xaml</DependentUpon>
     </Compile>
@@ -197,6 +200,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\CurrentDataPresentor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\FeaturesPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

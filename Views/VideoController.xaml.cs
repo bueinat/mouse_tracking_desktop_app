@@ -8,7 +8,6 @@ namespace mouse_tracking_web_app.Views
     /// </summary>
     public partial class VideoController : UserControl
     {
-
         public VideoController()
         {
             InitializeComponent();
@@ -23,7 +22,11 @@ namespace mouse_tracking_web_app.Views
                 VideoTimeSlider.Value = 0;
                 PlayPauseButton.Content = !(bool)PlayPauseButton.Content;
             }
-                
+        }
+
+        private void FPanelButtonClicked(object sender, RoutedEventArgs e)
+        {
+            ShowHideButton.Content = ShowHideButton.Content.ToString().StartsWith("Open") ? "Close Features Panel" : "Open Features Panel";
         }
     }
 }

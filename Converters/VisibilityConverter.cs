@@ -24,6 +24,34 @@ namespace mouse_tracking_web_app.Converters
         }
     }
 
+    [ValueConversion(typeof(bool), typeof(Visibility))]
+    public class InverseBooleanToVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return (bool)value ? Visibility.Collapsed : Visibility.Visible;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    [ValueConversion(typeof(bool), typeof(string))]
+    public class BooleanToOpenCloseConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return (bool)value ? "Close Features Panel" : "Open Features Panel";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return string.Equals((string)value, "Close Features Panel");
+        }
+    }
+
     [ValueConversion(typeof(float), typeof(string))]
     public class FillnaConverter : IValueConverter
     {

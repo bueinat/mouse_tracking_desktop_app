@@ -1,6 +1,9 @@
 ﻿using mouse_tracking_web_app.DataBase;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading;
+using System.Windows.Media;
 
 namespace mouse_tracking_web_app.Models
 {
@@ -13,6 +16,8 @@ namespace mouse_tracking_web_app.Models
         private int nframes = 1;
         private int stepCounter;
         private double speed;
+        private bool fPanel = false;
+
         public VideoControllerModel(MainControllerModel model)
         {
             this.model = model;
@@ -37,6 +42,16 @@ namespace mouse_tracking_web_app.Models
             }
         }
 
+        public bool VC_FeaturesPanelFlag
+        {
+            get => fPanel;
+            set
+            {
+                fPanel = value;
+                NotifyPropertyChanged("VC_FeaturesPanelFlag");
+            }
+        }
+
         public float VC_AccelerationX => (VC_Analysis is null) ? 0 : VC_Analysis.AccelerationX[VC_StepCounter];
 
         public float VC_AccelerationY => (VC_Analysis is null) ? 0 : VC_Analysis.AccelerationY[VC_StepCounter];
@@ -50,6 +65,9 @@ namespace mouse_tracking_web_app.Models
                 VC_NFrames = VC_Analysis.TimeStep.Count - 1;
                 VC_StepCounter = 0;
                 NotifyPropertyChanged("VC_Analysis");
+                NotifyPropertyChanged("VC_FeaturesTimeRanges");
+                NotifyPropertyChanged("VC_ColorRanges");
+                var a = VC_ColorRanges;
             }
         }
 
@@ -64,7 +82,6 @@ namespace mouse_tracking_web_app.Models
                 NotifyPropertyChanged("VC_FramePath");
             }
         }
-
 
         public bool VC_IsDrinking => !(VC_Analysis is null) && VC_Analysis.IsDrinking[VC_StepCounter];
 
@@ -117,6 +134,7 @@ namespace mouse_tracking_web_app.Models
                 NotifyPropertyChanged("VC_IsNoseCasting");
             }
         }
+
         public bool VC_Stop
         {
             get => model.Stop;
@@ -136,6 +154,9 @@ namespace mouse_tracking_web_app.Models
 
         public float VC_Y => (VC_Analysis is null) ? 0 : VC_Analysis.Y[VC_StepCounter];
 
+        public Dictionary<Tuple<int, int>, List<string>> VC_FeaturesTimeRanges => VC_Analysis?.GetFeaturesTimes();
+        public Dictionary<Tuple<int, int>, Color> VC_ColorRanges => (VC_Analysis is null) ? null : GetColorsRanges(VC_Analysis);
+
         public int ConvertFramePathToNum(string framePath)
         {
             string[] subs = framePath.Split('\\');
@@ -146,10 +167,40 @@ namespace mouse_tracking_web_app.Models
             }
             return 0;
         }
+
+        public Dictionary<Tuple<int, int>, Color> GetColorsRanges(Analysis analysis)
+        {
+            List<List<string>> fsubs = analysis.GetFeaturesSubsets();
+            Dictionary<Tuple<int, int>, List<string>> ftimes = analysis.GetFeaturesTimes();
+            Dictionary<Tuple<int, int>, Color> fcolors = new Dictionary<Tuple<int, int>, Color>();
+            // TODO: treat a case with more features
+            List<Color> colorsList = new List<Color>
+            {
+                Colors.IndianRed,
+                Colors.Navy,
+                Colors.Orchid,
+                Colors.SaddleBrown,
+                Colors.DarkSalmon,
+                Colors.MediumSeaGreen
+            };
+            Dictionary<List<string>, Color> featuresToColors = new Dictionary<List<string>, Color>();
+            for (int i = 0; i < fsubs.Count; i++)
+                featuresToColors[fsubs[i]] = colorsList[i];
+            foreach (KeyValuePair<Tuple<int, int>, List<string>> entry in ftimes)
+            {
+                Console.WriteLine(featuresToColors.ContainsKey(entry.Value));
+                // TODO: switch keys and values or something like that, since it's not the same list thus it doesn't work
+                fcolors[entry.Key] = featuresToColors[entry.Value];
+            }
+            return fcolors;
+        }
+
         public void InitializeVideo(string videoID)
         {
             Video video = model.DBHandler.GetVideoByID(videoID);
             VC_Analysis = model.DBHandler.GetAnalysisByID(video.Analysis);
+            //GetColorsRanges();
+            //Dictionary<Tuple<int, int>, List<string>> fTimes = model.DBHandler.GetFeaturesTimes(VC_Analysis);
             VC_StepCounter = 0;
         }
 

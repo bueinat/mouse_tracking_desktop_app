@@ -5,6 +5,7 @@
     xmlns:converters="clr-namespace:mouse_tracking_web_app.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fa="http://schemas.fontawesome.io/icons/"
+    xmlns:local="clr-namespace:mouse_tracking_web_app.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewmodels="clr-namespace:mouse_tracking_web_app.ViewModels"
     d:DataContext="{d:DesignInstance Type=viewmodels:VideoControllerViewModel}"
@@ -18,10 +19,12 @@
                 <ResourceDictionary Source="/CustomStyles/HiddenButton.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+            <converters:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" />
             <converters:PercentToTimeConverter x:Key="PercentToTimeConverter" />
             <converters:EnableDefaultImage x:Key="EnableDefaultImage" />
             <converters:SpeedToIndexConverter x:Key="SpeedToIndexConverter" />
             <converters:BooleanToIcon x:Key="BooleanToIcon" />
+            <converters:BooleanToOpenCloseConverter x:Key="BooleanToOpenCloseConverter" />
             <BitmapImage x:Key="DefaultImage" UriSource="../Images/default_image.png" />
             <!--  This style is used for buttons, to remove the WPF default 'animated' mouse over effect  -->
         </ResourceDictionary>
@@ -42,6 +45,7 @@
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
+                    <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
                 <Border Grid.Row="0" Grid.ColumnSpan="4">
@@ -99,6 +103,28 @@
                         <TextBlock FontSize="10" Text="playing speed" />
                     </ToolTipService.ToolTip>
                 </ComboBox>
+                <Button
+                    x:Name="ShowHideButton"
+                    Grid.Row="2"
+                    Grid.ColumnSpan="4"
+                    HorizontalAlignment="Center"
+                    Click="FPanelButtonClicked"
+                    Content="{Binding VMVC_FeaturesPanelFlag, Converter={StaticResource BooleanToOpenCloseConverter}, Mode=TwoWay}">
+                    <Button.Template>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <ContentPresenter />
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Foreground" Value="#616C7B" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+                <!--<local:FeaturesPanel
+                    Grid.Row="2"
+                    Grid.ColumnSpan="4"
+                    Visibility="{Binding VMVC_FeaturesPanelFlag, Converter={StaticResource BooleanToVisibilityConverter}}" />-->
             </Grid>
         </GroupBox>
     </Grid>

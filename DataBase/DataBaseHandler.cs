@@ -1,5 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
 
@@ -10,9 +12,17 @@ namespace mouse_tracking_web_app.DataBase
         //private readonly Models.MainControllerModel model;
         private IMongoCollection<Analysis> analysisCollection;
         private MongoClient client;
+        //public Dictionary<string, List<KeyValuePair<int, int>>> FeaturesTimes;
 
         private bool isConnected = false;
         private IMongoCollection<Video> videoCollection;
+
+        //private readonly List<string> featuresNames = new List<string>
+        //    {
+        //        "IsDrinking",
+        //        "IsNoseCasting",
+        //        "IsSniffing"
+        //    };
 
         public DataBaseHandler(Models.MainControllerModel model)
         {
@@ -36,6 +46,7 @@ namespace mouse_tracking_web_app.DataBase
 
                 videoCollection = database.GetCollection<Video>("videos");
                 analysisCollection = database.GetCollection<Analysis>("analysis");
+                //FillFeaturesTimes();
             }
         }
 
