@@ -2,8 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Threading;
-using System.Windows.Media;
 
 namespace mouse_tracking_web_app.Models
 {
@@ -12,7 +12,7 @@ namespace mouse_tracking_web_app.Models
         private readonly float baseSpeed = 1000 / 45;
         private readonly MainControllerModel model;
         private Analysis analysisData;
-        private string framePath = "../Images/default_image.png";
+        private string framePath = "/Images/default_image.png";
         private int nframes = 1;
         private int stepCounter;
         private double speed;
@@ -53,8 +53,10 @@ namespace mouse_tracking_web_app.Models
         }
 
         public float VC_AccelerationX => (VC_Analysis is null) ? 0 : VC_Analysis.AccelerationX[VC_StepCounter];
-
         public float VC_AccelerationY => (VC_Analysis is null) ? 0 : VC_Analysis.AccelerationY[VC_StepCounter];
+
+        public List<string> VC_FeaturesList => new List<string>(ConfigurationManager.AppSettings["FeaturesList"].Split(','));
+        public int VC_NFeatures => VC_FeaturesList.Count;
 
         public Analysis VC_Analysis
         {
@@ -66,8 +68,8 @@ namespace mouse_tracking_web_app.Models
                 VC_StepCounter = 0;
                 NotifyPropertyChanged("VC_Analysis");
                 NotifyPropertyChanged("VC_FeaturesTimeRanges");
-                NotifyPropertyChanged("VC_ColorRanges");
-                var a = VC_ColorRanges;
+                //NotifyPropertyChanged("VC_ColorRanges");
+                // var a = VC_ColorRanges;
             }
         }
 
@@ -154,8 +156,8 @@ namespace mouse_tracking_web_app.Models
 
         public float VC_Y => (VC_Analysis is null) ? 0 : VC_Analysis.Y[VC_StepCounter];
 
-        public Dictionary<Tuple<int, int>, List<string>> VC_FeaturesTimeRanges => VC_Analysis?.GetFeaturesTimes();
-        public Dictionary<Tuple<int, int>, Color> VC_ColorRanges => (VC_Analysis is null) ? null : GetColorsRanges(VC_Analysis);
+        public Dictionary<string, List<Tuple<int, int>>> VC_FeaturesTimeRanges => VC_Analysis?.GetFeaturesTimes();
+        //public Dictionary<Tuple<int, int>, Color> VC_ColorRanges => (VC_Analysis is null) ? null : GetColorsRanges(VC_Analysis);
 
         public int ConvertFramePathToNum(string framePath)
         {
@@ -168,32 +170,32 @@ namespace mouse_tracking_web_app.Models
             return 0;
         }
 
-        public Dictionary<Tuple<int, int>, Color> GetColorsRanges(Analysis analysis)
-        {
-            List<List<string>> fsubs = analysis.GetFeaturesSubsets();
-            Dictionary<Tuple<int, int>, List<string>> ftimes = analysis.GetFeaturesTimes();
-            Dictionary<Tuple<int, int>, Color> fcolors = new Dictionary<Tuple<int, int>, Color>();
-            // TODO: treat a case with more features
-            List<Color> colorsList = new List<Color>
-            {
-                Colors.IndianRed,
-                Colors.Navy,
-                Colors.Orchid,
-                Colors.SaddleBrown,
-                Colors.DarkSalmon,
-                Colors.MediumSeaGreen
-            };
-            Dictionary<List<string>, Color> featuresToColors = new Dictionary<List<string>, Color>();
-            for (int i = 0; i < fsubs.Count; i++)
-                featuresToColors[fsubs[i]] = colorsList[i];
-            foreach (KeyValuePair<Tuple<int, int>, List<string>> entry in ftimes)
-            {
-                Console.WriteLine(featuresToColors.ContainsKey(entry.Value));
-                // TODO: switch keys and values or something like that, since it's not the same list thus it doesn't work
-                fcolors[entry.Key] = featuresToColors[entry.Value];
-            }
-            return fcolors;
-        }
+        //public Dictionary<Tuple<int, int>, Color> GetColorsRanges(Analysis analysis)
+        //{
+        //    List<List<string>> fsubs = analysis.GetFeaturesSubsets();
+        //    Dictionary<Tuple<int, int>, List<string>> ftimes = analysis.GetFeaturesTimes();
+        //    Dictionary<Tuple<int, int>, Color> fcolors = new Dictionary<Tuple<int, int>, Color>();
+        //    // TODO: treat a case with more features
+        //    List<Color> colorsList = new List<Color>
+        //    {
+        //        Colors.IndianRed,
+        //        Colors.Navy,
+        //        Colors.Orchid,
+        //        Colors.SaddleBrown,
+        //        Colors.DarkSalmon,
+        //        Colors.MediumSeaGreen
+        //    };
+        //    Dictionary<List<string>, Color> featuresToColors = new Dictionary<List<string>, Color>();
+        //    for (int i = 0; i < fsubs.Count; i++)
+        //        featuresToColors[fsubs[i]] = colorsList[i];
+        //    foreach (KeyValuePair<Tuple<int, int>, List<string>> entry in ftimes)
+        //    {
+        //        Console.WriteLine(featuresToColors.ContainsKey(entry.Value));
+        //        // TODO: switch keys and values or something like that, since it's not the same list thus it doesn't work
+        //        fcolors[entry.Key] = featuresToColors[entry.Value];
+        //    }
+        //    return fcolors;
+        //}
 
         public void InitializeVideo(string videoID)
         {

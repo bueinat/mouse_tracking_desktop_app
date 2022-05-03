@@ -2,7 +2,7 @@
 using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Configuration;
 
 // TODO: set names properly
 
@@ -79,7 +79,6 @@ namespace mouse_tracking_web_app.DataBase
             return list;
         }
 
-
         private List<string> GetFeaturesAtStep(List<List<bool>> featuresColumns, int i)
         {
             List<string> currentFeatures = new List<string>();
@@ -91,57 +90,108 @@ namespace mouse_tracking_web_app.DataBase
             return currentFeatures;
         }
 
-        public Dictionary<Tuple<int, int>, List<string>> GetFeaturesTimes()
+        //    public Dictionary<Tuple<int, int>, List<string>> GetFeaturesTimes()
+        //    {
+        //        Dictionary<Tuple<int, int>, List<string>> featuresTimes = new Dictionary<Tuple<int, int>, List<string>>();
+        //        List<List<bool>> featuresColumns = new List<List<bool>>
+        //        {
+        //            IsDrinking,
+        //            IsNoseCasting,
+        //            IsSniffing
+        //        };
+        //        List<string> currentFeatures = new List<string>();
+        //        List<string> prevFeatures;
+
+        //        bool isOpen = false;
+        //        int openingIndex = 0;
+        //        int closingIndex = 0;
+        //        int i = 0;
+        //        while (i < IsSniffing.Count)
+        //        {
+        //            if (!isOpen)
+        //            {
+        //                foreach (List<bool> featureList in featuresColumns)
+        //                    isOpen = isOpen || featureList[i];
+
+        //                if (isOpen)
+        //                {
+        //                    openingIndex = i;
+        //                    closingIndex = i + 1;
+        //                    currentFeatures = GetFeaturesAtStep(featuresColumns, i);
+        //                }
+        //                i++;
+        //            }
+        //            else
+        //            {
+        //                prevFeatures = new List<string>(currentFeatures);
+        //                currentFeatures = GetFeaturesAtStep(featuresColumns, i);
+        //                if (Enumerable.SequenceEqual(currentFeatures, prevFeatures))
+        //                {
+        //                    closingIndex++;
+        //                    i++;
+        //                }
+        //                else
+        //                {
+        //                    featuresTimes.Add(new Tuple<int, int>(openingIndex, closingIndex), currentFeatures);
+        //                    isOpen = false;
+        //                }
+        //            }
+        //        }
+        //        if (isOpen)
+        //            featuresTimes.Add(new Tuple<int, int>(openingIndex, closingIndex), currentFeatures);
+        //        return featuresTimes;
+        //    }
+        //}
+
+        public Dictionary<string, List<Tuple<int, int>>> GetFeaturesTimes()
         {
-            Dictionary<Tuple<int, int>, List<string>> featuresTimes = new Dictionary<Tuple<int, int>, List<string>>();
-            List<List<bool>> featuresColumns = new List<List<bool>>
-            {
-                IsDrinking,
-                IsNoseCasting,
-                IsSniffing
-            };
-            List<string> currentFeatures = new List<string>();
-            List<string> prevFeatures;
+            List<string> featuresNames = new List<string>(ConfigurationManager.AppSettings["FeaturesList"].Split(','));
+            Dictionary<string, List<Tuple<int, int>>> featuresTimes = new Dictionary<string, List<Tuple<int, int>>>();
+            bool isOpen;
+            int openingIndex;
+            int closingIndex;
+            int i;
 
-            bool isOpen = false;
-            int openingIndex = 0;
-            int closingIndex = 0;
-            int i = 0;
-            while (i < IsSniffing.Count)
+            foreach (string name in featuresNames)
             {
-                if (!isOpen)
-                {
-                    foreach (List<bool> featureList in featuresColumns)
-                        isOpen = isOpen || featureList[i];
+                featuresTimes.Add(name, new List<Tuple<int, int>>());
+                List<bool> featureList = (List<bool>)GetType().GetProperty(name).GetValue(this);
 
-                    if (isOpen)
-                    {
-                        openingIndex = i;
-                        closingIndex = i + 1;
-                        currentFeatures = GetFeaturesAtStep(featuresColumns, i);
-                    }
-                    i++;
-                }
-                else
+                isOpen = false;
+                openingIndex = 0;
+                closingIndex = 0;
+                i = 0;
+                while (i < featureList.Count)
                 {
-                    prevFeatures = new List<string>(currentFeatures);
-                    currentFeatures = GetFeaturesAtStep(featuresColumns, i);
-                    bool isEqual = Enumerable.SequenceEqual(currentFeatures, prevFeatures);
-                    //if (currentFeatures.Equals(prevFeatures))
-                    if (Enumerable.SequenceEqual(currentFeatures, prevFeatures))
+                    if (!isOpen)
                     {
-                        closingIndex++;
+                        isOpen = featureList[i];
+
+                        if (isOpen)
+                        {
+                            openingIndex = i;
+                            closingIndex = i + 1;
+                        }
                         i++;
                     }
                     else
                     {
-                        featuresTimes.Add(new Tuple<int, int>(openingIndex, closingIndex), currentFeatures);
-                        isOpen = false;
+                        if (featureList[i])
+                        {
+                            closingIndex++;
+                            i++;
+                        }
+                        else
+                        {
+                            featuresTimes[name].Add(new Tuple<int, int>(openingIndex, closingIndex));
+                            isOpen = false;
+                        }
                     }
                 }
+                if (isOpen)
+                    featuresTimes[name].Add(new Tuple<int, int>(openingIndex, closingIndex));
             }
-            if (isOpen)
-                featuresTimes.Add(new Tuple<int, int>(openingIndex, closingIndex), currentFeatures);
+
             return featuresTimes;
         }
     }

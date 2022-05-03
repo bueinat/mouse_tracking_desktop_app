@@ -1,5 +1,8 @@
 ﻿using mouse_tracking_web_app.Models;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 
 namespace mouse_tracking_web_app.ViewModels
 {
@@ -27,6 +30,10 @@ namespace mouse_tracking_web_app.ViewModels
         public bool VMVC_IsSniffing => Model.VC_IsSniffing;
         public bool VMVC_IsVideoLoaded => Model.VC_IsVideoLoaded;
         public int VMVC_NFrames => Model.VC_NFrames;
+
+        public List<string> VMVC_FeaturesList => Model.VC_FeaturesList;
+        public Dictionary<string, List<Tuple<int, int>>> VMVC_FeaturesTimeRanges => Model.VC_FeaturesTimeRanges;
+        public int VMVC_NFeatures => Model.VC_NFeatures;
 
         public bool VMVC_FeaturesPanelFlag
         {

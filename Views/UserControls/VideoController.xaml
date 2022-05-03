@@ -25,7 +25,7 @@
             <converters:SpeedToIndexConverter x:Key="SpeedToIndexConverter" />
             <converters:BooleanToIcon x:Key="BooleanToIcon" />
             <converters:BooleanToOpenCloseConverter x:Key="BooleanToOpenCloseConverter" />
-            <BitmapImage x:Key="DefaultImage" UriSource="../Images/default_image.png" />
+            <BitmapImage x:Key="DefaultImage" UriSource="/Images/default_image.png" />
             <!--  This style is used for buttons, to remove the WPF default 'animated' mouse over effect  -->
         </ResourceDictionary>
     </UserControl.Resources>
@@ -44,9 +44,10 @@
                     <ColumnDefinition Width="auto" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="2*" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
                     <RowDefinition Height="*" />
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
                 <Border Grid.Row="0" Grid.ColumnSpan="4">
                     <Image Source="{Binding VMVC_FramePath, Converter={StaticResource EnableDefaultImage}}" Stretch="Uniform" />
@@ -121,10 +122,10 @@
                         </ControlTemplate>
                     </Button.Template>
                 </Button>
-                <!--<local:FeaturesPanel
-                    Grid.Row="2"
+                <local:FeaturesPanel
+                    Grid.Row="3"
                     Grid.ColumnSpan="4"
-                    Visibility="{Binding VMVC_FeaturesPanelFlag, Converter={StaticResource BooleanToVisibilityConverter}}" />-->
+                    Visibility="{Binding VMVC_FeaturesPanelFlag, Converter={StaticResource BooleanToVisibilityConverter}}" />
             </Grid>
         </GroupBox>
     </Grid>

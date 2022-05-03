@@ -176,19 +176,23 @@
     <Compile Include="Models\OuterCodeRunner.cs" />
     <Compile Include="ViewModels\MainControllerViewModel.cs" />
     <Compile Include="ViewModels\VideoControllerViewModel.cs" />
-    <Compile Include="Views\CurrentDataPresentor.xaml.cs">
+    <Compile Include="Views\GridHelper.cs" />
+    <Compile Include="Views\UserControls\ColoredTimeBar.xaml.cs">
+      <DependentUpon>ColoredTimeBar.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UserControls\CurrentDataPresentor.xaml.cs">
       <DependentUpon>CurrentDataPresentor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\FeaturesPanel.xaml.cs">
+    <Compile Include="Views\UserControls\FeaturesPanel.xaml.cs">
       <DependentUpon>FeaturesPanel.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\TabsWindow.xaml.cs">
+    <Compile Include="Views\Windows\TabsWindow.xaml.cs">
       <DependentUpon>TabsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\UploadVideoTab.xaml.cs">
+    <Compile Include="Views\UserControls\UploadVideoTab.xaml.cs">
       <DependentUpon>UploadVideoTab.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\VideoController.xaml.cs">
+    <Compile Include="Views\UserControls\VideoController.xaml.cs">
       <DependentUpon>VideoController.xaml</DependentUpon>
     </Compile>
     <Page Include="CustomStyles\HiddenButton.xaml">
@@ -199,15 +203,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\CurrentDataPresentor.xaml">
+    <Page Include="Views\UserControls\ColoredTimeBar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\FeaturesPanel.xaml">
+    <Page Include="Views\UserControls\CurrentDataPresentor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\IntroWindow.xaml">
+    <Page Include="Views\UserControls\FeaturesPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Windows\IntroWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -215,19 +223,19 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Views\IntroWindow.xaml.cs">
+    <Compile Include="Views\Windows\IntroWindow.xaml.cs">
       <DependentUpon>IntroWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Views\TabsWindow.xaml">
+    <Page Include="Views\Windows\TabsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\UploadVideoTab.xaml">
+    <Page Include="Views\UserControls\UploadVideoTab.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\VideoController.xaml">
+    <Page Include="Views\UserControls\VideoController.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

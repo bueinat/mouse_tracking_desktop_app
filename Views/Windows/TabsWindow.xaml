@@ -7,7 +7,7 @@
     xmlns:uc="clr-namespace:mouse_tracking_web_app.Views"
     Title="TabsWindow"
     Width="800"
-    Height="450"
+    Height="600"
     mc:Ignorable="d">
     <Grid>
         <Grid.ColumnDefinitions>
