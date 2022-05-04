@@ -15,8 +15,9 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/CustomStyles/VideoSlider.xaml" />
-                <ResourceDictionary Source="/CustomStyles/ButtonsStyles.xaml" />
+
+                <ResourceDictionary Source="pack://application:,,,/mouse_tracking_web_app;component/CustomStyles/VideoSlider.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/mouse_tracking_web_app;component/CustomStyles/ButtonsStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
             <converters:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" />

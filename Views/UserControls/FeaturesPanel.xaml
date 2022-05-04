@@ -13,7 +13,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/CustomStyles/InvisibleSlider.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/mouse_tracking_web_app;component/CustomStyles/InvisibleSlider.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
