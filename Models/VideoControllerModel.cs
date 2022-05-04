@@ -119,7 +119,7 @@ namespace mouse_tracking_web_app.Models
             set
             {
                 stepCounter = value;
-                VC_FramePath = VC_Analysis.Path[VC_StepCounter].Replace("@WORKING_PATH", model.ArchivePath);
+                VC_FramePath = VC_Analysis?.Path[VC_StepCounter].Replace("@WORKING_PATH", model.ArchivePath);
 
                 NotifyPropertyChanged("VC_StepCounter");
                 NotifyPropertyChanged("VC_TimeStep");
