@@ -11,7 +11,12 @@ namespace mouse_tracking_web_app.Views
         public VideoController()
         {
             InitializeComponent();
-            DataContext = (Application.Current as App).VCVM; ;
+            DataContext = (Application.Current as App).VCVM;
+        }
+
+        private void FPanelButtonClicked(object sender, RoutedEventArgs e)
+        {
+            ShowHideButton.Content = ShowHideButton.Content.ToString().StartsWith("Open") ? "Close Features Panel" : "Open Features Panel";
         }
 
         private void PlayPauseButtonClicked(object sender, RoutedEventArgs e)
@@ -22,11 +27,6 @@ namespace mouse_tracking_web_app.Views
                 VideoTimeSlider.Value = 0;
                 PlayPauseButton.Content = !(bool)PlayPauseButton.Content;
             }
-        }
-
-        private void FPanelButtonClicked(object sender, RoutedEventArgs e)
-        {
-            ShowHideButton.Content = ShowHideButton.Content.ToString().StartsWith("Open") ? "Close Features Panel" : "Open Features Panel";
         }
     }
 }

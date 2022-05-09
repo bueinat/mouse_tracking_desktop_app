@@ -18,7 +18,9 @@
             <TabItem Header="Videos">
                 <uc:UploadVideoTab />
             </TabItem>
-            <TabItem Header="Analyze" />
+            <TabItem Header="Analyze">
+                <uc:AnalysisTab />
+            </TabItem>
             <TabItem Header="Export" />
         </TabControl>
         <TextBlock Grid.Column="1" Text="here would be a file explorer" />

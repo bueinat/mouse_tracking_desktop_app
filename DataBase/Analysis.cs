@@ -3,9 +3,10 @@ using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
+using System.Reflection;
 
 // TODO: set names properly
-
 namespace mouse_tracking_web_app.DataBase
 {
     public class Analysis
@@ -53,20 +54,75 @@ namespace mouse_tracking_web_app.DataBase
         [BsonElement("video")]
         public ObjectId Video { get; set; }
 
-        private readonly List<string> featuresNames = new List<string>
+        private readonly List<string> featuresNames = new List<string>(ConfigurationManager.AppSettings["FeaturesList"].Split(','));
+
+        private readonly Dictionary<string, Type> analysisFields = new Dictionary<string, Type>
+        {
+            ["TimeStep"] = typeof(int),
+            ["X"] = typeof(float),
+            ["Y"] = typeof(float),
+            ["VelocityX"] = typeof(float),
+            ["VelocityY"] = typeof(float),
+            ["AccelerationX"] = typeof(float),
+            ["AccelerationY"] = typeof(float),
+            ["Curviness"] = typeof(float),
+            ["Path"] = typeof(string),
+            ["IsSniffing"] = typeof(bool),
+            ["IsDrinking"] = typeof(bool),
+            ["IsNoseCasting"] = typeof(bool)
+        };
+
+        public DataTable AnalysisDataTable => AnalysisToDataTable();
+
+        private DataTable AnalysisToDataTable()
+        {
+            DataTable dataTable = new DataTable();
+            _ = dataTable.Columns.Add("TimeStep", typeof(int));
+            _ = dataTable.Columns.Add("X", typeof(float));
+            _ = dataTable.Columns.Add("Y", typeof(float));
+            _ = dataTable.Columns.Add("VelocityX", typeof(float));
+            _ = dataTable.Columns.Add("VelocityY", typeof(float));
+            _ = dataTable.Columns.Add("AccelerationX", typeof(float));
+            _ = dataTable.Columns.Add("AccelerationY", typeof(float));
+            _ = dataTable.Columns.Add("Curviness", typeof(float));
+            _ = dataTable.Columns.Add("Path", typeof(string));
+            _ = dataTable.Columns.Add("IsSniffing", typeof(bool));
+            _ = dataTable.Columns.Add("IsDrinking", typeof(bool));
+            _ = dataTable.Columns.Add("IsNoseCasting", typeof(bool));
+
+            //foreach (KeyValuePair<string, Type> item in analysisFields)
+            //{
+            //    _ = dataTable.Columns.Add(item.Key, item.Value);
+            //    var v = GetType().GetProperty(item.Key).GetValue(this);
+            //    var v1 = (List<dynamic>)v;
+            //    analysisLists.Add(item.Key, v1);
+            //}
+            // TODO: try to make it more general
+            for (int i = 0; i < TimeStep.Count; i++)
             {
-                "IsDrinking",
-                "IsNoseCasting",
-                "IsSniffing"
-            };
+                DataRow dr = dataTable.NewRow();
+                dr["TimeStep"] = TimeStep[i];
+                dr["X"] = X[i];
+                dr["Y"] = Y[i];
+                dr["VelocityX"] = VelocityX[i];
+                dr["VelocityY"] = VelocityY[i];
+                dr["AccelerationX"] = AccelerationX[i];
+                dr["AccelerationY"] = AccelerationY[i];
+                dr["Curviness"] = Curviness[i];
+                dr["Path"] = Path[i];
+                dr["IsSniffing"] = IsSniffing[i];
+                dr["IsDrinking"] = IsDrinking[i];
+                dr["IsNoseCasting"] = IsNoseCasting[i];
+
+                dataTable.Rows.Add(dr);
+            }
+
+            return dataTable;
+        }
 
         public List<List<string>> GetFeaturesSubsets()
         {
             List<List<string>> list = new List<List<string>>();
-
-            Console.WriteLine(string.Join(", ", featuresNames.GetRange(0, 1)));
-            Console.WriteLine(string.Join(", ", featuresNames.GetRange(1, 1)));
-            Console.WriteLine(string.Join(", ", featuresNames.GetRange(1, 2)));
 
             for (int index = 0; index < featuresNames.Count; index++)
             {
@@ -79,73 +135,8 @@ namespace mouse_tracking_web_app.DataBase
             return list;
         }
 
-        private List<string> GetFeaturesAtStep(List<List<bool>> featuresColumns, int i)
-        {
-            List<string> currentFeatures = new List<string>();
-            foreach (List<bool> featureList in featuresColumns)
-            {
-                if (featureList[i])
-                    currentFeatures.Add(featuresNames[featuresColumns.IndexOf(featureList)]);
-            }
-            return currentFeatures;
-        }
-
-        //    public Dictionary<Tuple<int, int>, List<string>> GetFeaturesTimes()
-        //    {
-        //        Dictionary<Tuple<int, int>, List<string>> featuresTimes = new Dictionary<Tuple<int, int>, List<string>>();
-        //        List<List<bool>> featuresColumns = new List<List<bool>>
-        //        {
-        //            IsDrinking,
-        //            IsNoseCasting,
-        //            IsSniffing
-        //        };
-        //        List<string> currentFeatures = new List<string>();
-        //        List<string> prevFeatures;
-
-        //        bool isOpen = false;
-        //        int openingIndex = 0;
-        //        int closingIndex = 0;
-        //        int i = 0;
-        //        while (i < IsSniffing.Count)
-        //        {
-        //            if (!isOpen)
-        //            {
-        //                foreach (List<bool> featureList in featuresColumns)
-        //                    isOpen = isOpen || featureList[i];
-
-        //                if (isOpen)
-        //                {
-        //                    openingIndex = i;
-        //                    closingIndex = i + 1;
-        //                    currentFeatures = GetFeaturesAtStep(featuresColumns, i);
-        //                }
-        //                i++;
-        //            }
-        //            else
-        //            {
-        //                prevFeatures = new List<string>(currentFeatures);
-        //                currentFeatures = GetFeaturesAtStep(featuresColumns, i);
-        //                if (Enumerable.SequenceEqual(currentFeatures, prevFeatures))
-        //                {
-        //                    closingIndex++;
-        //                    i++;
-        //                }
-        //                else
-        //                {
-        //                    featuresTimes.Add(new Tuple<int, int>(openingIndex, closingIndex), currentFeatures);
-        //                    isOpen = false;
-        //                }
-        //            }
-        //        }
-        //        if (isOpen)
-        //            featuresTimes.Add(new Tuple<int, int>(openingIndex, closingIndex), currentFeatures);
-        //        return featuresTimes;
-        //    }
-        //}
-
         public Dictionary<string, List<Tuple<int, int>>> GetFeaturesTimes()
         {
-            List<string> featuresNames = new List<string>(ConfigurationManager.AppSettings["FeaturesList"].Split(','));
             Dictionary<string, List<Tuple<int, int>>> featuresTimes = new Dictionary<string, List<Tuple<int, int>>>();
             bool isOpen;
             int openingIndex;

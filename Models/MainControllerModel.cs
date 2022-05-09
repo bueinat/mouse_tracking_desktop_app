@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using mouse_tracking_web_app.DataBase;
+using System.Collections.Generic;
 
 using System.ComponentModel;
 using System.Threading.Tasks;
@@ -13,13 +14,25 @@ namespace mouse_tracking_web_app.Models
         private bool pause = true;
         private string videoID;
         private string videoName = "";
+        private Analysis analysis;
+
+        public Analysis VideoAnalysis
+        {
+            get => analysis;
+            set
+            {
+                analysis = value;
+                NotifyPropertyChanged("VideoAnalysis");
+            }
+        }
 
         public MainControllerModel()
         {
-            DBHandler = new DataBase.DataBaseHandler(this);
+            DBHandler = new DataBaseHandler(this);
             DBHandler.Connect();
             CodeRunner = new OuterCodeRunner();
             VC = new VideoControllerModel(this);
+            PC = new PlottingControllerModel(this);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -27,7 +40,7 @@ namespace mouse_tracking_web_app.Models
         public string ArchivePath { get; set; }
         public OuterCodeRunner CodeRunner { get; }
 
-        public DataBase.DataBaseHandler DBHandler { get; }
+        public DataBaseHandler DBHandler { get; }
 
         public string ErrorMessage
         {
@@ -66,6 +79,7 @@ namespace mouse_tracking_web_app.Models
 
         public bool Stop { get; set; }
         public VideoControllerModel VC { get; }
+        public PlottingControllerModel PC { get; }
 
         public string VideoName
         {

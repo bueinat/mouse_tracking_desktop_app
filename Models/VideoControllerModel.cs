@@ -52,28 +52,26 @@ namespace mouse_tracking_web_app.Models
             }
         }
 
-        public float VC_AccelerationX => (VC_Analysis is null) ? 0 : VC_Analysis.AccelerationX[VC_StepCounter];
-        public float VC_AccelerationY => (VC_Analysis is null) ? 0 : VC_Analysis.AccelerationY[VC_StepCounter];
+        public float VC_AccelerationX => (VC_VideoAnalysis is null) ? 0 : VC_VideoAnalysis.AccelerationX[VC_StepCounter];
+        public float VC_AccelerationY => (VC_VideoAnalysis is null) ? 0 : VC_VideoAnalysis.AccelerationY[VC_StepCounter];
 
         public List<string> VC_FeaturesList => new List<string>(ConfigurationManager.AppSettings["FeaturesList"].Split(','));
         public int VC_NFeatures => VC_FeaturesList.Count;
 
-        public Analysis VC_Analysis
+        public Analysis VC_VideoAnalysis
         {
-            get => analysisData;
+            get => model.VideoAnalysis;
             set
             {
-                analysisData = value;
-                VC_NFrames = VC_Analysis.TimeStep.Count - 1;
+                model.VideoAnalysis = value;
+                VC_NFrames = VC_VideoAnalysis.TimeStep.Count - 1;
                 VC_StepCounter = 0;
-                NotifyPropertyChanged("VC_Analysis");
+                NotifyPropertyChanged("VC_VideoAnalysis");
                 NotifyPropertyChanged("VC_FeaturesTimeRanges");
-                //NotifyPropertyChanged("VC_ColorRanges");
-                // var a = VC_ColorRanges;
             }
         }
 
-        public float VC_Curviness => (VC_Analysis is null) ? 0 : VC_Analysis.Curviness[VC_StepCounter];
+        public float VC_Curviness => (VC_VideoAnalysis is null) ? 0 : VC_VideoAnalysis.Curviness[VC_StepCounter];
 
         public string VC_FramePath
         {
@@ -85,11 +83,11 @@ namespace mouse_tracking_web_app.Models
             }
         }
 
-        public bool VC_IsDrinking => !(VC_Analysis is null) && VC_Analysis.IsDrinking[VC_StepCounter];
+        public bool VC_IsDrinking => !(VC_VideoAnalysis is null) && VC_VideoAnalysis.IsDrinking[VC_StepCounter];
 
-        public bool VC_IsNoseCasting => !(VC_Analysis is null) && VC_Analysis.IsNoseCasting[VC_StepCounter];
+        public bool VC_IsNoseCasting => !(VC_VideoAnalysis is null) && VC_VideoAnalysis.IsNoseCasting[VC_StepCounter];
 
-        public bool VC_IsSniffing => !(VC_Analysis is null) && VC_Analysis.IsSniffing[VC_StepCounter];
+        public bool VC_IsSniffing => !(VC_VideoAnalysis is null) && VC_VideoAnalysis.IsSniffing[VC_StepCounter];
 
         public bool VC_IsVideoLoaded => model.IsVideoLoaded;
 
@@ -119,7 +117,7 @@ namespace mouse_tracking_web_app.Models
             set
             {
                 stepCounter = value;
-                VC_FramePath = VC_Analysis?.Path[VC_StepCounter].Replace("@WORKING_PATH", model.ArchivePath);
+                VC_FramePath = VC_VideoAnalysis?.Path[VC_StepCounter].Replace("@WORKING_PATH", model.ArchivePath);
 
                 NotifyPropertyChanged("VC_StepCounter");
                 NotifyPropertyChanged("VC_TimeStep");
@@ -147,16 +145,16 @@ namespace mouse_tracking_web_app.Models
             }
         }
 
-        public int VC_TimeStep => (VC_Analysis is null) ? 0 : VC_Analysis.TimeStep[VC_StepCounter];
+        public int VC_TimeStep => (VC_VideoAnalysis is null) ? 0 : VC_VideoAnalysis.TimeStep[VC_StepCounter];
 
-        public float VC_VelocityX => (VC_Analysis is null) ? 0 : VC_Analysis.VelocityX[VC_StepCounter];
+        public float VC_VelocityX => (VC_VideoAnalysis is null) ? 0 : VC_VideoAnalysis.VelocityX[VC_StepCounter];
 
-        public float VC_VelocityY => (VC_Analysis is null) ? 0 : VC_Analysis.VelocityY[VC_StepCounter];
-        public float VC_X => (VC_Analysis is null) ? 0 : VC_Analysis.X[VC_StepCounter];
+        public float VC_VelocityY => (VC_VideoAnalysis is null) ? 0 : VC_VideoAnalysis.VelocityY[VC_StepCounter];
+        public float VC_X => (VC_VideoAnalysis is null) ? 0 : VC_VideoAnalysis.X[VC_StepCounter];
 
-        public float VC_Y => (VC_Analysis is null) ? 0 : VC_Analysis.Y[VC_StepCounter];
+        public float VC_Y => (VC_VideoAnalysis is null) ? 0 : VC_VideoAnalysis.Y[VC_StepCounter];
 
-        public Dictionary<string, List<Tuple<int, int>>> VC_FeaturesTimeRanges => VC_Analysis?.GetFeaturesTimes();
+        public Dictionary<string, List<Tuple<int, int>>> VC_FeaturesTimeRanges => VC_VideoAnalysis?.GetFeaturesTimes();
         //public Dictionary<Tuple<int, int>, Color> VC_ColorRanges => (VC_Analysis is null) ? null : GetColorsRanges(VC_Analysis);
 
         public int ConvertFramePathToNum(string framePath)
@@ -170,37 +168,10 @@ namespace mouse_tracking_web_app.Models
             return 0;
         }
 
-        //public Dictionary<Tuple<int, int>, Color> GetColorsRanges(Analysis analysis)
-        //{
-        //    List<List<string>> fsubs = analysis.GetFeaturesSubsets();
-        //    Dictionary<Tuple<int, int>, List<string>> ftimes = analysis.GetFeaturesTimes();
-        //    Dictionary<Tuple<int, int>, Color> fcolors = new Dictionary<Tuple<int, int>, Color>();
-        //    // TODO: treat a case with more features
-        //    List<Color> colorsList = new List<Color>
-        //    {
-        //        Colors.IndianRed,
-        //        Colors.Navy,
-        //        Colors.Orchid,
-        //        Colors.SaddleBrown,
-        //        Colors.DarkSalmon,
-        //        Colors.MediumSeaGreen
-        //    };
-        //    Dictionary<List<string>, Color> featuresToColors = new Dictionary<List<string>, Color>();
-        //    for (int i = 0; i < fsubs.Count; i++)
-        //        featuresToColors[fsubs[i]] = colorsList[i];
-        //    foreach (KeyValuePair<Tuple<int, int>, List<string>> entry in ftimes)
-        //    {
-        //        Console.WriteLine(featuresToColors.ContainsKey(entry.Value));
-        //        // TODO: switch keys and values or something like that, since it's not the same list thus it doesn't work
-        //        fcolors[entry.Key] = featuresToColors[entry.Value];
-        //    }
-        //    return fcolors;
-        //}
-
         public void InitializeVideo(string videoID)
         {
             Video video = model.DBHandler.GetVideoByID(videoID);
-            VC_Analysis = model.DBHandler.GetAnalysisByID(video.Analysis);
+            VC_VideoAnalysis = model.DBHandler.GetAnalysisByID(video.Analysis);
             //GetColorsRanges();
             //Dictionary<Tuple<int, int>, List<string>> fTimes = model.DBHandler.GetFeaturesTimes(VC_Analysis);
             VC_StepCounter = 0;
