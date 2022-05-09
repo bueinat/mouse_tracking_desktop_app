@@ -14,6 +14,12 @@ namespace mouse_tracking_web_app.Models
     {
         private readonly MainControllerModel model;
 
+        private string colorParam;
+
+        private ScatterSeries pathPoints;
+
+        private PlotModel plotModel;
+
         public PlottingControllerModel(MainControllerModel model)
         {
             this.model = model;
@@ -26,6 +32,137 @@ namespace mouse_tracking_web_app.Models
             };
             PC_PlotModel = new PlotModel();
             SetUpModel();
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public LinearColorAxis ColoredAx
+        {
+            get
+            {
+                return (ColorList.Count == 0)
+                    ? null
+                    : new LinearColorAxis
+                    {
+                        Position = AxisPosition.Right,
+                        Minimum = ColorList.Min(),
+                        Maximum = ColorList.Max(),
+                        Palette = OxyPalettes.Viridis(),
+                        InvalidNumberColor = OxyColors.Gray
+                    };
+            }
+        }
+
+        public List<double> ColorList => GetScatterColorList();
+        public DataTable PC_AnalysisDataTable => PC_VideoAnalysis?.AnalysisDataTable;
+
+        public string PC_ColorParameter
+        {
+            get => colorParam;
+            set
+            {
+                colorParam = value;
+                UpdateModel();
+                NotifyPropertyChanged("PC_ColorParameter");
+            }
+        }
+
+        public PlotModel PC_PlotModel
+        {
+            get => plotModel;
+            set
+            {
+                plotModel = value;
+                NotifyPropertyChanged("PC_PlotModel");
+            }
+        }
+
+        public Analysis PC_VideoAnalysis
+        {
+            get => model.VideoAnalysis;
+            set
+            {
+                model.VideoAnalysis = value;
+                NotifyPropertyChanged("PC_VideoAnalysis");
+                NotifyPropertyChanged("PC_AnalysisDataTable");
+                UpdateModel();
+            }
+        }
+
+        public List<float> X => PC_AnalysisDataTable?.Rows.OfType<DataRow>()
+                .Select(dr => dr.Field<float>("X")).ToList();
+
+        public List<float> Y => PC_AnalysisDataTable?.Rows.OfType<DataRow>()
+                .Select(dr => dr.Field<float>("Y")).ToList();
+
+        public List<double> GetScatterColorList()
+        {
+            List<double> points = new List<double>();
+            if (PC_ColorParameter == "timestep")
+                return PC_AnalysisDataTable.Rows.OfType<DataRow>()
+                        .Select(dr => (double)dr.Field<int>("TimeStep")).ToList();
+            if (PC_ColorParameter == "velocity")
+            {
+                List<float> vx = PC_AnalysisDataTable.Rows.OfType<DataRow>()
+                            .Select(dr => dr.Field<float>("VelocityX")).ToList();
+                List<float> vy = PC_AnalysisDataTable.Rows.OfType<DataRow>()
+                            .Select(dr => dr.Field<float>("VelocityY")).ToList();
+
+                foreach ((float vxi, float vyi) in vx.Zip(vy, (x, y) => (vxi: x, vyi: y)))
+                    points.Add(Math.Sqrt(vxi * vxi + vyi * vyi));
+                return points;
+            }
+            if (PC_ColorParameter == "acceleration")
+            {
+                List<float> ax = PC_AnalysisDataTable.Rows.OfType<DataRow>()
+                            .Select(dr => dr.Field<float>("VelocityX")).ToList();
+                List<float> ay = PC_AnalysisDataTable.Rows.OfType<DataRow>()
+                            .Select(dr => dr.Field<float>("VelocityY")).ToList();
+
+                foreach ((float axi, float ayi) in ax.Zip(ay, (x, y) => (axi: x, ayi: y)))
+                    points.Add(Math.Sqrt(axi * axi + ayi * ayi));
+                return points;
+            }
+            return points;
+        }
+
+        public void NotifyPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        // TODO: make this function async
+        public void UpdateModel()
+        {
+            Console.WriteLine($"start updating {DateTime.Now}");
+            pathPoints = new ScatterSeries()
+            {
+                MarkerType = MarkerType.Circle,
+                MarkerSize = 2
+            };
+
+            if (ColorList.Count > 0)
+            {
+                PC_PlotModel.Axes.Clear();
+                SetUpModel();
+
+                for (int i = 0; i < X.Count; i++)
+                    pathPoints.Points.Add(new ScatterPoint(X[i], Y[i]) { Value = ColorList[i] });
+            }
+            else
+            {
+                for (int i = 0; i < X.Count; i++)
+                {
+                    pathPoints.MarkerFill = OxyColors.IndianRed;
+                    pathPoints.Points.Add(new ScatterPoint(X[i], Y[i]) { });
+                }
+            }
+
+            PC_PlotModel.Series.Clear();
+            PC_PlotModel.Series.Add(pathPoints);
+
+            PC_PlotModel.InvalidatePlot(true);
+            Console.WriteLine($"end updating {DateTime.Now}");
         }
 
         private void SetUpModel()
@@ -44,105 +181,11 @@ namespace mouse_tracking_web_app.Models
                 IsZoomEnabled = false,
                 Minimum = 0,
             });
-        }
 
-        private ScatterSeries pathPoints;
+            //PC_PlotModel.PlotType = PlotType.Cartesian;
 
-        public void UpdateModel()
-        {
-            pathPoints = new ScatterSeries()
-            {
-                MarkerType = MarkerType.Circle,
-                MarkerSize = 2
-            };
-
-            List<float> x = PC_AnalysisDataTable.Rows.OfType<DataRow>()
-                .Select(dr => dr.Field<float>("x")).ToList();
-            List<float> y = PC_AnalysisDataTable.Rows.OfType<DataRow>()
-                        .Select(dr => dr.Field<float>("y")).ToList();
-            List<int> time = PC_AnalysisDataTable.Rows.OfType<DataRow>()
-                        .Select(dr => dr.Field<int>("TimeStep")).ToList();
-
-            PC_PlotModel.Axes.Add(new LinearColorAxis
-            {
-                Position = AxisPosition.Right,
-                Minimum = time.Min(),
-                Maximum = time.Max(),
-                Palette = OxyPalettes.Viridis(),
-                InvalidNumberColor = OxyColors.Gray
-        });
-
-            for (int i = 0; i < x.Count; i++)
-                pathPoints.Points.Add(new ScatterPoint(x[i], y[i]) { Value = time[i] });
-
-            PC_PlotModel.Series.Clear();
-            PC_PlotModel.Series.Add(pathPoints);
-
-            PC_PlotModel.InvalidatePlot(true);
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        //public PlotModel PC_PlotModel { get; private set; }
-        private PlotModel plotModel;
-
-        public PlotModel PC_PlotModel
-        {
-            get { return plotModel; }
-            set
-            {
-                plotModel = value;
-                NotifyPropertyChanged("PC_PlotModel");
-                //UpdatePlot();
-            }
-        }
-
-        public Analysis PC_VideoAnalysis
-        {
-            get
-            {
-                //UpdatePlot();
-                return model.VideoAnalysis;
-            }
-            set
-            {
-                model.VideoAnalysis = value;
-                NotifyPropertyChanged("PC_VideoAnalysis");
-                NotifyPropertyChanged("PC_AnalysisDataTable");
-                NotifyPropertyChanged("PC_Path");
-                UpdateModel();
-                //var v = PC_Path;
-            }
-        }
-
-        public DataTable PC_AnalysisDataTable => PC_VideoAnalysis?.AnalysisDataTable;
-
-        private List<DataPoint> GetPathFromAnalysis()
-        {
-            List<float> x = PC_AnalysisDataTable.Rows.OfType<DataRow>()
-                            .Select(dr => dr.Field<float>("x")).ToList();
-            List<float> y = PC_AnalysisDataTable.Rows.OfType<DataRow>()
-                        .Select(dr => dr.Field<float>("y")).ToList();
-            IEnumerable<(float X, float Y)> xy = x.Zip(y, (xi, yi) => (X: xi, Y: yi));
-            List<DataPoint> s = new List<DataPoint>();
-            foreach ((float X, float Y) in xy)
-                s.Add(new DataPoint(X, Y));
-            //s.Add({ xyi.X, xyi.Y});
-            return s;
-        }
-
-        public List<DataPoint> PC_Path
-        {
-            get
-            {
-                //PC_PlotModel.Series.Add(GetPathFromAnalysis());
-                return GetPathFromAnalysis();
-            }
-        }
-
-        public void NotifyPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            if (!(ColoredAx is null))
+                PC_PlotModel.Axes.Add(ColoredAx);
         }
     }
 }

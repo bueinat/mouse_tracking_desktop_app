@@ -12,6 +12,7 @@ namespace mouse_tracking_web_app.Views
     public partial class ColoredTimeBar : UserControl
     {
         private double normFactor;
+
         public ColoredTimeBar()
         {
             InitializeComponent();
@@ -48,6 +49,7 @@ namespace mouse_tracking_web_app.Views
         {
             Time = (int)(((Button)sender).Margin.Left / normFactor);
         }
+
         #region FeatureName DP
 
         /// <summary>
@@ -65,6 +67,7 @@ namespace mouse_tracking_web_app.Views
             get => (string)GetValue(FeatureNameProperty);
             set => SetValue(FeatureNameProperty, value);
         }
+
         #endregion FeatureName DP
 
         #region MaxLength DP
@@ -84,6 +87,7 @@ namespace mouse_tracking_web_app.Views
             get => (int)GetValue(MaxLengthProperty);
             set => SetValue(MaxLengthProperty, value);
         }
+
         #endregion MaxLength DP
 
         #region Time DP
@@ -103,6 +107,7 @@ namespace mouse_tracking_web_app.Views
             get => (int)GetValue(TimeProperty);
             set => SetValue(TimeProperty, value);
         }
+
         #endregion Time DP
 
         #region TimesDictionary DP
@@ -122,6 +127,7 @@ namespace mouse_tracking_web_app.Views
             get => (Dictionary<string, List<Tuple<int, int>>>)GetValue(TimesDictionaryProperty);
             set => SetValue(TimesDictionaryProperty, value);
         }
+
         #endregion TimesDictionary DP
     }
 }

@@ -14,5 +14,10 @@ namespace mouse_tracking_web_app.Views
             DataContext = (Application.Current as App).PCVM;
         }
 
+        private void HandleCheck(object sender, RoutedEventArgs e)
+        {
+            if (!(ParameterName is null))
+                ParameterName.Text = (string)(sender as RadioButton).Content;
+        }
     }
 }

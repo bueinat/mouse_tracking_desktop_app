@@ -1,18 +1,33 @@
 ﻿<UserControl
     x:Class="mouse_tracking_web_app.Views.AnalysisTab"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:mouse_tracking_web_app.Views"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:oxy="http://oxyplot.org/wpf"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewmodels="clr-namespace:mouse_tracking_web_app.ViewModels"
     d:DataContext="{d:DesignInstance Type=viewmodels:PlottingControllerViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
     <Grid>
-        <oxy:PlotView Model="{Binding VMPC_PlotModel}" />
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <GroupBox Header="Pick Color Path Parameter">
+            <StackPanel Margin="10">
+                <Label Content="Parameter Name" FontWeight="Bold" />
+                <RadioButton Checked="HandleCheck" Content="timestep" />
+                <RadioButton Checked="HandleCheck" Content="velocity" />
+                <RadioButton Checked="HandleCheck" Content="acceleration" />
+                <TextBlock
+                    x:Name="ParameterName"
+                    Height="0"
+                    Text="{Binding VMPC_ColorParameter, Mode=TwoWay}" />
+            </StackPanel>
+        </GroupBox>
+        <oxy:PlotView Grid.Column="1" Model="{Binding VMPC_PlotModel}" />
 
         <!--<oxy:Plot Title="Plot 2">
             <oxy:Plot.Series>

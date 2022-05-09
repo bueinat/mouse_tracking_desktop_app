@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Windows.Controls;
-using System.Windows.Shapes;
+﻿using System.Windows.Controls;
 
 namespace mouse_tracking_web_app.Views
 {

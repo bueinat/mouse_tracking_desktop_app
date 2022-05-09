@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Configuration;
 
 namespace mouse_tracking_web_app.ViewModels
 {

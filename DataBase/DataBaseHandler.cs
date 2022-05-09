@@ -1,7 +1,5 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
 
@@ -11,6 +9,7 @@ namespace mouse_tracking_web_app.DataBase
     {
         //private readonly Models.MainControllerModel model;
         private IMongoCollection<Analysis> analysisCollection;
+
         private MongoClient client;
         //public Dictionary<string, List<KeyValuePair<int, int>>> FeaturesTimes;
 
