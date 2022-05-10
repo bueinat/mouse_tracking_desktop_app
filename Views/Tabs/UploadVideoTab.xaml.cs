@@ -22,9 +22,8 @@ namespace mouse_tracking_web_app.Views
             };
         }
 
-        private async void ProcessVideoButtonClicked(object sender, RoutedEventArgs e)
+        private void ProcessVideoButtonClicked(object sender, RoutedEventArgs e)
         {
-            await Task.Delay(1);
             videoName.Text = uploadVideoDialog.FileName;
         }
 

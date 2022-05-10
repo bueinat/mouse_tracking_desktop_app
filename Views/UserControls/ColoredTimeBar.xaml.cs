@@ -44,7 +44,6 @@ namespace mouse_tracking_web_app.Views
             }
         }
 
-        // TODO: create some property and tie it to this
         private void TimeRangeClicked(object sender, RoutedEventArgs e)
         {
             Time = (int)(((Button)sender).Margin.Left / normFactor);

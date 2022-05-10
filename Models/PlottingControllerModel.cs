@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace mouse_tracking_web_app.Models
 {
@@ -36,11 +37,19 @@ namespace mouse_tracking_web_app.Models
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public LinearColorAxis ColoredAx
+        private bool isLoading = false;
+
+        public bool PC_IsLoading
         {
-            get
+            get => isLoading;
+            set
             {
-                return (ColorList.Count == 0)
+                isLoading = value;
+                NotifyPropertyChanged("PC_IsLoading");
+            }
+        }
+
+        public LinearColorAxis ColoredAx => (ColorList.Count == 0)
                     ? null
                     : new LinearColorAxis
                     {
@@ -50,8 +59,6 @@ namespace mouse_tracking_web_app.Models
                         Palette = OxyPalettes.Viridis(),
                         InvalidNumberColor = OxyColors.Gray
                     };
-            }
-        }
 
         public List<double> ColorList => GetScatterColorList();
         public DataTable PC_AnalysisDataTable => PC_VideoAnalysis?.AnalysisDataTable;
@@ -131,10 +138,9 @@ namespace mouse_tracking_web_app.Models
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        // TODO: make this function async
-        public void UpdateModel()
+        public void UpdateModelWrapped()
         {
-            Console.WriteLine($"start updating {DateTime.Now}");
+            PC_IsLoading = true;
             pathPoints = new ScatterSeries()
             {
                 MarkerType = MarkerType.Circle,
@@ -162,7 +168,12 @@ namespace mouse_tracking_web_app.Models
             PC_PlotModel.Series.Add(pathPoints);
 
             PC_PlotModel.InvalidatePlot(true);
-            Console.WriteLine($"end updating {DateTime.Now}");
+            PC_IsLoading = false;
+        }
+
+        public void UpdateModel()
+        {
+            new Task(UpdateModelWrapped).Start();
         }
 
         private void SetUpModel()

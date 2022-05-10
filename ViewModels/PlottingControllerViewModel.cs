@@ -28,6 +28,12 @@ namespace mouse_tracking_web_app.ViewModels
             set => Model.PC_ColorParameter = value;
         }
 
+        public bool VMPC_IsLoading
+        {
+            get => Model.PC_IsLoading;
+            set => Model.PC_IsLoading = value;
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public PlottingControllerModel Model { get; }
