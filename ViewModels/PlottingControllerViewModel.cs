@@ -28,6 +28,12 @@ namespace mouse_tracking_web_app.ViewModels
             set => Model.PC_ColorParameter = value;
         }
 
+        public string VMPC_SizeParameter
+        {
+            get => Model.PC_SizeParameter;
+            set => Model.PC_SizeParameter = value;
+        }
+
         public bool VMPC_IsLoading
         {
             get => Model.PC_IsLoading;

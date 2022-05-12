@@ -21,42 +21,159 @@
             <ColumnDefinition Width="auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <GroupBox Header="Pick Color Path Parameter">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <GroupBox
+            Grid.Row="0"
+            Grid.RowSpan="3"
+            Grid.Column="0"
+            Header="Path Parameters">
             <StackPanel Margin="10">
-                <Label Content="Parameter Name" FontWeight="Bold" />
-                <RadioButton Checked="HandleCheck" Content="timestep" />
-                <RadioButton Checked="HandleCheck" Content="velocity" />
-                <RadioButton Checked="HandleCheck" Content="acceleration" />
+                <Label Content="Color Parameter" FontWeight="Bold" />
+                <RadioButton
+                    Checked="HandleCheck"
+                    Content="none"
+                    GroupName="color"
+                    IsChecked="True" />
+                <RadioButton
+                    Checked="HandleCheck"
+                    Content="timestep"
+                    GroupName="color" />
+                <RadioButton
+                    Checked="HandleCheck"
+                    Content="velocity"
+                    GroupName="color" />
+                <RadioButton
+                    Checked="HandleCheck"
+                    Content="acceleration"
+                    GroupName="color" />
                 <TextBlock
-                    x:Name="ParameterName"
+                    x:Name="ColorParameterName"
                     Height="0"
                     Text="{Binding VMPC_ColorParameter, Mode=TwoWay}" />
-                <StackPanel Margin="0,5,0,0" Orientation="Horizontal">
+
+                <Label
+                    Margin="0,8,0,0"
+                    Content="Size Parameter"
+                    FontWeight="Bold" />
+                <RadioButton
+                    Checked="HandleCheck"
+                    Content="none"
+                    GroupName="size"
+                    IsChecked="True" />
+                <RadioButton
+                    Checked="HandleCheck"
+                    Content="timestep"
+                    GroupName="size" />
+                <RadioButton
+                    Checked="HandleCheck"
+                    Content="velocity"
+                    GroupName="size" />
+                <RadioButton
+                    Checked="HandleCheck"
+                    Content="acceleration"
+                    GroupName="size" />
+                <TextBlock
+                    x:Name="SizeParameterName"
+                    Height="0"
+                    Text="{Binding VMPC_SizeParameter, Mode=TwoWay}" />
+                <Label
+                    Margin="0,8,0,0"
+                    Content="Size Range"
+                    FontWeight="Bold" />
+                <Grid Margin="0,2,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBox
+                        x:Name="minSizeValue"
+                        Grid.Column="0"
+                        Width="50"
+                        Margin="4,0,0,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        BorderBrush="#646464"
+                        BorderThickness="0.7" />
                     <TextBlock
+                        Grid.Column="0"
+                        Margin="10,0,0,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Foreground="DarkGray"
+                        IsHitTestVisible="False"
+                        Text="min">
+                        <TextBlock.Style>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Text, ElementName=minSizeValue}" Value="">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                    <TextBlock
+                        Grid.Column="1"
                         Margin="5,0,5,0"
+                        Text="-" />
+                    <TextBox
+                        x:Name="maxSizeValue"
+                        Grid.Column="2"
+                        Width="50"
+                        Margin="0,0,4,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        BorderBrush="#646464"
+                        BorderThickness="0.7" />
+                    <TextBlock
+                        Grid.Column="2"
+                        Margin="10,0,0,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Foreground="DarkGray"
+                        IsHitTestVisible="False"
+                        Text="max">
+                        <TextBlock.Style>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Text, ElementName=maxSizeValue}" Value="">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </Grid>
+                <StackPanel
+                    Margin="0,8,0,0"
+                    Orientation="Horizontal"
+                    Visibility="{Binding VMPC_IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <TextBlock
+                        Margin="10,0,5,0"
                         VerticalAlignment="Center"
                         FontSize="10"
                         Foreground="#646464"
-                        Text="loading plot..."
-                        Visibility="{Binding VMPC_IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                        Text="loading plot..." />
                     <fa:ImageAwesome
                         Height="10"
                         VerticalAlignment="Center"
                         Icon="CircleOutlineNotch"
-                        Spin="True"
-                        Visibility="{Binding VMPC_IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                        Spin="True" />
                 </StackPanel>
             </StackPanel>
         </GroupBox>
         <oxy:PlotView
+            Grid.Row="1"
+            Grid.RowSpan="2"
             Grid.Column="1"
-            Height="300"
             Model="{Binding VMPC_PlotModel}" />
-
-        <!--<oxy:Plot Title="Plot 2">
-            <oxy:Plot.Series>
-                <oxy:LineSeries ItemsSource="{Binding VMVC_Path}" />
-            </oxy:Plot.Series>
-        </oxy:Plot>-->
     </Grid>
 </UserControl>

@@ -16,8 +16,11 @@ namespace mouse_tracking_web_app.Views
 
         private void HandleCheck(object sender, RoutedEventArgs e)
         {
-            if (!(ParameterName is null))
-                ParameterName.Text = (string)(sender as RadioButton).Content;
+            RadioButton rButton = sender as RadioButton;
+            if ((rButton.GroupName == "color") && !(ColorParameterName is null))
+                ColorParameterName.Text = (string)(sender as RadioButton).Content;
+            if ((rButton.GroupName == "size") && !(SizeParameterName is null))
+                SizeParameterName.Text = (string)(sender as RadioButton).Content;
         }
     }
 }

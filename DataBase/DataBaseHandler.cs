@@ -11,7 +11,6 @@ namespace mouse_tracking_web_app.DataBase
         private IMongoCollection<Analysis> analysisCollection;
 
         private MongoClient client;
-        //public Dictionary<string, List<KeyValuePair<int, int>>> FeaturesTimes;
 
         private bool isConnected = false;
         private IMongoCollection<Video> videoCollection;
@@ -45,13 +44,12 @@ namespace mouse_tracking_web_app.DataBase
 
                 videoCollection = database.GetCollection<Video>("videos");
                 analysisCollection = database.GetCollection<Analysis>("analysis");
-                //FillFeaturesTimes();
             }
         }
 
-        public void NotifyPropertyChanged(string propertyName)
+        public Analysis GetAnalysisByID(ObjectId analysis)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            return analysisCollection.Find(x => x.ID == analysis).FirstOrDefault();
         }
 
         public Video GetVideoByID(string videoID)
@@ -61,9 +59,9 @@ namespace mouse_tracking_web_app.DataBase
             return video;
         }
 
-        public Analysis GetAnalysisByID(ObjectId analysis)
+        public void NotifyPropertyChanged(string propertyName)
         {
-            return analysisCollection.Find(x => x.ID == analysis).FirstOrDefault();
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

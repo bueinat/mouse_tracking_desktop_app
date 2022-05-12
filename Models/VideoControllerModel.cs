@@ -11,13 +11,11 @@ namespace mouse_tracking_web_app.Models
     {
         private readonly float baseSpeed = 1000 / 45;
         private readonly MainControllerModel model;
-        private Analysis analysisData;
+        private bool fPanel = false;
         private string framePath = "/Images/default_image.png";
         private int nframes = 1;
-        private int stepCounter;
         private double speed;
-        private bool fPanel = false;
-
+        private int stepCounter;
         public VideoControllerModel(MainControllerModel model)
         {
             this.model = model;
@@ -32,15 +30,13 @@ namespace mouse_tracking_web_app.Models
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public double VC_Speed
-        {
-            get => speed;
-            set
-            {
-                speed = value;
-                NotifyPropertyChanged("VC_Speed");
-            }
-        }
+        public float VC_AccelerationX => (VC_VideoAnalysis is null) ? 0 : VC_VideoAnalysis.AccelerationX[VC_StepCounter];
+
+        public float VC_AccelerationY => (VC_VideoAnalysis is null) ? 0 : VC_VideoAnalysis.AccelerationY[VC_StepCounter];
+
+        public float VC_Curviness => (VC_VideoAnalysis is null) ? 0 : VC_VideoAnalysis.Curviness[VC_StepCounter];
+
+        public List<string> VC_FeaturesList => new List<string>(ConfigurationManager.AppSettings["FeaturesList"].Split(','));
 
         public bool VC_FeaturesPanelFlag
         {
@@ -52,26 +48,7 @@ namespace mouse_tracking_web_app.Models
             }
         }
 
-        public float VC_AccelerationX => (VC_VideoAnalysis is null) ? 0 : VC_VideoAnalysis.AccelerationX[VC_StepCounter];
-        public float VC_AccelerationY => (VC_VideoAnalysis is null) ? 0 : VC_VideoAnalysis.AccelerationY[VC_StepCounter];
-
-        public List<string> VC_FeaturesList => new List<string>(ConfigurationManager.AppSettings["FeaturesList"].Split(','));
-        public int VC_NFeatures => VC_FeaturesList.Count;
-
-        public Analysis VC_VideoAnalysis
-        {
-            get => model.VideoAnalysis;
-            set
-            {
-                model.VideoAnalysis = value;
-                VC_NFrames = VC_VideoAnalysis.TimeStep.Count - 1;
-                VC_StepCounter = 0;
-                NotifyPropertyChanged("VC_VideoAnalysis");
-                NotifyPropertyChanged("VC_FeaturesTimeRanges");
-            }
-        }
-
-        public float VC_Curviness => (VC_VideoAnalysis is null) ? 0 : VC_VideoAnalysis.Curviness[VC_StepCounter];
+        public Dictionary<string, List<Tuple<int, int>>> VC_FeaturesTimeRanges => VC_VideoAnalysis?.GetFeaturesTimes();
 
         public string VC_FramePath
         {
@@ -90,6 +67,8 @@ namespace mouse_tracking_web_app.Models
         public bool VC_IsSniffing => !(VC_VideoAnalysis is null) && VC_VideoAnalysis.IsSniffing[VC_StepCounter];
 
         public bool VC_IsVideoLoaded => model.IsVideoLoaded;
+
+        public int VC_NFeatures => VC_FeaturesList.Count;
 
         public int VC_NFrames
         {
@@ -111,6 +90,15 @@ namespace mouse_tracking_web_app.Models
             }
         }
 
+        public double VC_Speed
+        {
+            get => speed;
+            set
+            {
+                speed = value;
+                NotifyPropertyChanged("VC_Speed");
+            }
+        }
         public int VC_StepCounter
         {
             get => stepCounter;
@@ -150,12 +138,22 @@ namespace mouse_tracking_web_app.Models
         public float VC_VelocityX => (VC_VideoAnalysis is null) ? 0 : VC_VideoAnalysis.VelocityX[VC_StepCounter];
 
         public float VC_VelocityY => (VC_VideoAnalysis is null) ? 0 : VC_VideoAnalysis.VelocityY[VC_StepCounter];
+
+        public Analysis VC_VideoAnalysis
+        {
+            get => model.VideoAnalysis;
+            set
+            {
+                model.VideoAnalysis = value;
+                VC_NFrames = VC_VideoAnalysis.TimeStep.Count - 1;
+                VC_StepCounter = 0;
+                NotifyPropertyChanged("VC_VideoAnalysis");
+                NotifyPropertyChanged("VC_FeaturesTimeRanges");
+            }
+        }
         public float VC_X => (VC_VideoAnalysis is null) ? 0 : VC_VideoAnalysis.X[VC_StepCounter];
 
         public float VC_Y => (VC_VideoAnalysis is null) ? 0 : VC_VideoAnalysis.Y[VC_StepCounter];
-
-        public Dictionary<string, List<Tuple<int, int>>> VC_FeaturesTimeRanges => VC_VideoAnalysis?.GetFeaturesTimes();
-        //public Dictionary<Tuple<int, int>, Color> VC_ColorRanges => (VC_Analysis is null) ? null : GetColorsRanges(VC_Analysis);
 
         public int ConvertFramePathToNum(string framePath)
         {
@@ -172,8 +170,6 @@ namespace mouse_tracking_web_app.Models
         {
             Video video = model.DBHandler.GetVideoByID(videoID);
             VC_VideoAnalysis = model.DBHandler.GetAnalysisByID(video.Analysis);
-            //GetColorsRanges();
-            //Dictionary<Tuple<int, int>, List<string>> fTimes = model.DBHandler.GetFeaturesTimes(VC_Analysis);
             VC_StepCounter = 0;
         }
 

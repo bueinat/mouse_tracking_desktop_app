@@ -11,12 +11,16 @@ using System.Threading.Tasks;
 
 namespace mouse_tracking_web_app.Models
 {
+    // TODO: write code for size changing
+
     public class PlottingControllerModel : INotifyPropertyChanged
     {
         private readonly MainControllerModel model;
 
         private string colorParam;
+        private string sizeParam;
 
+        private bool isLoading = false;
         private ScatterSeries pathPoints;
 
         private PlotModel plotModel;
@@ -37,18 +41,6 @@ namespace mouse_tracking_web_app.Models
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private bool isLoading = false;
-
-        public bool PC_IsLoading
-        {
-            get => isLoading;
-            set
-            {
-                isLoading = value;
-                NotifyPropertyChanged("PC_IsLoading");
-            }
-        }
-
         public LinearColorAxis ColoredAx => (ColorList.Count == 0)
                     ? null
                     : new LinearColorAxis
@@ -60,7 +52,9 @@ namespace mouse_tracking_web_app.Models
                         InvalidNumberColor = OxyColors.Gray
                     };
 
-        public List<double> ColorList => GetScatterColorList();
+        public List<double> ColorList => GetScatterList(PC_ColorParameter, false);
+        public List<double> SizeList => GetScatterList(PC_SizeParameter, true);
+
         public DataTable PC_AnalysisDataTable => PC_VideoAnalysis?.AnalysisDataTable;
 
         public string PC_ColorParameter
@@ -71,6 +65,27 @@ namespace mouse_tracking_web_app.Models
                 colorParam = value;
                 UpdateModel();
                 NotifyPropertyChanged("PC_ColorParameter");
+            }
+        }
+
+        public string PC_SizeParameter
+        {
+            get => sizeParam;
+            set
+            {
+                sizeParam = value;
+                UpdateModel();
+                NotifyPropertyChanged("PC_SizeParameter");
+            }
+        }
+
+        public bool PC_IsLoading
+        {
+            get => isLoading;
+            set
+            {
+                isLoading = value;
+                NotifyPropertyChanged("PC_IsLoading");
             }
         }
 
@@ -102,13 +117,20 @@ namespace mouse_tracking_web_app.Models
         public List<float> Y => PC_AnalysisDataTable?.Rows.OfType<DataRow>()
                 .Select(dr => dr.Field<float>("Y")).ToList();
 
-        public List<double> GetScatterColorList()
+        public List<double> GetScatterList(string parameter, bool normalize)
         {
+            double nfactor = 5;
             List<double> points = new List<double>();
-            if (PC_ColorParameter == "timestep")
-                return PC_AnalysisDataTable.Rows.OfType<DataRow>()
+            if (parameter == "timestep")
+            {
+                List<double> list = PC_AnalysisDataTable.Rows.OfType<DataRow>()
                         .Select(dr => (double)dr.Field<int>("TimeStep")).ToList();
-            if (PC_ColorParameter == "velocity")
+                return normalize
+                    ? PC_AnalysisDataTable.Rows.OfType<DataRow>()
+                        .Select(dr => nfactor * dr.Field<int>("TimeStep") / list.Max()).ToList()
+                    : list;
+            }
+            if (parameter == "velocity")
             {
                 List<float> vx = PC_AnalysisDataTable.Rows.OfType<DataRow>()
                             .Select(dr => dr.Field<float>("VelocityX")).ToList();
@@ -117,9 +139,9 @@ namespace mouse_tracking_web_app.Models
 
                 foreach ((float vxi, float vyi) in vx.Zip(vy, (x, y) => (vxi: x, vyi: y)))
                     points.Add(Math.Sqrt(vxi * vxi + vyi * vyi));
-                return points;
+                return normalize ? points.Select(v => nfactor * v / points.Max()).ToList() : points;
             }
-            if (PC_ColorParameter == "acceleration")
+            if (parameter == "acceleration")
             {
                 List<float> ax = PC_AnalysisDataTable.Rows.OfType<DataRow>()
                             .Select(dr => dr.Field<float>("VelocityX")).ToList();
@@ -128,7 +150,7 @@ namespace mouse_tracking_web_app.Models
 
                 foreach ((float axi, float ayi) in ax.Zip(ay, (x, y) => (axi: x, ayi: y)))
                     points.Add(Math.Sqrt(axi * axi + ayi * ayi));
-                return points;
+                return normalize ? points.Select(a => nfactor * a / points.Max()).ToList() : points;
             }
             return points;
         }
@@ -138,29 +160,47 @@ namespace mouse_tracking_web_app.Models
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        public void UpdateModel() => new Task(UpdateModelWrapped).Start();
+
         public void UpdateModelWrapped()
         {
             PC_IsLoading = true;
             pathPoints = new ScatterSeries()
             {
                 MarkerType = MarkerType.Circle,
-                MarkerSize = 2
+                //MarkerSize = 2
             };
 
-            if (ColorList.Count > 0)
+            if ((ColorList.Count > 0) && (SizeList.Count > 0))
             {
                 PC_PlotModel.Axes.Clear();
                 SetUpModel();
 
                 for (int i = 0; i < X.Count; i++)
-                    pathPoints.Points.Add(new ScatterPoint(X[i], Y[i]) { Value = ColorList[i] });
+                    pathPoints.Points.Add(new ScatterPoint(X[i], Y[i]) { Value = ColorList[i], Size = SizeList[i] });
+            }
+            else if (ColorList.Count > 0)
+            {
+                PC_PlotModel.Axes.Clear();
+                SetUpModel();
+
+                for (int i = 0; i < X.Count; i++)
+                    pathPoints.Points.Add(new ScatterPoint(X[i], Y[i]) { Value = ColorList[i], Size = 2 });
+            }
+            else if (SizeList.Count > 0)
+            {
+                for (int i = 0; i < X.Count; i++)
+                {
+                    pathPoints.MarkerFill = OxyColors.IndianRed;
+                    pathPoints.Points.Add(new ScatterPoint(X[i], Y[i]) { Size = SizeList[i] });
+                }
             }
             else
             {
                 for (int i = 0; i < X.Count; i++)
                 {
                     pathPoints.MarkerFill = OxyColors.IndianRed;
-                    pathPoints.Points.Add(new ScatterPoint(X[i], Y[i]) { });
+                    pathPoints.Points.Add(new ScatterPoint(X[i], Y[i]) { Size = 2 });
                 }
             }
 
@@ -171,11 +211,6 @@ namespace mouse_tracking_web_app.Models
             PC_IsLoading = false;
         }
 
-        public void UpdateModel()
-        {
-            new Task(UpdateModelWrapped).Start();
-        }
-
         private void SetUpModel()
         {
             // TODO: get arena size from python script
@@ -183,17 +218,13 @@ namespace mouse_tracking_web_app.Models
             {
                 Position = AxisPosition.Bottom,
                 IsZoomEnabled = false,
-                Minimum = 0,
             });
 
             PC_PlotModel.Axes.Add(new LinearAxis
             {
                 Position = AxisPosition.Left,
                 IsZoomEnabled = false,
-                Minimum = 0,
             });
-
-            //PC_PlotModel.PlotType = PlotType.Cartesian;
 
             if (!(ColoredAx is null))
                 PC_PlotModel.Axes.Add(ColoredAx);
