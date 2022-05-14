@@ -16,6 +16,7 @@ namespace mouse_tracking_web_app.Models
         private int nframes = 1;
         private double speed;
         private int stepCounter;
+
         public VideoControllerModel(MainControllerModel model)
         {
             this.model = model;
@@ -99,6 +100,7 @@ namespace mouse_tracking_web_app.Models
                 NotifyPropertyChanged("VC_Speed");
             }
         }
+
         public int VC_StepCounter
         {
             get => stepCounter;
@@ -151,6 +153,7 @@ namespace mouse_tracking_web_app.Models
                 NotifyPropertyChanged("VC_FeaturesTimeRanges");
             }
         }
+
         public float VC_X => (VC_VideoAnalysis is null) ? 0 : VC_VideoAnalysis.X[VC_StepCounter];
 
         public float VC_Y => (VC_VideoAnalysis is null) ? 0 : VC_VideoAnalysis.Y[VC_StepCounter];

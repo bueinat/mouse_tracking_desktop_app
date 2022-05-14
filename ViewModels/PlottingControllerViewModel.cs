@@ -1,6 +1,7 @@
 ﻿using mouse_tracking_web_app.DataBase;
 using mouse_tracking_web_app.Models;
 using OxyPlot;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 
@@ -20,7 +21,7 @@ namespace mouse_tracking_web_app.ViewModels
 
         public PlotModel VMPC_PlotModel => Model.PC_PlotModel;
         public Analysis VMPC_VideoAnalysis => Model.PC_VideoAnalysis;
-        public DataTable VMPC_AnalysisDataTable => Model.PC_AnalysisDataTable;
+        public DataRows VMPC_AnalysisDataTable => Model.PC_AnalysisDataRows;
 
         public string VMPC_ColorParameter
         {
@@ -32,6 +33,18 @@ namespace mouse_tracking_web_app.ViewModels
         {
             get => Model.PC_SizeParameter;
             set => Model.PC_SizeParameter = value;
+        }
+
+        public double VMPC_MinSize
+        {
+            get => Model.PC_MinSize;
+            set => Model.PC_MinSize = value;
+        }
+
+        public double VMPC_MaxSize
+        {
+            get => Model.PC_MaxSize;
+            set => Model.PC_MaxSize = value;
         }
 
         public bool VMPC_IsLoading

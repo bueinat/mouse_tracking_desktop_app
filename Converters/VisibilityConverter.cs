@@ -23,6 +23,22 @@ namespace mouse_tracking_web_app.Converters
         }
     }
 
+    [ValueConversion(typeof(double), typeof(string))]
+    public class DoubleToStringConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+            //return (double)value.ToString();
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return string.IsNullOrEmpty((string)value) ? double.NaN : (object)double.Parse((string)value);
+            //throw new NotImplementedException();
+        }
+    }
+
     [ValueConversion(typeof(bool), typeof(Visibility))]
     public class InverseBooleanToVisibilityConverter : IValueConverter
     {

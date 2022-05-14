@@ -22,6 +22,7 @@ namespace mouse_tracking_web_app.Models
             set
             {
                 analysis = value;
+                AnalysisDataRows = new DataRows(analysis);
                 NotifyPropertyChanged("VideoAnalysis");
             }
         }
@@ -41,6 +42,8 @@ namespace mouse_tracking_web_app.Models
         public OuterCodeRunner CodeRunner { get; }
 
         public DataBaseHandler DBHandler { get; }
+
+        public DataRows AnalysisDataRows { get; set; }
 
         public string ErrorMessage
         {
