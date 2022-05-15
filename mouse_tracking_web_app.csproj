@@ -192,9 +192,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\RangeValidationRule.cs" />
     <Compile Include="Converters\VisibilityConverter.cs" />
     <Compile Include="DataBase\Analysis.cs" />
     <Compile Include="DataBase\DataBaseHandler.cs" />
+    <Compile Include="DataBase\DataRows.cs" />
     <Compile Include="DataBase\Video.cs" />
     <Compile Include="Models\PlottingControllerModel.cs" />
     <Compile Include="Models\VideoControllerModel.cs" />
@@ -224,6 +226,10 @@
     <Compile Include="Views\UserControls\VideoController.xaml.cs">
       <DependentUpon>VideoController.xaml</DependentUpon>
     </Compile>
+    <Page Include="CustomStyles\ErrorsStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="CustomStyles\ButtonsStyles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

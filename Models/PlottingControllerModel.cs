@@ -13,52 +13,6 @@ namespace mouse_tracking_web_app.Models
 {
     // TODO: write code for size changing
 
-    public class DataRows
-    {
-        public IEnumerable<DataRow> AnalysisDataRows;
-        public List<double> Time { get; set; }
-        public List<double> X { get; set; }
-        public List<double> Y { get; set; }
-        public List<double> V { get; set; }
-        public List<double> A { get; set; }
-        private readonly List<float> vxList;
-        private readonly List<float> vyList;
-        private readonly List<float> axList;
-        private readonly List<float> ayList;
-
-        private double Norm(double x, double min, double max, double listMin, double listMax)
-        {
-            return (x - listMin) / (listMax - listMin) * (max - min) + min;
-        }
-
-        public List<double> NormList(List<double> list, double min, double max)
-        {
-            if (min == max)
-                return list;
-            return  list.Select(t => Norm(t, min, max, list.Min(), list.Max())).ToList();
-        }
-
-        public DataRows(Analysis analysis)
-        {
-            AnalysisDataRows = analysis.AnalysisDataTable.Rows.OfType<DataRow>();
-            X = AnalysisDataRows?.Select(dr => (double)dr.Field<float>("X")).ToList();
-            Y = AnalysisDataRows?.Select(dr => (double)dr.Field<float>("Y")).ToList();
-            Time = AnalysisDataRows?.Select(dr => (double)dr.Field<int>("TimeStep")).ToList();
-
-            vxList = AnalysisDataRows?.Select(dr => dr.Field<float>("VelocityX")).ToList();
-            vyList = AnalysisDataRows?.Select(dr => dr.Field<float>("VelocityY")).ToList();
-            V = new List<double>();
-            foreach ((float vxi, float vyi) in vxList.Zip(vyList, (x, y) => (vxi: x, vyi: y)))
-                V.Add(Math.Sqrt(vxi * vxi + vyi * vyi));
-
-            axList = AnalysisDataRows?.Select(dr => dr.Field<float>("AccelerationX")).ToList();
-            ayList = AnalysisDataRows?.Select(dr => dr.Field<float>("AccelerationY")).ToList();
-            A = new List<double>();
-            foreach ((float axi, float ayi) in axList.Zip(ayList, (x, y) => (axi: x, ayi: y)))
-                A.Add(Math.Sqrt(axi * axi + ayi * ayi));
-        }
-    }
-
     public class PlottingControllerModel : INotifyPropertyChanged
     {
         private readonly MainControllerModel model;
@@ -72,6 +26,17 @@ namespace mouse_tracking_web_app.Models
         private PlotModel plotModel;
 
         private double minSize;
+        private Tuple<double, double> sizeRange;
+        public string PC_StringSizeRange { get; set; }
+        public Tuple<double, double> PC_SizeRange
+        {
+            get => sizeRange;
+            set
+            {
+                sizeRange = value;
+                NotifyPropertyChanged("PC_SizeRange");
+            }
+        }
 
         public DataRows PC_AnalysisDataRows
         {
@@ -178,40 +143,6 @@ namespace mouse_tracking_web_app.Models
                 NotifyPropertyChanged("PC_PlotModel");
             }
         }
-        //public List<float> X => PC_AnalysisDataRows?.Select(dr => dr.Field<float>("X")).ToList();
-        //public List<float> Y => PC_AnalysisDataRows?.Select(dr => dr.Field<float>("Y")).ToList();
-
-        private double Norm(double x, double min, double max, double listMin, double listMax)
-        {
-            return (x - listMin) / (listMax - listMin) * (max - min) + min;
-        }
-
-        //private List<double> timeList;
-        //private List<float> xList;
-        //private List<float> yList;
-        //private List<float> vxList;
-        //private List<float> vyList;
-        //private List<double> vList;
-        //private List<float> axList;
-        //private List<float> ayList;
-        //private List<double> aList;
-
-        //public void UpdateLists()
-        //{
-        //    timeList = PC_AnalysisDataRows?.Select(dr => (double)dr.Field<int>("TimeStep")).ToList();
-
-        //    vxList = PC_AnalysisDataRows?.Select(dr => dr.Field<float>("VelocityX")).ToList();
-        //    vyList = PC_AnalysisDataRows?.Select(dr => dr.Field<float>("VelocityY")).ToList();
-        //    vList = new List<double>();
-        //    foreach ((float vxi, float vyi) in vxList.Zip(vyList, (x, y) => (vxi: x, vyi: y)))
-        //        vList.Add(Math.Sqrt(vxi * vxi + vyi * vyi));
-
-        //    axList = PC_AnalysisDataRows?.Select(dr => dr.Field<float>("AccelerationX")).ToList();
-        //    ayList = PC_AnalysisDataRows?.Select(dr => dr.Field<float>("AccelerationY")).ToList();
-        //    aList = new List<double>();
-        //    foreach ((float axi, float ayi) in axList.Zip(ayList, (x, y) => (axi: x, ayi: y)))
-        //        aList.Add(Math.Sqrt(axi * axi + ayi * ayi));
-        //}
 
         public Analysis PC_VideoAnalysis
         {
@@ -219,11 +150,9 @@ namespace mouse_tracking_web_app.Models
             set
             {
                 model.VideoAnalysis = value;
-                //PC_AnalysisDataRows = new DataRows(PC_VideoAnalysis);
                 NotifyPropertyChanged("PC_VideoAnalysis");
                 NotifyPropertyChanged("PC_AnalysisDataTable");
                 NotifyPropertyChanged("PC_AnalysisDataRows");
-                //UpdateLists();
                 UpdateModel();
             }
         }
@@ -253,8 +182,6 @@ namespace mouse_tracking_web_app.Models
         public void NotifyPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            //if (propertyName == "PC_AnalysisDataRows")
-            //    UpdateLists();
         }
 
         public void UpdateModel() => new Task(UpdateModelWrapped).Start();

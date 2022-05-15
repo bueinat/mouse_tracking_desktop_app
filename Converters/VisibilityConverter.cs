@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 
@@ -23,19 +24,21 @@ namespace mouse_tracking_web_app.Converters
         }
     }
 
-    [ValueConversion(typeof(double), typeof(string))]
+    [ValueConversion(typeof(Tuple<double, double>), typeof(string))]
     public class DoubleToStringConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
-            //return (double)value.ToString();
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return string.IsNullOrEmpty((string)value) ? double.NaN : (object)double.Parse((string)value);
-            //throw new NotImplementedException();
+            string v = (string)value;
+            if (string.IsNullOrEmpty(v))
+                return new Tuple<double, double>(double.NaN, double.NaN);
+            string[] vSplit = v.Split(',');
+            return new Tuple<double, double>(double.Parse(vSplit[0]), double.Parse((vSplit.Length > 1) ? vSplit[1] : vSplit[0]));
         }
     }
 

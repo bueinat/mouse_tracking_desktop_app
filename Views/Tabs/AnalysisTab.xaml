@@ -15,7 +15,10 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-            <converters:DoubleToStringConverter x:Key="DoubleToStringConverter" />
+            <converters:DoubleToStringConverter x:Key="RangeToStringConverter" />
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/mouse_tracking_web_app;component/CustomStyles/ErrorsStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
@@ -87,75 +90,34 @@
                     Margin="0,8,0,0"
                     Content="Size Range"
                     FontWeight="Bold" />
-                <Grid Margin="0,2,0,0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="auto" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <TextBox
-                        x:Name="minSizeValue"
-                        Grid.Column="0"
-                        Width="50"
-                        Margin="4,0,0,0"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Center"
-                        BorderBrush="#646464"
-                        BorderThickness="0.7"
-                        Text="{Binding VMPC_MinSize, Mode=OneWayToSource, Converter={StaticResource DoubleToStringConverter}}" />
-                    <TextBlock
-                        Grid.Column="0"
-                        Margin="10,0,0,0"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Center"
-                        Foreground="DarkGray"
-                        IsHitTestVisible="False"
-                        Text="min">
-                        <TextBlock.Style>
-                            <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="Visibility" Value="Collapsed" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Text, ElementName=minSizeValue}" Value="">
-                                        <Setter Property="Visibility" Value="Visible" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </TextBlock.Style>
-                    </TextBlock>
-                    <TextBlock
-                        Grid.Column="1"
-                        Margin="5,0,5,0"
-                        Text="-" />
-                    <TextBox
-                        x:Name="maxSizeValue"
-                        Grid.Column="2"
-                        Width="50"
-                        Margin="0,0,4,0"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Center"
-                        BorderBrush="#646464"
-                        BorderThickness="0.7"
-                        Text="{Binding VMPC_MaxSize, Mode=OneWayToSource, Converter={StaticResource DoubleToStringConverter}}" />
-                    <TextBlock
-                        Grid.Column="2"
-                        Margin="10,0,0,0"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Center"
-                        Foreground="DarkGray"
-                        IsHitTestVisible="False"
-                        Text="max">
-                        <TextBlock.Style>
-                            <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="Visibility" Value="Collapsed" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Text, ElementName=maxSizeValue}" Value="">
-                                        <Setter Property="Visibility" Value="Visible" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </TextBlock.Style>
-                    </TextBlock>
-                </Grid>
+                <!--<TextBox
+                    x:Name="sizeRangeValue"
+                    Grid.Column="0"
+                    Width="120"
+                    Margin="4,0,0,0"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    BorderBrush="#646464"
+                    BorderThickness="0.7"
+                    Style="{StaticResource textBoxInError}"
+                    Text="{Binding VMPC_StringSizeRange, Mode=OneWayToSource, UpdateSourceTrigger=LostFocus}"
+                    Validation.ErrorTemplate="{StaticResource validationTemplate}" />-->
+                <TextBox
+                    Name="textBox1"
+                    Width="100"
+                    Margin="2"
+                    HorizontalAlignment="Left"
+                    Style="{StaticResource textBoxInError}"
+                    Validation.ErrorTemplate="{StaticResource validationTemplate}">
+                    <TextBox.Text>
+                        <Binding
+                            Mode="OneWayToSource"
+                            Path="VMPC_StringSizeRange"
+                            UpdateSourceTrigger="PropertyChanged"
+                            ValidatesOnDataErrors="True" />
+                    </TextBox.Text>
+                </TextBox>
+
                 <StackPanel
                     Margin="0,8,0,0"
                     Orientation="Horizontal"
