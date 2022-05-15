@@ -113,7 +113,7 @@
                         <Binding
                             Mode="OneWayToSource"
                             Path="VMPC_StringSizeRange"
-                            UpdateSourceTrigger="PropertyChanged"
+                            UpdateSourceTrigger="LostFocus"
                             ValidatesOnDataErrors="True" />
                     </TextBox.Text>
                 </TextBox>
@@ -140,6 +140,24 @@
             Grid.Row="1"
             Grid.RowSpan="2"
             Grid.Column="1"
-            Model="{Binding VMPC_PlotModel}" />
+            Controller="{Binding VMPC_PlotController}"
+            Model="{Binding VMPC_PlotModel}">
+            <oxy:PlotView.DefaultTrackerTemplate>
+                <ControlTemplate>
+                    <oxy:TrackerControl
+                        Background="Teal"
+                        BorderBrush="DarkSlateBlue"
+                        BorderThickness="0.5"
+                        Foreground="LightCyan"
+                        LineStroke="Transparent"
+                        Opacity="0.9"
+                        Position="{Binding Position}">
+                        <oxy:TrackerControl.Content>
+                            <TextBlock Margin="5" Text="{Binding}" />
+                        </oxy:TrackerControl.Content>
+                    </oxy:TrackerControl>
+                </ControlTemplate>
+            </oxy:PlotView.DefaultTrackerTemplate>
+        </oxy:PlotView>
     </Grid>
 </UserControl>

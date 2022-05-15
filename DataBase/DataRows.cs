@@ -27,7 +27,9 @@ namespace mouse_tracking_web_app.DataBase
         {
             if (min == max)
                 return list;
-            return list.Select(t => Norm(t, min, max, list.Min(), list.Max())).ToList();
+            List<double> l = new List<double>(list);
+            _ = l.RemoveAll(item => double.IsNaN(item));
+            return list.Select(t => Norm(t, min, max, l.Min(), list.Max())).ToList();
         }
 
         public DataRows(Analysis analysis)

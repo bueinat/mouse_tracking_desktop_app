@@ -11,8 +11,6 @@ using System.Threading.Tasks;
 
 namespace mouse_tracking_web_app.Models
 {
-    // TODO: write code for size changing
-
     public class PlottingControllerModel : INotifyPropertyChanged
     {
         private readonly MainControllerModel model;
@@ -25,6 +23,17 @@ namespace mouse_tracking_web_app.Models
         private Tuple<double, double> sizeRange = new Tuple<double, double>(double.NaN, double.NaN);
         private readonly double defaultMarkerSize = double.Parse(ConfigurationManager.AppSettings.Get("PlotDefaultMarkerSize"));
 
+        private readonly List<string> propNames = new List<string>
+            {
+                "PC_VideoAnalysis",
+                "PC_MinSize",
+                "PC_MaxSize",
+                "PC_ColorParameter",
+                "PC_SizeParameter",
+            };
+
+        public PlotController PC_PlotController { get; private set; }
+
         public PlottingControllerModel(MainControllerModel model)
         {
             this.model = model;
@@ -32,11 +41,18 @@ namespace mouse_tracking_web_app.Models
             delegate (object sender, PropertyChangedEventArgs e)
             {
                 NotifyPropertyChanged("PC_" + e.PropertyName);
-                if (e.PropertyName == "VideoAnalysis")
-                    UpdateModel();
             };
+            PC_PlotController = new PlotController();
+            PC_PlotController.UnbindMouseDown(OxyMouseButton.Left);
+            PC_PlotController.BindMouseEnter(PlotCommands.HoverSnapTrack);
+
             PC_PlotModel = new PlotModel();
             SetUpModel();
+            PropertyChanged += delegate (object sender, PropertyChangedEventArgs e)
+            {
+                if (propNames.Contains(e.PropertyName))
+                    new Task(UpdateModel).Start();
+            };
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -49,17 +65,18 @@ namespace mouse_tracking_web_app.Models
                         Minimum = PC_ColorList.Min(),
                         Maximum = PC_ColorList.Max(),
                         Palette = OxyPalettes.Viridis(),
-                        InvalidNumberColor = OxyColors.Gray
+                        InvalidNumberColor = OxyColors.Gray,
+                        Title = PC_ColorParameter
                     };
 
-        public List<double> PC_ColorList => GetScatterList(PC_ColorParameter, false);
+        public List<double> PC_ColorList; // => GetScatterList(PC_ColorParameter, false);
 
         // TODO:
-        // * shorten its time
-        // * create one box for range and then parse it to tuple
+        // * shorten processing time
         // * MOST IMPORTANT: create a video for Rafi and edit it.
         // * add an option of hiding inactive features
         // * generalizing features
+        // * improve range thing
         public double PC_MaxSize => double.IsNaN(PC_SizeRange.Item2) ? defaultMarkerSize : PC_SizeRange.Item2;
 
         public double PC_MinSize => double.IsNaN(PC_SizeRange.Item1) ? defaultMarkerSize : PC_SizeRange.Item1;
@@ -80,7 +97,8 @@ namespace mouse_tracking_web_app.Models
             set
             {
                 colorParam = value;
-                UpdateModel();
+                // TODO: use events for those
+                PC_ColorList = GetScatterList(PC_ColorParameter, false);
                 NotifyPropertyChanged("PC_ColorParameter");
             }
         }
@@ -111,7 +129,7 @@ namespace mouse_tracking_web_app.Models
             set
             {
                 sizeParam = value;
-                UpdateModel();
+                PC_SizeList = GetScatterList(PC_SizeParameter, true);
                 NotifyPropertyChanged("PC_SizeParameter");
             }
         }
@@ -139,11 +157,10 @@ namespace mouse_tracking_web_app.Models
                 NotifyPropertyChanged("PC_VideoAnalysis");
                 NotifyPropertyChanged("PC_AnalysisDataTable");
                 NotifyPropertyChanged("PC_AnalysisDataRows");
-                UpdateModel();
             }
         }
 
-        public List<double> PC_SizeList => GetScatterList(PC_SizeParameter, true);
+        public List<double> PC_SizeList { get; set; } // => GetScatterList(PC_SizeParameter, true);
 
         public List<double> GetScatterList(string parameter, bool normalize)
         {
@@ -163,23 +180,26 @@ namespace mouse_tracking_web_app.Models
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public void UpdateModel() => new Task(UpdateModelWrapped).Start();
+        //public void UpdateModel() => new Task(UpdateModelWrapped).Start();
 
-        public void UpdateModelWrapped()
+        public void UpdateModel()
         {
             if (PC_AnalysisDataRows is null) return;
             PC_IsLoading = true;
             pathPoints = new ScatterSeries()
             {
                 MarkerType = MarkerType.Circle,
+                TrackerFormatString = "position = ({X:0.##}, {Y:0.##})"
             };
-
             if (PC_ColorList.Count > 0)
             {
                 PC_PlotModel.Axes.Clear();
+                pathPoints.TrackerFormatString += "\n" + PC_ColorParameter + " = {Value:0.##}";
+
                 SetUpModel();
                 if ((PC_SizeList.Count > 0) && (PC_MaxSize > PC_MinSize))
                 {
+                    pathPoints.TrackerFormatString += "\nsize = {Size:0.##}";
                     for (int i = 0; i < PC_AnalysisDataRows.X.Count; i++)
                         pathPoints.Points.Add(new ScatterPoint(PC_AnalysisDataRows.X[i], PC_AnalysisDataRows.Y[i]) { Value = PC_ColorList[i], Size = PC_SizeList[i] });
                 }
@@ -191,6 +211,7 @@ namespace mouse_tracking_web_app.Models
             }
             else if ((PC_SizeList.Count > 0) && (PC_MaxSize > PC_MinSize))
             {
+                pathPoints.TrackerFormatString += "\nsize = {Size:0.##}";
                 for (int i = 0; i < PC_AnalysisDataRows.X.Count; i++)
                 {
                     pathPoints.MarkerFill = OxyColors.IndianRed;
@@ -220,12 +241,14 @@ namespace mouse_tracking_web_app.Models
             {
                 Position = AxisPosition.Bottom,
                 IsZoomEnabled = false,
+                Title = "X"
             });
 
             PC_PlotModel.Axes.Add(new LinearAxis
             {
                 Position = AxisPosition.Left,
                 IsZoomEnabled = false,
+                Title = "Y"
             });
 
             if (!(ColoredAx is null))

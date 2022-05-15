@@ -19,6 +19,7 @@ namespace mouse_tracking_web_app.ViewModels
             };
         }
 
+        public PlotController VMPC_PlotController => Model.PC_PlotController;
         public PlotModel VMPC_PlotModel => Model.PC_PlotModel;
         public Analysis VMPC_VideoAnalysis => Model.PC_VideoAnalysis;
         public DataRows VMPC_AnalysisDataTable => Model.PC_AnalysisDataRows;
@@ -48,16 +49,7 @@ namespace mouse_tracking_web_app.ViewModels
         }
 
         public double VMPC_MinSize => Model.PC_MinSize;
-        //{
-        //    get => Model.PC_MinSize;
-        //    set => Model.PC_MinSize = value;
-        //}
-
         public double VMPC_MaxSize => Model.PC_MaxSize;
-        //{
-        //    get => Model.PC_MaxSize;
-        //    set => Model.PC_MaxSize = value;
-        //}
 
         public bool VMPC_IsLoading
         {
