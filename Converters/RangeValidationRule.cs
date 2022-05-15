@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
+﻿using System.Globalization;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 
 namespace mouse_tracking_web_app.Converters
 {
     public class RangeValidationRule : ValidationRule
     {
-        public RangeValidationRule() { }
+        public RangeValidationRule()
+        { }
 
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {

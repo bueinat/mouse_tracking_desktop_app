@@ -2,12 +2,9 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace mouse_tracking_web_app.DataBase
 {
-
     public class DataRows
     {
         public IEnumerable<DataRow> AnalysisDataRows;

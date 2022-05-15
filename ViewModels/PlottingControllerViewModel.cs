@@ -2,9 +2,7 @@
 using mouse_tracking_web_app.Models;
 using OxyPlot;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Text.RegularExpressions;
 
 namespace mouse_tracking_web_app.ViewModels
@@ -30,6 +28,7 @@ namespace mouse_tracking_web_app.ViewModels
             get => Model.PC_ColorParameter;
             set => Model.PC_ColorParameter = value;
         }
+
         public string VMPC_StringSizeRange
         {
             get => Model.PC_StringSizeRange;
@@ -48,17 +47,17 @@ namespace mouse_tracking_web_app.ViewModels
             set => Model.PC_SizeRange = value;
         }
 
-        public double VMPC_MinSize
-        {
-            get => Model.PC_MinSize;
-            set => Model.PC_MinSize = value;
-        }
+        public double VMPC_MinSize => Model.PC_MinSize;
+        //{
+        //    get => Model.PC_MinSize;
+        //    set => Model.PC_MinSize = value;
+        //}
 
-        public double VMPC_MaxSize
-        {
-            get => Model.PC_MaxSize;
-            set => Model.PC_MaxSize = value;
-        }
+        public double VMPC_MaxSize => Model.PC_MaxSize;
+        //{
+        //    get => Model.PC_MaxSize;
+        //    set => Model.PC_MaxSize = value;
+        //}
 
         public bool VMPC_IsLoading
         {
@@ -71,6 +70,7 @@ namespace mouse_tracking_web_app.ViewModels
         public PlottingControllerModel Model { get; }
 
         public string Error => null;
+
         public string this[string columnName]
         {
             get
@@ -90,7 +90,6 @@ namespace mouse_tracking_web_app.ViewModels
                             if (matches.Count == 0)
                                 return $"{vSplit[0]} is not in\nfloat format.";
                             VMPC_SizeRange = new Tuple<double, double>(double.Parse(vSplit[0]), double.Parse(vSplit[0]));
-
                         }
                         else if (vSplit.Length == 2)
                         {
@@ -105,6 +104,7 @@ namespace mouse_tracking_web_app.ViewModels
                         else
                             return "Illegal characters";
                         return string.Empty;
+
                     default:
                         break;
                 }
