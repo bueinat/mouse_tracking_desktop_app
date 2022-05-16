@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 
-// TODO: set names properly
 namespace mouse_tracking_web_app.DataBase
 {
     public class Analysis

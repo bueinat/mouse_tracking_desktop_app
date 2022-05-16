@@ -26,8 +26,7 @@ namespace mouse_tracking_web_app.Models
         private readonly List<string> propNames = new List<string>
             {
                 "PC_VideoAnalysis",
-                "PC_MinSize",
-                "PC_MaxSize",
+                "PC_SizeRange",
                 "PC_ColorParameter",
                 "PC_SizeParameter",
             };
@@ -57,7 +56,7 @@ namespace mouse_tracking_web_app.Models
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public LinearColorAxis ColoredAx => (PC_ColorList.Count == 0)
+        public LinearColorAxis ColoredAx => IsNullOrEmpty(PC_ColorList)
                     ? null
                     : new LinearColorAxis
                     {
@@ -69,14 +68,11 @@ namespace mouse_tracking_web_app.Models
                         Title = PC_ColorParameter
                     };
 
-        public List<double> PC_ColorList; // => GetScatterList(PC_ColorParameter, false);
+        public List<double> PC_ColorList;
 
         // TODO:
-        // * shorten processing time
-        // * MOST IMPORTANT: create a video for Rafi and edit it.
         // * add an option of hiding inactive features
         // * generalizing features
-        // * improve range thing
         public double PC_MaxSize => double.IsNaN(PC_SizeRange.Item2) ? defaultMarkerSize : PC_SizeRange.Item2;
 
         public double PC_MinSize => double.IsNaN(PC_SizeRange.Item1) ? defaultMarkerSize : PC_SizeRange.Item1;
@@ -160,10 +156,11 @@ namespace mouse_tracking_web_app.Models
             }
         }
 
-        public List<double> PC_SizeList { get; set; } // => GetScatterList(PC_SizeParameter, true);
+        public List<double> PC_SizeList { get; set; }
 
         public List<double> GetScatterList(string parameter, bool normalize)
         {
+            if (PC_AnalysisDataRows is null) return null;
             if (PC_MinSize == PC_MaxSize)
                 normalize = false;
             if (parameter == "timestep")
@@ -180,7 +177,10 @@ namespace mouse_tracking_web_app.Models
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        //public void UpdateModel() => new Task(UpdateModelWrapped).Start();
+        private bool IsNullOrEmpty<T>(List<T> list)
+        {
+            return (list is null) || (list.Count == 0);
+        }
 
         public void UpdateModel()
         {
@@ -191,17 +191,21 @@ namespace mouse_tracking_web_app.Models
                 MarkerType = MarkerType.Circle,
                 TrackerFormatString = "position = ({X:0.##}, {Y:0.##})"
             };
-            if (PC_ColorList.Count > 0)
+            if (!IsNullOrEmpty(PC_ColorList))
             {
                 PC_PlotModel.Axes.Clear();
                 pathPoints.TrackerFormatString += "\n" + PC_ColorParameter + " = {Value:0.##}";
 
                 SetUpModel();
-                if ((PC_SizeList.Count > 0) && (PC_MaxSize > PC_MinSize))
+                if (!IsNullOrEmpty(PC_SizeList) && (PC_MaxSize > PC_MinSize))
                 {
                     pathPoints.TrackerFormatString += "\nsize = {Size:0.##}";
                     for (int i = 0; i < PC_AnalysisDataRows.X.Count; i++)
+                    {
+                        if (PC_SizeList[i] > PC_MaxSize)
+                            Console.WriteLine("hello!");
                         pathPoints.Points.Add(new ScatterPoint(PC_AnalysisDataRows.X[i], PC_AnalysisDataRows.Y[i]) { Value = PC_ColorList[i], Size = PC_SizeList[i] });
+                    }
                 }
                 else
                 {
@@ -209,7 +213,7 @@ namespace mouse_tracking_web_app.Models
                         pathPoints.Points.Add(new ScatterPoint(PC_AnalysisDataRows.X[i], PC_AnalysisDataRows.Y[i]) { Value = PC_ColorList[i], Size = PC_MinSize });
                 }
             }
-            else if ((PC_SizeList.Count > 0) && (PC_MaxSize > PC_MinSize))
+            else if (!IsNullOrEmpty(PC_SizeList) && (PC_MaxSize > PC_MinSize))
             {
                 pathPoints.TrackerFormatString += "\nsize = {Size:0.##}";
                 for (int i = 0; i < PC_AnalysisDataRows.X.Count; i++)
