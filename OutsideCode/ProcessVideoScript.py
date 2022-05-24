@@ -139,6 +139,8 @@ try:
         aireal_dist, win_size, raw_data.x, raw_data.y)
     raw_data["rdist"] = raw_data.r.rolling(win_size).sum()
 
+    raw_data = raw_data.fillna(method='backfill')
+
     # %% [markdown]
     # ### Upload data to server
 
@@ -156,8 +158,10 @@ try:
     # video.length = VideoFileClip(VIDEO_PATH).duration
     video.length = 10.1
     video.nframes = len(os.listdir(frames_path))
+
+    working_path = os.getcwd()
     video.description = "dummy video\nthis is just meant for testing."
-    video.link_to_data = f"@WORKING_PATH\\{data_path[2:]}"
+    video.link_to_data = f"{working_path}\\{data_path[2:]}"
     video.save()
 
     print(f"video id: {video.id}")
@@ -165,12 +169,12 @@ try:
     # %%
     uploadabale_data = raw_data[['x', 'y', 'vx', 'vy', 'ax', 'ay']]
     uploadabale_data.loc[:, 'curviness'] = raw_data.adist / raw_data.rdist
-    uploadabale_data['path'] = [f"@WORKING_PATH\\{frames_path[2:]}\\frame{i}.jpg"
+    uploadabale_data['path'] = [f"{working_path}\\{frames_path[2:]}\\frame{i}.jpg"
                                 for i in uploadabale_data.index]
     uploadabale_data.index -= 1
     
     # uploadabale_data.index -= 1
-    # uploadabale_data['path'] = [f"@WORKING_PATH\\{frames_path[2:]}\\frame{i-uploadabale_data.index[0]}.jpg"
+    # uploadabale_data['path'] = [f"{working_path}\\{frames_path[2:]}\\frame{i-uploadabale_data.index[0]}.jpg"
     #                             for i in uploadabale_data.index]
 
     ### I read dummy predictions

@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace mouse_tracking_web_app.Views
@@ -23,12 +24,6 @@ namespace mouse_tracking_web_app.Views
             return (int)obj.GetValue(RowCountProperty);
         }
 
-        // Set
-        public static void SetRowCount(DependencyObject obj, int value)
-        {
-            obj.SetValue(RowCountProperty, value);
-        }
-
         // Change Event - Adds the Rows
         public static void RowCountChanged(
             DependencyObject obj, DependencyPropertyChangedEventArgs e)
@@ -46,6 +41,11 @@ namespace mouse_tracking_web_app.Views
             SetStarRows(grid);
         }
 
+        // Set
+        public static void SetRowCount(DependencyObject obj, int value)
+        {
+            obj.SetValue(RowCountProperty, value);
+        }
         #endregion RowCount Property
 
         #region ColumnCount Property
@@ -58,18 +58,6 @@ namespace mouse_tracking_web_app.Views
             DependencyProperty.RegisterAttached(
                 "ColumnCount", typeof(int), typeof(GridHelpers),
                 new PropertyMetadata(-1, ColumnCountChanged));
-
-        // Get
-        public static int GetColumnCount(DependencyObject obj)
-        {
-            return (int)obj.GetValue(ColumnCountProperty);
-        }
-
-        // Set
-        public static void SetColumnCount(DependencyObject obj, int value)
-        {
-            obj.SetValue(ColumnCountProperty, value);
-        }
 
         // Change Event - Add the Columns
         public static void ColumnCountChanged(
@@ -88,6 +76,17 @@ namespace mouse_tracking_web_app.Views
             SetStarColumns(grid);
         }
 
+        // Get
+        public static int GetColumnCount(DependencyObject obj)
+        {
+            return (int)obj.GetValue(ColumnCountProperty);
+        }
+
+        // Set
+        public static void SetColumnCount(DependencyObject obj, int value)
+        {
+            obj.SetValue(ColumnCountProperty, value);
+        }
         #endregion ColumnCount Property
 
         #region StarRows Property
@@ -164,23 +163,12 @@ namespace mouse_tracking_web_app.Views
         {
             string[] starColumns =
                 GetStarColumns(grid).Split(',');
-            if (string.IsNullOrEmpty(starColumns[0]))
-                return;
 
-            if (starColumns.Length == 2)
+            for (int i = 0; i < grid.ColumnDefinitions.Count; i++)
             {
-                int start = int.Parse(starColumns[0]);
-                int end = int.Parse(starColumns[1]);
-                for (int i = start; i <= end; i++)
-                    grid.ColumnDefinitions[i].Width = new GridLength(1, GridUnitType.Star);
-            }
-            else
-            {
-                foreach (string item in starColumns)
-                {
-                    if (int.Parse(item) < grid.ColumnDefinitions.Count)
-                        grid.ColumnDefinitions[int.Parse(item)].Width = new GridLength(1, GridUnitType.Star);
-                }
+                if (starColumns.Contains(i.ToString()))
+                    grid.ColumnDefinitions[i].Width =
+                        new GridLength(1, GridUnitType.Star);
             }
         }
 
@@ -188,23 +176,12 @@ namespace mouse_tracking_web_app.Views
         {
             string[] starRows =
                 GetStarRows(grid).Split(',');
-            if (string.IsNullOrEmpty(starRows[0]))
-                return;
 
-            if (starRows.Length == 2)
+            for (int i = 0; i < grid.RowDefinitions.Count; i++)
             {
-                int start = int.Parse(starRows[0]);
-                int end = int.Parse(starRows[1]);
-                for (int i = start; i <= end; i++)
-                    grid.RowDefinitions[i].Height = new GridLength(1, GridUnitType.Star);
-            }
-            else
-            {
-                foreach (string item in starRows)
-                {
-                    if (int.Parse(item) < grid.RowDefinitions.Count)
-                        grid.RowDefinitions[int.Parse(item)].Height = new GridLength(1, GridUnitType.Star);
-                }
+                if (starRows.Contains(i.ToString()))
+                    grid.RowDefinitions[i].Height =
+                        new GridLength(1, GridUnitType.Star);
             }
         }
     }

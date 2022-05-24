@@ -151,7 +151,6 @@ namespace mouse_tracking_web_app.Models
             {
                 model.VideoAnalysis = value;
                 NotifyPropertyChanged("PC_VideoAnalysis");
-                NotifyPropertyChanged("PC_AnalysisDataTable");
                 NotifyPropertyChanged("PC_AnalysisDataRows");
             }
         }

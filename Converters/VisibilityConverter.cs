@@ -72,17 +72,25 @@ namespace mouse_tracking_web_app.Converters
     [ValueConversion(typeof(float), typeof(string))]
     public class FillnaConverter : IValueConverter
     {
-        public bool IsNaN(float f)
-        {
-#pragma warning disable CS1718 // Comparison made to same variable
-            return f != f;
-#pragma warning restore CS1718 // Comparison made to same variable
-        }
-
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             float v = (float)value;
-            return IsNaN(v) ? "-" : v.ToString();
+            return float.IsNaN(v) ? "-" : v.ToString();
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    [ValueConversion(typeof(string), typeof(bool))]
+    public class DoesStringExist : IValueConverter
+    {
+        // c# to view
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return !string.IsNullOrEmpty((string)value);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

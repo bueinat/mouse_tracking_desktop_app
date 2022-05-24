@@ -2,6 +2,7 @@
     x:Class="mouse_tracking_web_app.Views.TabsWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="clr-namespace:mouse_tracking_web_app.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:uc="clr-namespace:mouse_tracking_web_app.Views"
@@ -9,23 +10,48 @@
     Width="800"
     Height="600"
     mc:Ignorable="d">
+    <Window.Resources>
+        <ResourceDictionary>
+            <converters:DoesStringExist x:Key="DoesStringExist" />
+        </ResourceDictionary>
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <TabControl x:Name="tabs" Grid.Column="0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+        <TabControl
+            x:Name="tabs"
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            Grid.Column="0">
             <TabItem Header="Videos">
                 <uc:UploadVideoTab />
             </TabItem>
             <TabItem Header="Analyze">
                 <uc:AnalysisTab />
             </TabItem>
-            <TabItem Header="Export" />
         </TabControl>
         <TextBlock
+            Grid.Row="0"
             Grid.Column="1"
             Margin="2,10,0,0"
             Text="here there would be a file explorer" />
+        <Button
+            x:Name="exportButton"
+            Grid.Row="1"
+            Grid.Column="1"
+            Margin="10"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Background="#FFD6EBF2"
+            Click="ExportButtonClick"
+            Content="Export Data"
+            IsEnabled="{Binding VM_VideoName, Converter={StaticResource DoesStringExist}}" />
+        <!--  Click="ExportButtonClick"  -->
     </Grid>
 </Window>

@@ -8,25 +8,13 @@ namespace mouse_tracking_web_app.Models
 {
     public class MainControllerModel : INotifyPropertyChanged
     {
+        private Analysis analysis;
         private string errorMessage = "";
 
         private bool isLoading = false;
         private bool pause = true;
         private string videoID;
         private string videoName = "";
-        private Analysis analysis;
-
-        public Analysis VideoAnalysis
-        {
-            get => analysis;
-            set
-            {
-                analysis = value;
-                AnalysisDataRows = new DataRows(analysis);
-                NotifyPropertyChanged("VideoAnalysis");
-            }
-        }
-
         public MainControllerModel()
         {
             DBHandler = new DataBaseHandler(this);
@@ -38,12 +26,12 @@ namespace mouse_tracking_web_app.Models
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public DataRows AnalysisDataRows { get; set; }
         public string ArchivePath { get; set; }
         public OuterCodeRunner CodeRunner { get; }
+        public string CSVString => VideoAnalysis.GetCSVString();
 
         public DataBaseHandler DBHandler { get; }
-
-        public DataRows AnalysisDataRows { get; set; }
 
         public string ErrorMessage
         {
@@ -80,10 +68,24 @@ namespace mouse_tracking_web_app.Models
             }
         }
 
-        public bool Stop { get; set; }
-        public VideoControllerModel VC { get; }
         public PlottingControllerModel PC { get; }
 
+        public bool Stop { get; set; }
+
+        public VideoControllerModel VC { get; }
+
+        public Analysis VideoAnalysis
+        {
+            get => analysis;
+            set
+            {
+                analysis = value;
+                AnalysisDataRows = new DataRows(analysis);
+                NotifyPropertyChanged("VideoAnalysis");
+                NotifyPropertyChanged("AnalysisDataRows");
+                NotifyPropertyChanged("CSVString");
+            }
+        }
         public string VideoName
         {
             get => videoName;

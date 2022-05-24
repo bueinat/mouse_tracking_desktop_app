@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Linq;
+using System.Text;
 
 namespace mouse_tracking_web_app.DataBase
 {
@@ -71,6 +73,23 @@ namespace mouse_tracking_web_app.DataBase
         };
 
         public DataTable AnalysisDataTable => AnalysisToDataTable();
+
+        public string GetCSVString()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            IEnumerable<string> columnNames = AnalysisDataTable.Columns.Cast<DataColumn>().
+                                              Select(column => column.ColumnName);
+            _ = sb.AppendLine(string.Join(",", columnNames));
+
+            foreach (DataRow row in AnalysisDataTable.Rows)
+            {
+                IEnumerable<string> fields = row.ItemArray.Select(field => field.ToString());
+                _ = sb.AppendLine(string.Join(",", fields));
+            }
+
+            return sb.ToString();
+        }
 
         private DataTable AnalysisToDataTable()
         {

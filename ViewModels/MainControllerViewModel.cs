@@ -20,6 +20,7 @@ namespace mouse_tracking_web_app.ViewModels
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public string VM_CSVString => model.CSVString;
         public string VM_ErrorMessage
         {
             get => model.ErrorMessage;
