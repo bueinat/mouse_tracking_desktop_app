@@ -56,21 +56,21 @@ namespace mouse_tracking_web_app.DataBase
 
         private readonly List<string> featuresNames = new List<string>(ConfigurationManager.AppSettings["FeaturesList"].Split(','));
 
-        private readonly Dictionary<string, Type> analysisFields = new Dictionary<string, Type>
-        {
-            ["TimeStep"] = typeof(int),
-            ["X"] = typeof(float),
-            ["Y"] = typeof(float),
-            ["VelocityX"] = typeof(float),
-            ["VelocityY"] = typeof(float),
-            ["AccelerationX"] = typeof(float),
-            ["AccelerationY"] = typeof(float),
-            ["Curviness"] = typeof(float),
-            ["Path"] = typeof(string),
-            ["IsSniffing"] = typeof(bool),
-            ["IsDrinking"] = typeof(bool),
-            ["IsNoseCasting"] = typeof(bool)
-        };
+        //private readonly Dictionary<string, Type> analysisFields = new Dictionary<string, Type>
+        //{
+        //    ["TimeStep"] = typeof(int),
+        //    ["X"] = typeof(float),
+        //    ["Y"] = typeof(float),
+        //    ["VelocityX"] = typeof(float),
+        //    ["VelocityY"] = typeof(float),
+        //    ["AccelerationX"] = typeof(float),
+        //    ["AccelerationY"] = typeof(float),
+        //    ["Curviness"] = typeof(float),
+        //    ["Path"] = typeof(string),
+        //    ["IsSniffing"] = typeof(bool),
+        //    ["IsDrinking"] = typeof(bool),
+        //    ["IsNoseCasting"] = typeof(bool)
+        //};
 
         public DataTable AnalysisDataTable => AnalysisToDataTable();
 
