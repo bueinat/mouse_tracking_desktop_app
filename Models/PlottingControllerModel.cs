@@ -13,16 +13,9 @@ namespace mouse_tracking_web_app.Models
 {
     public class PlottingControllerModel : INotifyPropertyChanged
     {
-        private readonly MainControllerModel model;
-
-        private string colorParam;
-        private bool isLoading = false;
-        private ScatterSeries pathPoints;
-        private PlotModel plotModel;
-        private string sizeParam;
-        private Tuple<double, double> sizeRange = new Tuple<double, double>(double.NaN, double.NaN);
+        public List<double> PC_ColorList;
         private readonly double defaultMarkerSize = double.Parse(ConfigurationManager.AppSettings.Get("PlotDefaultMarkerSize"));
-
+        private readonly MainControllerModel model;
         private readonly List<string> propNames = new List<string>
             {
                 "PC_VideoAnalysis",
@@ -31,8 +24,12 @@ namespace mouse_tracking_web_app.Models
                 "PC_SizeParameter",
             };
 
-        public PlotController PC_PlotController { get; private set; }
-
+        private string colorParam;
+        private bool isLoading = false;
+        private ScatterSeries pathPoints;
+        private PlotModel plotModel;
+        private string sizeParam;
+        private Tuple<double, double> sizeRange = new Tuple<double, double>(double.NaN, double.NaN);
         public PlottingControllerModel(MainControllerModel model)
         {
             this.model = model;
@@ -68,25 +65,9 @@ namespace mouse_tracking_web_app.Models
                         Title = PC_ColorParameter
                     };
 
-        public List<double> PC_ColorList;
-
-        // TODO:
-        // * add an option of hiding inactive features
-        // * generalizing features
-        public double PC_MaxSize => double.IsNaN(PC_SizeRange.Item2) ? defaultMarkerSize : PC_SizeRange.Item2;
-
-        public double PC_MinSize => double.IsNaN(PC_SizeRange.Item1) ? defaultMarkerSize : PC_SizeRange.Item1;
-
-        public DataRows PC_AnalysisDataRows
-        {
-            get => model.AnalysisDataRows;
-            set
-            {
-                model.AnalysisDataRows = value;
-                NotifyPropertyChanged("PC_AnalysisDataRows");
-            }
-        }
-
+        public DataRows PC_AnalysisDataRows => model.AnalysisDataRows;
+        public double PC_AverageAcceleration => model.AverageAcceleration;
+        public double PC_AverageSpeed => model.AverageSpeed;
         public string PC_ColorParameter
         {
             get => colorParam;
@@ -99,6 +80,7 @@ namespace mouse_tracking_web_app.Models
             }
         }
 
+        public double PC_IsDrinkingPercent => model.IsDrinkingPercent;
         public bool PC_IsLoading
         {
             get => isLoading;
@@ -108,6 +90,18 @@ namespace mouse_tracking_web_app.Models
                 NotifyPropertyChanged("PC_IsLoading");
             }
         }
+
+        public double PC_IsNoseCastingPercent => model.IsNoseCastingPercent;
+        public double PC_IsSniffingPercent => model.IsSniffingPercent;
+        // TODO:
+        // * add an option of hiding inactive features
+        // * generalizing features
+        public double PC_MaxSize => double.IsNaN(PC_SizeRange.Item2) ? defaultMarkerSize : PC_SizeRange.Item2;
+
+        public double PC_MinSize => double.IsNaN(PC_SizeRange.Item1) ? defaultMarkerSize : PC_SizeRange.Item1;
+        public int PC_NSteps => model.NSteps;
+        //public int PC_NSteps => PC_VideoStats is null ? 0 : PC_VideoStats.NSteps;
+        public PlotController PC_PlotController { get; private set; }
 
         public PlotModel PC_PlotModel
         {
@@ -119,6 +113,7 @@ namespace mouse_tracking_web_app.Models
             }
         }
 
+        public List<double> PC_SizeList { get; set; }
         public string PC_SizeParameter
         {
             get => sizeParam;
@@ -143,19 +138,9 @@ namespace mouse_tracking_web_app.Models
         }
 
         public string PC_StringSizeRange { get; set; }
-
-        public Analysis PC_VideoAnalysis
-        {
-            get => model.VideoAnalysis;
-            set
-            {
-                model.VideoAnalysis = value;
-                NotifyPropertyChanged("PC_VideoAnalysis");
-                NotifyPropertyChanged("PC_AnalysisDataRows");
-            }
-        }
-
-        public List<double> PC_SizeList { get; set; }
+        public double PC_TotalDistance => model.TotalDistance;
+        public Analysis PC_VideoAnalysis => model.VideoAnalysis;
+        public AnalysisStats PC_VideoStats => model.VideoStats;
 
         public List<double> GetScatterList(string parameter, bool normalize)
         {
@@ -174,11 +159,6 @@ namespace mouse_tracking_web_app.Models
         public void NotifyPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        private bool IsNullOrEmpty<T>(List<T> list)
-        {
-            return (list is null) || (list.Count == 0);
         }
 
         public void UpdateModel()
@@ -235,6 +215,11 @@ namespace mouse_tracking_web_app.Models
 
             PC_PlotModel.InvalidatePlot(true);
             PC_IsLoading = false;
+        }
+
+        private bool IsNullOrEmpty<T>(List<T> list)
+        {
+            return (list is null) || (list.Count == 0);
         }
 
         private void SetUpModel()

@@ -19,23 +19,33 @@ namespace mouse_tracking_web_app.ViewModels
             };
         }
 
-        public PlotController VMPC_PlotController => Model.PC_PlotController;
-        public PlotModel VMPC_PlotModel => Model.PC_PlotModel;
-        public Analysis VMPC_VideoAnalysis => Model.PC_VideoAnalysis;
-        public DataRows VMPC_AnalysisDataTable => Model.PC_AnalysisDataRows;
+        public event PropertyChangedEventHandler PropertyChanged;
 
+        public string Error => null;
+        public PlottingControllerModel Model { get; }
+        public DataRows VMPC_AnalysisDataTable => Model.PC_AnalysisDataRows;
+        public double VMPC_AverageAcceleration => Model.PC_AverageAcceleration;
+        public double VMPC_AverageSpeed => Model.PC_AverageSpeed;
         public string VMPC_ColorParameter
         {
             get => Model.PC_ColorParameter;
             set => Model.PC_ColorParameter = value;
         }
 
-        public string VMPC_StringSizeRange
+        public double VMPC_IsDrinkingPercent => Model.PC_IsDrinkingPercent;
+        public bool VMPC_IsLoading
         {
-            get => Model.PC_StringSizeRange;
-            set => Model.PC_StringSizeRange = value;
+            get => Model.PC_IsLoading;
+            set => Model.PC_IsLoading = value;
         }
 
+        public double VMPC_IsNoseCastingPercent => Model.PC_IsNoseCastingPercent;
+        public double VMPC_IsSniffingPercent => Model.PC_IsSniffingPercent;
+        public double VMPC_MaxSize => Model.PC_MaxSize;
+        public double VMPC_MinSize => Model.PC_MinSize;
+        public int VMPC_NSteps => Model.PC_NSteps;
+        public PlotController VMPC_PlotController => Model.PC_PlotController;
+        public PlotModel VMPC_PlotModel => Model.PC_PlotModel;
         public string VMPC_SizeParameter
         {
             get => Model.PC_SizeParameter;
@@ -48,21 +58,14 @@ namespace mouse_tracking_web_app.ViewModels
             set => Model.PC_SizeRange = value;
         }
 
-        public double VMPC_MinSize => Model.PC_MinSize;
-        public double VMPC_MaxSize => Model.PC_MaxSize;
-
-        public bool VMPC_IsLoading
+        public string VMPC_StringSizeRange
         {
-            get => Model.PC_IsLoading;
-            set => Model.PC_IsLoading = value;
+            get => Model.PC_StringSizeRange;
+            set => Model.PC_StringSizeRange = value;
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public PlottingControllerModel Model { get; }
-
-        public string Error => null;
-
+        public double VMPC_TotalDistance => Model.PC_TotalDistance;
+        public Analysis VMPC_VideoAnalysis => Model.PC_VideoAnalysis;
         public string this[string columnName]
         {
             get

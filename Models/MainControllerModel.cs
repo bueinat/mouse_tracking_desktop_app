@@ -15,6 +15,7 @@ namespace mouse_tracking_web_app.Models
         private bool pause = true;
         private string videoID;
         private string videoName = "";
+
         public MainControllerModel()
         {
             DBHandler = new DataBaseHandler(this);
@@ -26,11 +27,12 @@ namespace mouse_tracking_web_app.Models
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public DataRows AnalysisDataRows { get; set; }
+        public DataRows AnalysisDataRows => VideoStats.DataRows;
         public string ArchivePath { get; set; }
+        public double AverageAcceleration => VideoStats is null ? 0 : VideoStats.AverageAcceleration;
+        public double AverageSpeed => VideoStats is null ? 0 : VideoStats.AverageSpeed;
         public OuterCodeRunner CodeRunner { get; }
         public string CSVString => VideoAnalysis.GetCSVString();
-
         public DataBaseHandler DBHandler { get; }
 
         public string ErrorMessage
@@ -45,7 +47,7 @@ namespace mouse_tracking_web_app.Models
         }
 
         public bool HasErrorMessage => !string.IsNullOrEmpty(ErrorMessage);
-
+        public double IsDrinkingPercent => VideoStats is null ? 0 : VideoStats.IsDrinkingPercent;
         public bool IsLoading
         {
             get => isLoading;
@@ -56,8 +58,10 @@ namespace mouse_tracking_web_app.Models
             }
         }
 
+        public double IsNoseCastingPercent => VideoStats is null ? 0 : VideoStats.IsNoseCastingPercent;
+        public double IsSniffingPercent => VideoStats is null ? 0 : VideoStats.IsSniffingPercent;
         public bool IsVideoLoaded => !string.IsNullOrEmpty(VideoName);
-
+        public int NSteps => VideoStats is null ? 0 : VideoStats.NSteps;
         public bool Pause
         {
             get => pause;
@@ -69,9 +73,8 @@ namespace mouse_tracking_web_app.Models
         }
 
         public PlottingControllerModel PC { get; }
-
         public bool Stop { get; set; }
-
+        public double TotalDistance => VideoStats is null ? 0 : VideoStats.TotalDistance;
         public VideoControllerModel VC { get; }
 
         public Analysis VideoAnalysis
@@ -80,12 +83,21 @@ namespace mouse_tracking_web_app.Models
             set
             {
                 analysis = value;
-                AnalysisDataRows = new DataRows(analysis);
+                VideoStats = new AnalysisStats(VideoAnalysis);
                 NotifyPropertyChanged("VideoAnalysis");
+                NotifyPropertyChanged("VideoStats");
+                NotifyPropertyChanged("AverageSpeed");
+                NotifyPropertyChanged("AverageAcceleration");
+                NotifyPropertyChanged("NSteps");
+                NotifyPropertyChanged("IsDrinkingPercent");
+                NotifyPropertyChanged("IsNoseCastingPercent");
+                NotifyPropertyChanged("IsSniffingPercent");
+                NotifyPropertyChanged("TotalDistance");
                 NotifyPropertyChanged("AnalysisDataRows");
                 NotifyPropertyChanged("CSVString");
             }
         }
+
         public string VideoName
         {
             get => videoName;
@@ -96,6 +108,8 @@ namespace mouse_tracking_web_app.Models
                 _ = ProcessVideo(value);
             }
         }
+
+        public AnalysisStats VideoStats { get; set; }
 
         public void NotifyPropertyChanged(string propertyName)
         {
