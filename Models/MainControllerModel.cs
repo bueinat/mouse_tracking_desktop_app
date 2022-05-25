@@ -27,7 +27,7 @@ namespace mouse_tracking_web_app.Models
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public DataRows AnalysisDataRows => VideoStats.DataRows;
+        public DataRows AnalysisDataRows => VideoStats?.DataRows;
         public string ArchivePath { get; set; }
         public double AverageAcceleration => VideoStats is null ? 0 : VideoStats.AverageAcceleration;
         public double AverageSpeed => VideoStats is null ? 0 : VideoStats.AverageSpeed;

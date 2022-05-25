@@ -4,6 +4,7 @@ using OxyPlot;
 using System;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace mouse_tracking_web_app.ViewModels
 {
@@ -17,6 +18,11 @@ namespace mouse_tracking_web_app.ViewModels
             {
                 NotifyPropertyChanged("VM" + e.PropertyName);
             };
+        }
+
+        public void ApplyChanges()
+        {
+            new Task(Model.UpdateModel).Start();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

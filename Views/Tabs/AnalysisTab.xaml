@@ -17,6 +17,7 @@
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
             <converters:ObjectToVisibilityConverter x:Key="ObjectToVisibilityConverter" />
+            <converters:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" />
             <converters:DoubleToStringConverter x:Key="RangeToStringConverter" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/mouse_tracking_web_app;component/CustomStyles/ErrorsStyles.xaml" />
@@ -67,6 +68,17 @@
                             Height="0"
                             Text="{Binding VMPC_ColorParameter, Mode=TwoWay}" />
                     </StackPanel>
+                    <Button
+                        x:Name="applyButton"
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        Width="90"
+                        Margin="0,3"
+                        VerticalAlignment="Bottom"
+                        Background="#FFD6EBF2"
+                        Click="ApplyButtonClicked"
+                        Content="apply changes"
+                        IsEnabled="{Binding VMPC_IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
                     <StackPanel Grid.Row="0" Grid.Column="0">
                         <Label Content="Size Parameter" FontWeight="Bold" />
@@ -109,7 +121,7 @@
                                     ValidatesOnDataErrors="True" />
                             </TextBox.Text>
                             <ToolTipService.ToolTip>
-                                <TextBlock FontSize="10" Text="first item in range is default size\npress tab to finish editing" />
+                                <TextBlock FontSize="10" Text="first item in range is default size" />
                             </ToolTipService.ToolTip>
                         </TextBox>
                     </StackPanel>

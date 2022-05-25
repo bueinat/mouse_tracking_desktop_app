@@ -29,7 +29,7 @@ namespace mouse_tracking_web_app.Models
         private bool isLoading = false;
 
         //private ScatterSeries pathPoints;
-        private Dictionary<string, ScatterSeries> pathPoints = new Dictionary<string, ScatterSeries>();
+        
 
         private PlotModel plotModel;
         private string sizeParam;
@@ -42,14 +42,16 @@ namespace mouse_tracking_web_app.Models
             ["noseCasting"] = MarkerType.Square
         };
 
-        private void ResetPathPoints()
+        private Dictionary<string, ScatterSeries> CreateEmptyPathPoints()
         {
+            Dictionary<string, ScatterSeries> pathPoints = new Dictionary<string, ScatterSeries>();
             foreach (var keyVal in scatterTypes)
                 pathPoints[keyVal.Key] = new ScatterSeries()
                 {
                     MarkerType = keyVal.Value,
                     TrackerFormatString = "position = ({X:0.##}, {Y:0.##})"
                 };
+            return pathPoints;
         }
 
         public PlottingControllerModel(MainControllerModel model)
@@ -66,12 +68,13 @@ namespace mouse_tracking_web_app.Models
 
             PC_PlotModel = new PlotModel();
             SetUpModel();
-            PropertyChanged += delegate (object sender, PropertyChangedEventArgs e)
-            {
-                if (propNames.Contains(e.PropertyName))
-                    new Task(UpdateModel).Start();
-            };
-            ResetPathPoints();
+            UpdateModel();
+            //PropertyChanged += delegate (object sender, PropertyChangedEventArgs e)
+            //{
+            //    if (propNames.Contains(e.PropertyName))
+            //        new Task(UpdateModel).Start();
+            //};
+            //CreateEmptyPathPoints();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -99,7 +102,7 @@ namespace mouse_tracking_web_app.Models
             {
                 colorParam = value;
                 // TODO: use events for those
-                PC_ColorList = GetScatterList(PC_ColorParameter, false);
+                //UpdateScatterList("PC_ColorList", PC_ColorParameter, false);
                 NotifyPropertyChanged("PC_ColorParameter");
             }
         }
@@ -148,7 +151,8 @@ namespace mouse_tracking_web_app.Models
             set
             {
                 sizeParam = value;
-                PC_SizeList = GetScatterList(PC_SizeParameter, true);
+                //PC_SizeList = GetScatterList(PC_SizeParameter, true);
+                //UpdateScatterList("PC_SizeList", PC_SizeParameter, true);
                 NotifyPropertyChanged("PC_SizeParameter");
             }
         }
@@ -162,6 +166,8 @@ namespace mouse_tracking_web_app.Models
                 NotifyPropertyChanged("PC_SizeRange");
                 NotifyPropertyChanged("PC_MaxSize");
                 NotifyPropertyChanged("PC_MinSize");
+                NotifyPropertyChanged("PC_SizeParameter");
+                //UpdateScatterList("PC_SizeList", PC_SizeParameter, true);
             }
         }
 
@@ -170,18 +176,21 @@ namespace mouse_tracking_web_app.Models
         public Analysis PC_VideoAnalysis => model.VideoAnalysis;
         public AnalysisStats PC_VideoStats => model.VideoStats;
 
-        public List<double> GetScatterList(string parameter, bool normalize)
+        public void UpdateScatterList(string propertyName, string parameter, bool normalize)
         {
-            if (PC_AnalysisDataRows is null) return null;
-            if (PC_MinSize == PC_MaxSize)
-                normalize = false;
-            if (parameter == "timestep")
-                return normalize ? PC_AnalysisDataRows.NormList(PC_AnalysisDataRows.Time, PC_MinSize, PC_MaxSize) : PC_AnalysisDataRows.Time;
-            if (parameter == "velocity")
-                return normalize ? PC_AnalysisDataRows.NormList(PC_AnalysisDataRows.V, PC_MinSize, PC_MaxSize) : PC_AnalysisDataRows.V;
-            if (parameter == "acceleration")
-                return normalize ? PC_AnalysisDataRows.NormList(PC_AnalysisDataRows.A, PC_MinSize, PC_MaxSize) : PC_AnalysisDataRows.A;
-            return new List<double>();
+            List<double> list = new List<double>();
+            if (PC_AnalysisDataRows is null) list = null;
+            else if (propertyName == "PC_ColorList" && PC_ColorParameter == "none") list = null;
+            else if (parameter == "timestep")
+                list = normalize ? PC_AnalysisDataRows.NormList(PC_AnalysisDataRows.Time, PC_MinSize, PC_MaxSize) : PC_AnalysisDataRows.Time;
+            else if (parameter == "velocity")
+                list = normalize ? PC_AnalysisDataRows.NormList(PC_AnalysisDataRows.V, PC_MinSize, PC_MaxSize) : PC_AnalysisDataRows.V;
+            else if (parameter == "acceleration")
+                list = normalize ? PC_AnalysisDataRows.NormList(PC_AnalysisDataRows.A, PC_MinSize, PC_MaxSize) : PC_AnalysisDataRows.A;
+            if (propertyName == "PC_SizeList")
+                PC_SizeList = list;
+            if (propertyName == "PC_ColorList")
+                PC_ColorList = list;
         }
 
         public void NotifyPropertyChanged(string propertyName)
@@ -198,20 +207,50 @@ namespace mouse_tracking_web_app.Models
 
         public void UpdateModel()
         {
-            if (PC_AnalysisDataRows is null) return;
+            if (PC_AnalysisDataRows is null)
+            {
+                PC_IsLoading = false;
+                return;
+            }
             PC_IsLoading = true;
-            ResetPathPoints();
+            Dictionary<string, ScatterSeries> pathPoints = CreateEmptyPathPoints();
+            UpdateScatterList("PC_ColorList", PC_ColorParameter, false);
+            UpdateScatterList("PC_SizeList", PC_SizeParameter, true);
 
             for (int i = 0; i < PC_AnalysisDataRows.X.Count; i++)
             {
                 if (PC_VideoAnalysis.IsDrinking[i])
-                    pathPoints["drinking"].Points.Add(new ScatterPoint(PC_AnalysisDataRows.X[i], PC_AnalysisDataRows.Y[i]) { Size = PC_MinSize });
+                    pathPoints["drinking"].Points.Add(new ScatterPoint(PC_AnalysisDataRows.X[i], PC_AnalysisDataRows.Y[i]) {});
                 else if (PC_VideoAnalysis.IsSniffing[i])
-                    pathPoints["sniffing"].Points.Add(new ScatterPoint(PC_AnalysisDataRows.X[i], PC_AnalysisDataRows.Y[i]) { Size = PC_MinSize });
+                    pathPoints["sniffing"].Points.Add(new ScatterPoint(PC_AnalysisDataRows.X[i], PC_AnalysisDataRows.Y[i]) {});
                 else if (PC_VideoAnalysis.IsNoseCasting[i])
-                    pathPoints["noseCasting"].Points.Add(new ScatterPoint(PC_AnalysisDataRows.X[i], PC_AnalysisDataRows.Y[i]) { Size = PC_MinSize });
+                    pathPoints["noseCasting"].Points.Add(new ScatterPoint(PC_AnalysisDataRows.X[i], PC_AnalysisDataRows.Y[i]) {});
                 else
-                    pathPoints["none"].Points.Add(new ScatterPoint(PC_AnalysisDataRows.X[i], PC_AnalysisDataRows.Y[i]) { Size = PC_MinSize });
+                    pathPoints["none"].Points.Add(new ScatterPoint(PC_AnalysisDataRows.X[i], PC_AnalysisDataRows.Y[i]) {});
+
+                if (!IsNullOrEmpty(PC_ColorList))
+                {
+                    if (PC_VideoAnalysis.IsDrinking[i])
+                        pathPoints["drinking"].Points[pathPoints["drinking"].Points.Count-1].Value = PC_ColorList[i];
+                    else if (PC_VideoAnalysis.IsSniffing[i])
+                        pathPoints["sniffing"].Points[pathPoints["sniffing"].Points.Count - 1].Value = PC_ColorList[i];
+                    else if (PC_VideoAnalysis.IsNoseCasting[i])
+                        pathPoints["noseCasting"].Points[pathPoints["noseCasting"].Points.Count - 1].Value = PC_ColorList[i];
+                    else
+                        pathPoints["none"].Points[pathPoints["none"].Points.Count - 1].Value = PC_ColorList[i];
+                }
+
+                if (!IsNullOrEmpty(PC_SizeList))
+                {
+                    if (PC_VideoAnalysis.IsDrinking[i])
+                        pathPoints["drinking"].Points[pathPoints["drinking"].Points.Count - 1].Size = PC_SizeList[i];
+                    else if (PC_VideoAnalysis.IsSniffing[i])
+                        pathPoints["sniffing"].Points[pathPoints["sniffing"].Points.Count - 1].Size = PC_SizeList[i];
+                    else if (PC_VideoAnalysis.IsNoseCasting[i])
+                        pathPoints["noseCasting"].Points[pathPoints["noseCasting"].Points.Count - 1].Size = PC_SizeList[i];
+                    else
+                        pathPoints["none"].Points[pathPoints["none"].Points.Count - 1].Size = PC_SizeList[i];
+                }
             }
 
             if (!IsNullOrEmpty(PC_ColorList))
@@ -221,11 +260,13 @@ namespace mouse_tracking_web_app.Models
                 foreach (var keyVal in pathPoints)
                 {
                     keyVal.Value.TrackerFormatString += "\n" + PC_ColorParameter + " = {Value:0.##}";
-                    for (int i = 0; i < PC_AnalysisDataRows.X.Count; i++)
-                        keyVal.Value.Points[i].Value = PC_ColorList[i];
+                    //for (int i = 0; i < PC_AnalysisDataRows.X.Count; i++)
+                    //    keyVal.Value.Points[i].Value = PC_ColorList[i];
                 }
             } else
             {
+                PC_PlotModel.Axes.Clear();
+                SetUpModel();
                 foreach (var keyVal in pathPoints)
                     keyVal.Value.MarkerFill = OxyColors.IndianRed;
             }
@@ -235,8 +276,15 @@ namespace mouse_tracking_web_app.Models
                 foreach (var keyVal in pathPoints)
                 {
                     keyVal.Value.TrackerFormatString += "\nsize = {Size:0.##}";
-                    for (int i = 0; i < PC_AnalysisDataRows.X.Count; i++)
-                        keyVal.Value.Points[i].Size = PC_SizeList[i];
+                    //for (int i = 0; i < PC_AnalysisDataRows.X.Count; i++)
+                    //    keyVal.Value.Points[i].Size = PC_SizeList[i];
+                }
+            } else
+            {
+                foreach (var keyVal in pathPoints)
+                {
+                    for (int i = 0; i < keyVal.Value.Points.Count; i++)
+                        keyVal.Value.Points[i].Size = PC_MinSize;
                 }
             }
 

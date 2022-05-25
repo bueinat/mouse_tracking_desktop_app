@@ -8,30 +8,10 @@ namespace mouse_tracking_web_app.DataBase
     public class DataRows
     {
         public IEnumerable<DataRow> AnalysisDataRows;
-        public List<double> Time { get; set; }
-        public List<double> X { get; set; }
-        public List<double> Y { get; set; }
-        public List<double> V { get; set; }
-        public List<double> A { get; set; }
-        private readonly List<float> vxList;
-        private readonly List<float> vyList;
         private readonly List<float> axList;
         private readonly List<float> ayList;
-
-        private double Norm(double x, double min, double max, double listMin, double listMax)
-        {
-            return (x - listMin) / (listMax - listMin) * (max - min) + min;
-        }
-
-        public List<double> NormList(List<double> list, double min, double max)
-        {
-            if (min == max)
-                return list;
-            List<double> l = new List<double>(list);
-            _ = l.RemoveAll(item => double.IsNaN(item));
-            return list.Select(t => Norm(t, min, max, l.Min(), list.Max())).ToList();
-        }
-
+        private readonly List<float> vxList;
+        private readonly List<float> vyList;
         public DataRows(Analysis analysis)
         {
             AnalysisDataRows = analysis.AnalysisDataTable.Rows.OfType<DataRow>();
@@ -50,6 +30,21 @@ namespace mouse_tracking_web_app.DataBase
             A = new List<double>();
             foreach ((float axi, float ayi) in axList.Zip(ayList, (x, y) => (axi: x, ayi: y)))
                 A.Add(Math.Sqrt(axi * axi + ayi * ayi));
+        }
+
+        public List<double> A { get; set; }
+        public List<double> Time { get; set; }
+        public List<double> V { get; set; }
+        public List<double> X { get; set; }
+        public List<double> Y { get; set; }
+        public List<double> NormList(List<double> list, double min, double max)
+        {
+            if (min == max)
+                return list.Select(t => min).ToList();
+            List<double> l = new List<double>(list);
+            _ = l.RemoveAll(item => double.IsNaN(item));
+            List<double> returnList = list.Select(t => (t - l.Min()) / (l.Max() - l.Min()) * (max - min) + min).ToList();
+            return returnList;
         }
     }
 }
