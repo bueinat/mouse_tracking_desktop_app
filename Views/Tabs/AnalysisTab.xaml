@@ -45,7 +45,7 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0" Grid.Column="1">
-                        <Label Content="Color Parameter" FontWeight="Bold" />
+                        <Label Content="Color" FontWeight="Bold" />
                         <RadioButton
                             Checked="HandleCheck"
                             Content="none"
@@ -81,7 +81,7 @@
                         IsEnabled="{Binding VMPC_IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
                     <StackPanel Grid.Row="0" Grid.Column="0">
-                        <Label Content="Size Parameter" FontWeight="Bold" />
+                        <Label Content="Size" FontWeight="Bold" />
                         <RadioButton
                             Checked="HandleCheck"
                             Content="none"
@@ -156,7 +156,7 @@
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
-                <RowDefinition Height="3*" />
+                <RowDefinition Height="2.5*" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 

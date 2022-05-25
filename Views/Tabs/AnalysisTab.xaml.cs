@@ -8,12 +8,18 @@ namespace mouse_tracking_web_app.Views
     /// </summary>
     public partial class AnalysisTab : UserControl
     {
-        private ViewModels.PlottingControllerViewModel vm;
+        private readonly ViewModels.PlottingControllerViewModel vm;
+
         public AnalysisTab()
         {
             InitializeComponent();
             vm = (Application.Current as App).PCVM;
             DataContext = vm;
+        }
+
+        private void ApplyButtonClicked(object sender, RoutedEventArgs e)
+        {
+            vm.ApplyChanges();
         }
 
         private void HandleCheck(object sender, RoutedEventArgs e)
@@ -23,11 +29,6 @@ namespace mouse_tracking_web_app.Views
                 ColorParameterName.Text = (string)(sender as RadioButton).Content;
             if ((rButton.GroupName == "size") && !(SizeParameterName is null))
                 SizeParameterName.Text = (string)(sender as RadioButton).Content;
-        }
-
-        private void ApplyButtonClicked(object sender, RoutedEventArgs e)
-        {
-            vm.ApplyChanges();
         }
     }
 }
