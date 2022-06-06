@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Windows.Media.Imaging;
 
@@ -8,6 +9,17 @@ using System.Windows.Media.Imaging;
 
 namespace mouse_tracking_web_app.NavigationTree
 {
+    public static class Extensions
+    {
+        // this method is taken from here: https://stackoverflow.com/questions/3527203/getfiles-with-multiple-extensions
+        public static IEnumerable<FileInfo> GetFilesByExtensions(this DirectoryInfo dir, params string[] extensions)
+        {
+            if (extensions == null)
+                throw new ArgumentNullException("extensions");
+            IEnumerable<FileInfo> files = dir.EnumerateFiles();
+            return files.Where(f => extensions.Contains(f.Extension));
+        }
+    }
     public static class NavTreeRootItemUtils
     {
         // See NavTreeItems for our Model of the tree with RootNode and RootItems
@@ -97,7 +109,7 @@ namespace mouse_tracking_web_app.NavigationTree
 
     public static class NavTreeUtils
     {
-        private static string strSeparator = "[+]";
+        private static readonly string strSeparator = "[+]";
 
         // Procedure used in NavTreeVm. First take snapshot, reconstruct new tree, expand items in snapshot
         public static void ExpandSnapShotItems(List<string> SnapShot, INavTreeItem treeRootItem)

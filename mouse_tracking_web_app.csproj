@@ -36,6 +36,46 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="DnsClient, Version=1.6.0.0, Culture=neutral, PublicKeyToken=4574bb5573c51424, processorArchitecture=MSIL">
       <HintPath>packages\DnsClient.1.6.0\lib\net471\DnsClient.dll</HintPath>
@@ -209,11 +249,11 @@
     <Compile Include="Models\PlottingControllerModel.cs" />
     <Compile Include="Models\VideoControllerModel.cs" />
     <Compile Include="Models\OuterCodeRunner.cs" />
+    <Compile Include="NavigationTree\NTreeRootItems.cs" />
     <Compile Include="Utils\GetIconUseDll.cs" />
     <Compile Include="Utils\GetImageFn.cs" />
     <Compile Include="Utils\RelayCommand.cs" />
-    <Compile Include="Utils\ViewModelBase.cs" />
-    <Compile Include="NavigationTree\NTreeItemsClass.cs" />
+    <Compile Include="NavigationTree\NTreeItems.cs" />
     <Compile Include="NavigationTree\NTreeUtils.cs" />
     <Compile Include="ViewModels\MainControllerViewModel.cs" />
     <Compile Include="ViewModels\NavigationTreeViewModel.cs" />
@@ -229,9 +269,6 @@
     <Compile Include="Views\GridHelper.cs" />
     <Compile Include="Views\UserControls\ColoredTimeBar.xaml.cs">
       <DependentUpon>ColoredTimeBar.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\UserControls\FileExplorerWrapper_.xaml.cs">
-      <DependentUpon>FileExplorerWrapper_.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\UserControls\NavigationTree.xaml.cs">
       <DependentUpon>NavigationTree.xaml</DependentUpon>
@@ -279,10 +316,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\UserControls\ColoredTimeBar.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\UserControls\FileExplorerWrapper_.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

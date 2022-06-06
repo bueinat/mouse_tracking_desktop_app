@@ -8,7 +8,7 @@ namespace mouse_tracking_web_app.ViewModels
 {
     // MainVm for ATreeDemo
 
-    public partial class NavigationTreeViewModel : ViewModelBase, INotifyPropertyChanged
+    public partial class NavigationTreeViewModel : INotifyPropertyChanged
     {
         #region JustForSingleTreeDemo
 
@@ -24,8 +24,8 @@ namespace mouse_tracking_web_app.ViewModels
             get => includeFiles;
             set
             {
-                if (!SetProperty(ref includeFiles, value, "IncludeFiles")) return;
-                SingleTree.RebuildTree(RootNr, includeFiles);
+                includeFiles = value;
+                NotifyPropertyChanged("IncludeFiles");
             }
         }
 
@@ -36,8 +36,8 @@ namespace mouse_tracking_web_app.ViewModels
             get => rootNr;
             set
             {
-                if (!SetProperty(ref rootNr, value, "RootNr")) return;
-                SingleTree.RebuildTree(RootNr, includeFiles);
+                rootNr = value;
+                NotifyPropertyChanged("RootNr");
             }
         }
 
@@ -59,21 +59,17 @@ namespace mouse_tracking_web_app.ViewModels
 
         // constructor constructs Single Tree and TabbedNavTreesVm
 
-        private string rootPath;
         public string NTVM_FileExplorerDirectory
         {
             get => model.FileExplorerDirectory;
             set
             {
-                _ = SetProperty(ref rootPath, value, "NTVM_FileExplorerDirectory");
-                SingleTree = new NavTreeVm(rootPath); // TODO: it's important that this would happen!!!
+                model.FileExplorerDirectory = value;
+                NotifyPropertyChanged("NTVM_FileExplorerDirectory");
             }
         }
 
-        //public string NTVM_FileExplorerDirectory
-        //{
 
-        //}
         private readonly Models.MainControllerModel model;
         public NavigationTreeViewModel(Models.MainControllerModel mainController)
         {
@@ -83,7 +79,7 @@ namespace mouse_tracking_web_app.ViewModels
             {
                 NotifyPropertyChanged("NTVM_" + e.PropertyName);
                 if (e.PropertyName == "FileExplorerDirectory")
-                    SingleTree = new NavTreeVm(NTVM_FileExplorerDirectory);
+                    SingleTree = new NavTreeVm(NTVM_FileExplorerDirectory, 0, true);
             };
 
             // Construct Single tree
@@ -96,11 +92,14 @@ namespace mouse_tracking_web_app.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-
         public string SelectedPath
         {
             get => selectedPath;
-            set => SetProperty(ref selectedPath, value, "SelectedPath");
+            set
+            {
+                selectedPath = value;
+                NotifyPropertyChanged("SelectedPath");
+            }
         }
 
         public ICommand SelectedPathFromTreeCommand => selectedPathFromTreeCommand ??

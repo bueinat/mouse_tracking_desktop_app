@@ -13,15 +13,6 @@
 
         <HierarchicalDataTemplate x:Key="NavTreeTempl" ItemsSource="{Binding Path=Children}">
 
-            <!--  Transparant button + command+parameter set SelectedPath EACH time item is clicked  -->
-
-            <!--  Note: Normally I use very basic bindings  -->
-            <!--
-                Note: Now commmand in ViewModel, earlier in NavTreeVm, using bindings:
-                "{Binding Path=DataContext.SelectedPathFromTreeCommand, ElementName=CurrentNavTreeViewName}" (+ this User Control given name)
-                or ..., RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
-            -->
-
             <Button
                 Height="20"
                 Padding="0"
@@ -54,8 +45,6 @@
         <TreeView.ItemContainerStyle>
             <Style TargetType="{x:Type TreeViewItem}">
                 <Setter Property="IsExpanded" Value="{Binding Path=IsExpanded, Mode=TwoWay}" />
-                <!--<Setter Property="IsSelected" Value="{Binding Path=IsSelected, Mode=TwoWay}"/>-->
-                <!--<Setter Property="dd1:DragDropManager.DropTargetAdvisor" Value="{StaticResource FolderPlaneItemsDropAdvisor}"/>-->
             </Style>
         </TreeView.ItemContainerStyle>
     </TreeView>

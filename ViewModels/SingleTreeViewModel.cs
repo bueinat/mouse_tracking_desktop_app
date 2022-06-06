@@ -2,14 +2,14 @@
 using mouse_tracking_web_app.NavigationTree;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 // based on code from here: https://www.codeproject.com/Articles/390514/Playing-with-a-MVVM-Tabbed-TreeView-for-a-File-Exp
 
 namespace mouse_tracking_web_app.ViewModels
 {
-    public class NavTreeVm : ViewModelBase
+    public class NavTreeVm : INotifyPropertyChanged
     {
-        // public ICommand SelectedPathFromTreeCommand moved to ViewModel
 
         // RootChildren are used to bind to TreeView
         private ObservableCollection<INavTreeItem> rootChildren = new ObservableCollection<INavTreeItem> { };
@@ -19,6 +19,8 @@ namespace mouse_tracking_web_app.ViewModels
 
         // a Name to bind to the NavTreeTabs
         private string treeName = "";
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         // Constructors
         public NavTreeVm(string nTreePath, int pRootNumber = 0, bool pIncludeFileChildren = false)
@@ -41,23 +43,39 @@ namespace mouse_tracking_web_app.ViewModels
         public NavTreeVm(string nTreePath) : this(nTreePath, 0)
         {
         }
+        public void NotifyPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
 
         public ObservableCollection<INavTreeItem> RootChildren
         {
             get => rootChildren;
-            set => _ = SetProperty(ref rootChildren, value, "RootChildren");
+            set
+            {
+                rootChildren = value;
+                NotifyPropertyChanged("RootChildren");
+            }
         }
 
         public int RootNr
         {
             get => rootNr;
-            set => _ = SetProperty(ref rootNr, value, "RootNr");
+            set
+            {
+                rootNr = value;
+                NotifyPropertyChanged("RootNr");
+            }
         }
 
         public string TreeName
         {
             get => treeName;
-            set => _ = SetProperty(ref treeName, value, "TreeName");
+            set
+            {
+                treeName = value;
+                NotifyPropertyChanged("TreeName");
+            }
         }
         public void RebuildTree(int pRootNr = -1, bool pIncludeFileChildren = false)
         {

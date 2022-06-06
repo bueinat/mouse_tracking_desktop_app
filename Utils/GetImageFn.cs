@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;     // add to references
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Windows.Media.Imaging;
 
@@ -73,19 +72,6 @@ namespace mouse_tracking_web_app.Utils
                 imageList.Add(ext, myIcon);
             }
             return myIcon;
-        }
-    }
-
-    public static class TestCurrentOs
-    {
-        // Only tested for one 64 bit Windows7 PC, not other operating systems
-        public static bool IsWindows7()
-        {
-            OperatingSystem osInfo = Environment.OSVersion;
-            PlatformID platform = osInfo.Platform;
-            int majorVersion = osInfo.Version.Major;
-            int minorVersion = osInfo.Version.Minor;
-            return (platform == PlatformID.Win32NT) && (majorVersion == 6) && (minorVersion >= 1);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -20,18 +21,6 @@ using System.Runtime.InteropServices;
 ///
 namespace mouse_tracking_web_app.Utils
 {
-
-    public static class Utils
-    {
-        // this method is taken from here: https://stackoverflow.com/questions/3527203/getfiles-with-multiple-extensions
-        public static IEnumerable<FileInfo> GetFilesByExtensions(this DirectoryInfo dir, params string[] extensions)
-        {
-            if (extensions == null)
-                throw new ArgumentNullException("extensions");
-            IEnumerable<FileInfo> files = dir.EnumerateFiles();
-            return files.Where(f => extensions.Contains(f.Extension));
-        }
-    }
     public class ShellIcon
     {
         public ShellIcon()
@@ -49,8 +38,29 @@ namespace mouse_tracking_web_app.Utils
             }
             catch
             {
-                // to do, test registry??
-                return null;
+                //    string tempDirectory = @"c:\\temp";
+                //    TempFileCollection coll = new TempFileCollection(tempDirectory, true);
+                    string[] sName = fileName.Split('.');
+                //    string tempFilename = coll.AddExtension(sName[sName.Length - 1], true);
+                string tempFileName = Path.Combine(".", $"temp.{sName[sName.Length - 1]}");
+                File.WriteAllText(tempFileName, "Hello World");
+
+                _ = Win32.SHGetFileInfo(tempFileName, 0, ref shinfo, (uint)Marshal.SizeOf(shinfo), Win32.SHGFI_ICON | Win32.SHGFI_LARGEICON);
+                try
+                {
+                    Icon icon = (Icon)Icon.FromHandle(shinfo.hIcon).Clone();
+                    _ = Win32.DestroyIcon(shinfo.hIcon);
+                    return icon;
+                }
+                catch
+                {
+                    Icon icon = new Icon(SystemIcons.Application, 40, 40);
+                    return icon;
+                }
+                finally
+                {
+                    File.Delete(tempFileName);
+                }
             }
         }
 
