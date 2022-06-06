@@ -16,8 +16,8 @@ namespace mouse_tracking_web_app
         {
             // create models and view models
             Model = new Models.MainControllerModel();
-            MainVM = new ViewModels.MainControllerViewModel(Model);
             NTVM = new ViewModels.NavigationTreeViewModel(Model);
+            MainVM = new ViewModels.MainControllerViewModel(Model, NTVM);
             VCVM = new ViewModels.VideoControllerViewModel(Model.VC);
             PCVM = new ViewModels.PlottingControllerViewModel(Model.PC);
 

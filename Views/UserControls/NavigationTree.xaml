@@ -28,7 +28,7 @@
                 Background="{x:Null}"
                 BorderBrush="{x:Null}"
                 ClickMode="Press"
-                Command="{Binding Path=DataContext.SelectedPathFromTreeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
+                Command="{Binding Path=DataContext.NTVM.SelectedPathFromTreeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"
                 CommandParameter="{Binding FullPathName}"
                 Focusable="False"
                 ToolTip="{Binding Path=FullPathName, Mode=OneTime}">

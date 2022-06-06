@@ -28,7 +28,7 @@ namespace mouse_tracking_web_app.ViewModels
             NavTreeItem treeRootItem = NavTreeRootItemUtils.ReturnRootItem(pRootNumber, pIncludeFileChildren, nTreePath);
             TreeName = treeRootItem.FriendlyName;
 
-            // Delete RootChildren and init RootChildren ussing treeRootItem.Children
+            // Delete RootChildren and init RootChildren using treeRootItem.Children
             foreach (INavTreeItem item in RootChildren) { item.DeleteChildren(); }
             RootChildren.Clear();
 

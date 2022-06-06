@@ -5,10 +5,12 @@ namespace mouse_tracking_web_app.ViewModels
     public class MainControllerViewModel : INotifyPropertyChanged
     {
         private readonly Models.MainControllerModel model;
+        public NavigationTreeViewModel NTVM { get; internal set; }
 
-        public MainControllerViewModel(Models.MainControllerModel mainController)
+        public MainControllerViewModel(Models.MainControllerModel mainController, NavigationTreeViewModel NTVM)
         {
             model = mainController;
+            this.NTVM = NTVM;
             model.PropertyChanged +=
             delegate (object sender, PropertyChangedEventArgs e)
             {

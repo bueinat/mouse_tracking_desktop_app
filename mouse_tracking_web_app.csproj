@@ -230,6 +230,9 @@
     <Compile Include="Views\UserControls\ColoredTimeBar.xaml.cs">
       <DependentUpon>ColoredTimeBar.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\UserControls\FileExplorerWrapper_.xaml.cs">
+      <DependentUpon>FileExplorerWrapper_.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\UserControls\NavigationTree.xaml.cs">
       <DependentUpon>NavigationTree.xaml</DependentUpon>
     </Compile>
@@ -276,6 +279,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\UserControls\ColoredTimeBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UserControls\FileExplorerWrapper_.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

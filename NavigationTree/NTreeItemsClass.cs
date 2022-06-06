@@ -101,6 +101,8 @@ namespace mouse_tracking_web_app.NavigationTree
             INavTreeItem item1;
 
             //string[] allDrives = System.Environment.GetLogicalDrives();
+            string[] files = Directory.GetFiles(FullPathName, "*.cs", SearchOption.TopDirectoryOnly);
+
             DriveInfo[] allDrives = DriveInfo.GetDrives();
             foreach (DriveInfo drive in allDrives)
             {
@@ -150,6 +152,63 @@ namespace mouse_tracking_web_app.NavigationTree
         }
     }
 
+
+    public class FolderRootItem : NavTreeItem
+    {
+        public FolderRootItem(string fullPathName)
+        {
+            //Constructor sets some properties
+            FriendlyName = "FolderRoot";
+            IsExpanded = true;
+            FullPathName = fullPathName;
+            //FullPathName = "$xxDriveRoot$";
+        }
+        public override ObservableCollection<INavTreeItem> GetMyChildren()
+        {
+            ObservableCollection<INavTreeItem> childrenList = new ObservableCollection<INavTreeItem>() { };
+            INavTreeItem item1;
+
+            try
+            {
+                DirectoryInfo di = new DirectoryInfo(FullPathName); // maybe access not allowed
+                if (!di.Exists) return childrenList;
+                foreach (DirectoryInfo dir in di.GetDirectories())
+                {
+                    item1 = new FolderItem
+                    {
+                        FullPathName = FullPathName + "\\" + dir.Name,
+                        FriendlyName = dir.Name,
+                        IncludeFileChildren = IncludeFileChildren
+                    };
+                    childrenList.Add(item1);
+                }
+
+                if (IncludeFileChildren)
+                {
+                    foreach (FileInfo file in di.GetFiles())
+                    {
+                        item1 = new FileItem
+                        {
+                            FullPathName = FullPathName + "\\" + file.Name,
+                            FriendlyName = file.Name
+                        };
+                        childrenList.Add(item1);
+                    }
+                }
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            return childrenList;
+        }
+
+        public override BitmapSource GetMyIcon()
+        {
+            return myIcon = Utils.GetIconFn.GetIconDll(FullPathName);
+        }
+    }
+
     public class FolderItem : NavTreeItem
     {
         public override ObservableCollection<INavTreeItem> GetMyChildren()
@@ -159,7 +218,7 @@ namespace mouse_tracking_web_app.NavigationTree
 
             try
             {
-                DirectoryInfo di = new DirectoryInfo(FullPathName); // may be acces not allowed
+                DirectoryInfo di = new DirectoryInfo(FullPathName); // maybe access not allowed
                 if (!di.Exists) return childrenList;
                 foreach (DirectoryInfo dir in di.GetDirectories())
                 {

@@ -14,7 +14,7 @@ namespace mouse_tracking_web_app.NavigationTree
         // RootNode.Children = RootItem(s) or direct RootItem(s).Children dependant RootNode.UseRootItemsAsChildren
 
         // Convention: Root items end with:
-        public const string LastPartRootItemName = "RootItem";
+        public const string LastPartRootItemName = "FolderRootItem";
 
         // Using convention and reflection to construct a List<string> of RootItems defined in the code
         // Note: can we use also MEF??
@@ -43,7 +43,7 @@ namespace mouse_tracking_web_app.NavigationTree
         public static NavTreeItem ReturnRootItem(int iRootNr, bool includeFileChildren = false, string rootPath = "")
         {
             // Set default System.Type
-            Type selectedType = typeof(DriveRootItem);
+            Type selectedType = typeof(FolderItem);
             string selectedName = "Drive";
 
             // Can you find other type given the conventions ..RootItem name and iRootNr

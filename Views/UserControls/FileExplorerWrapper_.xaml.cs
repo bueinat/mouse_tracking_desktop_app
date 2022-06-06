@@ -4,11 +4,11 @@ using System.Windows.Controls;
 namespace mouse_tracking_web_app.Views
 {
     /// <summary>
-    /// Interaction logic for FileExplorerWrapper.xaml
+    /// Interaction logic for FileExplorerWrapper_.xaml
     /// </summary>
-    public partial class FileExplorerWrapper : UserControl
+    public partial class FileExplorerWrapper_ : Page
     {
-        public FileExplorerWrapper()
+        public FileExplorerWrapper_()
         {
             InitializeComponent();
             DataContext = (Application.Current as App).NTVM;
