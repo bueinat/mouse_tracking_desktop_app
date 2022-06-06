@@ -38,7 +38,7 @@
                 <uc:AnalysisTab />
             </TabItem>
         </TabControl>
-        <uc:FileExplorerWrapper />
+        <uc:FileExplorerWrapper Grid.Row="0" Grid.Column="1" />
         <!--<uc:NavigationTree
             Grid.Row="0"
             Grid.Column="1"

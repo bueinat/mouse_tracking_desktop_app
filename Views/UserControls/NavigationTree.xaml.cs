@@ -14,7 +14,8 @@ namespace mouse_tracking_web_app.Views
         public NavigationTree()
         {
             InitializeComponent();
-            DataContext = new NavigationTreeViewModel(NavigationTreePath).SingleTree;
+            //DataContext = (Application.Current as App).NTVM.SingleTree;
+            //DataContext = new NavigationTreeViewModel().SingleTree;
         }
 
         #region NavigationTreePath DP

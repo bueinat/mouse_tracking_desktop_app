@@ -36,6 +36,5 @@ namespace mouse_tracking_web_app.Views
             if (saveFileDialog.ShowDialog() == true)
                 File.WriteAllText(saveFileDialog.FileName, vm.VM_CSVString);
         }
-
     }
 }

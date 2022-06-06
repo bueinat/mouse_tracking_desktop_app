@@ -5,6 +5,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:uc="clr-namespace:mouse_tracking_web_app.Views"
+    xmlns:viewModels="clr-namespace:mouse_tracking_web_app.ViewModels"
+    d:DataContext="{d:DesignInstance Type=viewModels:NavigationTreeViewModel}"
     d:DesignHeight="300"
     d:DesignWidth="300"
     mc:Ignorable="d">
@@ -12,12 +14,12 @@
         <GroupBox Header="File Explorer">
             <StackPanel>
 
-                <Label Content="hello" />
+                <Label Content="{Binding NTVM_FileExplorerDirectory}" />
 
                 <uc:NavigationTree
                     Grid.Row="0"
                     Grid.Column="1"
-                    NavigationTreePath="{Binding VM_FileExplorerDirectory}" />
+                    DataContext="{Binding SingleTree}" />
 
             </StackPanel>
         </GroupBox>

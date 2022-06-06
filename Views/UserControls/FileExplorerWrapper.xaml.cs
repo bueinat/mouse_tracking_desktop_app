@@ -23,6 +23,7 @@ namespace mouse_tracking_web_app.Views
         public FileExplorerWrapper()
         {
             InitializeComponent();
+            DataContext = (Application.Current as App).NTVM;
         }
     }
 }

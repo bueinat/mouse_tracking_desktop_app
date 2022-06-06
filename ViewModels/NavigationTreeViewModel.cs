@@ -1,4 +1,5 @@
 ﻿using mouse_tracking_web_app.MVVM;
+using System.ComponentModel;
 using System.Windows.Input;
 
 // based on code from here: https://www.codeproject.com/Articles/390514/Playing-with-a-MVVM-Tabbed-TreeView-for-a-File-Exp
@@ -7,7 +8,7 @@ namespace mouse_tracking_web_app.ViewModels
 {
     // MainVm for ATreeDemo
 
-    public partial class NavigationTreeViewModel : ViewModelBase
+    public partial class NavigationTreeViewModel : ViewModelBase, INotifyPropertyChanged
     {
         #region JustForSingleTreeDemo
 
@@ -57,11 +58,44 @@ namespace mouse_tracking_web_app.ViewModels
         private RelayCommand selectedPathFromTreeCommand;
 
         // constructor constructs Single Tree and TabbedNavTreesVm
-        public NavigationTreeViewModel(string nTreePath)
+
+        private string rootPath;
+        public string NTVM_FileExplorerDirectory
         {
-            // Construct Single tree
-            SingleTree = new NavTreeVm(nTreePath);
+            get => model.FileExplorerDirectory;
+            set
+            {
+                _ = SetProperty(ref rootPath, value, "NTVM_FileExplorerDirectory");
+                SingleTree = new NavTreeVm(rootPath); // TODO: it's important that this would happen!!!
+            }
         }
+
+        //public string NTVM_FileExplorerDirectory
+        //{
+
+        //}
+        private readonly Models.MainControllerModel model;
+        public NavigationTreeViewModel(Models.MainControllerModel mainController)
+        {
+            model = mainController;
+            model.PropertyChanged +=
+            delegate (object sender, PropertyChangedEventArgs e)
+            {
+                NotifyPropertyChanged("NTVM_" + e.PropertyName);
+                if (e.PropertyName == "FileExplorerDirectory")
+                    SingleTree = new NavTreeVm(NTVM_FileExplorerDirectory);
+            };
+
+            // Construct Single tree
+            //SingleTree = new NavTreeVm(nTreePath);
+        }
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public void NotifyPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
 
         public string SelectedPath
         {

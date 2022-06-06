@@ -8,12 +8,10 @@ namespace mouse_tracking_web_app.Views
     /// </summary>
     public partial class CurrentDataPresentor : UserControl
     {
-        //private readonly ViewModels.VideoControllerViewModel vm;
 
         public CurrentDataPresentor()
         {
             InitializeComponent();
-            //vm = (Application.Current as App).VCVM;
             DataContext = (Application.Current as App).VCVM;
         }
     }
