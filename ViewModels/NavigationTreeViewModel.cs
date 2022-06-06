@@ -12,7 +12,7 @@ namespace mouse_tracking_web_app.ViewModels
     {
         #region JustForSingleTreeDemo
 
-        private bool includeFiles;
+        private bool includeFiles = true;
 
         private RelayCommand rebuildTreeCommand;
 

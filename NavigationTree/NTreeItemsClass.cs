@@ -1,8 +1,10 @@
 ﻿using mouse_tracking_web_app.MVVM;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Windows.Media.Imaging;
 
 // based on code from here: https://www.codeproject.com/Articles/390514/Playing-with-a-MVVM-Tabbed-TreeView-for-a-File-Exp
@@ -35,11 +37,24 @@ namespace mouse_tracking_web_app.NavigationTree
         // For resetting the tree
         void DeleteChildren();
     }
+    public static class Extensions // CS1106  
+    {
+        // this method is taken from here: https://stackoverflow.com/questions/3527203/getfiles-with-multiple-extensions
+        public static IEnumerable<FileInfo> GetFilesByExtensions(this DirectoryInfo dir, params string[] extensions)
+        {
+            if (extensions == null)
+                throw new ArgumentNullException("extensions");
+            IEnumerable<FileInfo> files = dir.EnumerateFiles();
+            return files.Where(f => extensions.Contains(f.Extension));
+        }
+    }
 
     public class DriveItem : NavTreeItem
     {
         public override ObservableCollection<INavTreeItem> GetMyChildren()
         {
+
+
             ObservableCollection<INavTreeItem> childrenList = new ObservableCollection<INavTreeItem>() { };
             INavTreeItem item1;
 
@@ -62,7 +77,8 @@ namespace mouse_tracking_web_app.NavigationTree
 
             if (IncludeFileChildren)
             {
-                foreach (FileInfo file in di.GetFiles())
+
+                foreach (FileInfo file in di.GetFilesByExtensions(".jpg", ".exe", ".gif", ".cs", ".txt", ".pdf"))
                 {
                     item1 = new FileItem
                     {

@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 
 // based on code from here: https://www.codeproject.com/Articles/390514/Playing-with-a-MVVM-Tabbed-TreeView-for-a-File-Exp
@@ -17,6 +20,18 @@ using System.Runtime.InteropServices;
 ///
 namespace mouse_tracking_web_app.Utils
 {
+
+    public static class Utils
+    {
+        // this method is taken from here: https://stackoverflow.com/questions/3527203/getfiles-with-multiple-extensions
+        public static IEnumerable<FileInfo> GetFilesByExtensions(this DirectoryInfo dir, params string[] extensions)
+        {
+            if (extensions == null)
+                throw new ArgumentNullException("extensions");
+            IEnumerable<FileInfo> files = dir.EnumerateFiles();
+            return files.Where(f => extensions.Contains(f.Extension));
+        }
+    }
     public class ShellIcon
     {
         public ShellIcon()
