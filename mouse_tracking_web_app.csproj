@@ -209,15 +209,29 @@
     <Compile Include="Models\PlottingControllerModel.cs" />
     <Compile Include="Models\VideoControllerModel.cs" />
     <Compile Include="Models\OuterCodeRunner.cs" />
+    <Compile Include="Utils\GetIconUseDll.cs" />
+    <Compile Include="Utils\GetImageFn.cs" />
+    <Compile Include="Utils\RelayCommand.cs" />
+    <Compile Include="Utils\ViewModelBase.cs" />
+    <Compile Include="NavigationTree\NTreeItemsClass.cs" />
+    <Compile Include="NavigationTree\NTreeUtils.cs" />
     <Compile Include="ViewModels\MainControllerViewModel.cs" />
+    <Compile Include="ViewModels\NavigationTreeViewModel.cs" />
     <Compile Include="ViewModels\PlottingControllerViewModel.cs" />
+    <Compile Include="ViewModels\SingleTreeViewModel.cs" />
     <Compile Include="ViewModels\VideoControllerViewModel.cs" />
+    <Compile Include="Views\UserControls\FileExplorerWrapper.xaml.cs">
+      <DependentUpon>FileExplorerWrapper.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Tabs\AnalysisTab.xaml.cs">
       <DependentUpon>AnalysisTab.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\GridHelper.cs" />
     <Compile Include="Views\UserControls\ColoredTimeBar.xaml.cs">
       <DependentUpon>ColoredTimeBar.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UserControls\NavigationTree.xaml.cs">
+      <DependentUpon>NavigationTree.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\UserControls\PathStatisticsPresentor.xaml.cs">
       <DependentUpon>PathStatisticsPresentor.xaml</DependentUpon>
@@ -253,11 +267,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\UserControls\FileExplorerWrapper.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Tabs\AnalysisTab.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\UserControls\ColoredTimeBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UserControls\NavigationTree.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

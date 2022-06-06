@@ -6,9 +6,11 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:uc="clr-namespace:mouse_tracking_web_app.Views"
+    xmlns:viewmodels="clr-namespace:mouse_tracking_web_app.ViewModels"
     Title="TabsWindow"
     Width="800"
     Height="600"
+    d:DataContext="{d:DesignInstance Type=viewmodels:MainControllerViewModel}"
     mc:Ignorable="d">
     <Window.Resources>
         <ResourceDictionary>
@@ -36,11 +38,11 @@
                 <uc:AnalysisTab />
             </TabItem>
         </TabControl>
-        <TextBlock
+        <uc:FileExplorerWrapper />
+        <!--<uc:NavigationTree
             Grid.Row="0"
             Grid.Column="1"
-            Margin="2,10,0,0"
-            Text="here there would be a file explorer" />
+            NavigationTreePath="{Binding VM_FileExplorerDirectory}" />-->
         <Button
             x:Name="exportButton"
             Grid.Row="1"

@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using System.Windows;
 
 namespace mouse_tracking_web_app.ViewModels
 {
@@ -15,12 +14,13 @@ namespace mouse_tracking_web_app.ViewModels
             {
                 NotifyPropertyChanged("VM_" + e.PropertyName);
             };
-            VM_VideoControllerViewModel = (Application.Current as App).VCVM;
+            //VM_VideoControllerViewModel = (Application.Current as App).VCVM;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         public string VM_CSVString => model.CSVString;
+
         public string VM_ErrorMessage
         {
             get => model.ErrorMessage;
@@ -41,7 +41,7 @@ namespace mouse_tracking_web_app.ViewModels
             set => model.IsLoading = value;
         }
 
-        public VideoControllerViewModel VM_VideoControllerViewModel { get; set; }
+        //public VideoControllerViewModel VM_VideoControllerViewModel { get; set; }
 
         public string VM_VideoName
         {
