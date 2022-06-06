@@ -10,6 +10,7 @@ namespace mouse_tracking_web_app.Models
     {
         private Analysis analysis;
         private string errorMessage = "";
+        private string fileExplorerDirectory = "";
 
         private bool isLoading = false;
         private bool pause = true;
@@ -43,6 +44,16 @@ namespace mouse_tracking_web_app.Models
                 errorMessage = value;
                 NotifyPropertyChanged("ErrorMessage");
                 NotifyPropertyChanged("HasErrorMessage");
+            }
+        }
+
+        public string FileExplorerDirectory
+        {
+            get => fileExplorerDirectory;
+            set
+            {
+                fileExplorerDirectory = value;
+                NotifyPropertyChanged("FileExplorerDirectory");
             }
         }
 

@@ -27,6 +27,12 @@ namespace mouse_tracking_web_app.ViewModels
             set => model.ErrorMessage = value;
         }
 
+        public string VM_FileExplorerDirectory
+        {
+            get => model.FileExplorerDirectory;
+            set => model.FileExplorerDirectory = value;
+        }
+
         public bool VM_HasErrorMessage => model.HasErrorMessage;
 
         public bool VM_IsLoading

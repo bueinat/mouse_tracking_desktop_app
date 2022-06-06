@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace mouse_tracking_web_app.Views
 {
@@ -28,12 +29,15 @@ namespace mouse_tracking_web_app.Views
             };
         }
 
-        //private void Button_Connect(object sender, RoutedEventArgs e)
-        //{
-        //    connecting_button.Content = "connecting...";
-        //    vm.Connect();
-        //    connecting_button.Content = "connected!";
-        //}
+        private void Button_Workspace(object sender, RoutedEventArgs e)
+        {
+            CommonOpenFileDialog dialog = new CommonOpenFileDialog
+            {
+                IsFolderPicker = true
+            };
+            if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
+                dirName.Text = dialog.FileName;
+        }
 
         private void Go_to_screen_Click(object sender, RoutedEventArgs e)
         {
