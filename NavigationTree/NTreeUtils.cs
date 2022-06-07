@@ -12,14 +12,6 @@ namespace mouse_tracking_web_app.NavigationTree
     public static class Extensions
     {
         // this method is taken from here: https://stackoverflow.com/questions/3527203/getfiles-with-multiple-extensions
-        public static IEnumerable<FileInfo> GetFilesByExtensions(this DirectoryInfo dir, params string[] extensions)
-        {
-            if (extensions == null)
-                throw new ArgumentNullException("extensions");
-            IEnumerable<FileInfo> files = dir.EnumerateFiles();
-            return files.Where(f => extensions.Contains(f.Extension));
-        }
-
         public static IEnumerable<FileInfo> GetFilesByExtensions(this DirectoryInfo dir, List<string> extensions)
         {
             if (extensions == null)
@@ -49,11 +41,7 @@ namespace mouse_tracking_web_app.NavigationTree
             foreach (Type t in entityTypes)
             {
                 if (t.Name.EndsWith(LastPartRootItemName))
-                {
-                    //Console.Write("* Root * ");
                     List.Add(t.Name.Replace(LastPartRootItemName, ""));
-                }
-                //Console.WriteLine(t.Name);
             }
             return List;
         }

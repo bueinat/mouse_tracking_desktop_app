@@ -78,7 +78,8 @@ namespace mouse_tracking_web_app.NavigationTree
                 {
                     FullPathName = FullPathName,
                     FriendlyName = di.Name,
-                    IncludeFileChildren = IncludeFileChildren
+                    IncludeFileChildren = IncludeFileChildren,
+                    IsExpanded = true
                 };
                 childrenList.Add(item1);
 
