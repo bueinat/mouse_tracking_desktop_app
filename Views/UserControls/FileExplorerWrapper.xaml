@@ -12,15 +12,12 @@
     mc:Ignorable="d">
     <Grid>
         <GroupBox Header="File Explorer">
-            <StackPanel>
-
-                <Label Content="{Binding NTVM_FileExplorerDirectory}" />
-
+            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                 <uc:NavigationTree
                     Grid.Row="0"
                     Grid.Column="1"
                     DataContext="{Binding SingleTree}" />
-            </StackPanel>
+            </ScrollViewer>
         </GroupBox>
     </Grid>
 </UserControl>

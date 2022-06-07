@@ -19,6 +19,14 @@ namespace mouse_tracking_web_app.NavigationTree
             IEnumerable<FileInfo> files = dir.EnumerateFiles();
             return files.Where(f => extensions.Contains(f.Extension));
         }
+
+        public static IEnumerable<FileInfo> GetFilesByExtensions(this DirectoryInfo dir, List<string> extensions)
+        {
+            if (extensions == null)
+                throw new ArgumentNullException("extensions");
+            IEnumerable<FileInfo> files = dir.EnumerateFiles();
+            return files.Where(f => extensions.Contains(f.Extension));
+        }
     }
     public static class NavTreeRootItemUtils
     {

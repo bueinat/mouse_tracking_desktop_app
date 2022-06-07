@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Windows.Media.Imaging;
@@ -46,6 +47,16 @@ namespace mouse_tracking_web_app.NavigationTree
         protected BitmapSource myIcon;
 
         private bool isExpanded;
+
+
+        private static readonly List<string> extensionsList = new List<string>(ConfigurationManager.AppSettings["FileTypesList"].Split(',')).Select(ext => "." + ext).ToList();
+        public List<string> ExtensionsList => extensionsList;
+
+        //public NavTreeItem()
+        //{
+        //private static readonly List<string> helpoutList = new List<string>(ConfigurationManager.AppSettings["FileTypesList"].Split(','));
+        //    extentionsList = helpoutList.Select(ext => "." + ext).ToList();
+        //}
 
         public void NotifyPropertyChanged(string propertyName)
         {
@@ -144,7 +155,7 @@ namespace mouse_tracking_web_app.NavigationTree
 
             if (IncludeFileChildren)
             {
-                foreach (FileInfo file in di.GetFilesByExtensions(".jpg", ".exe", ".gif", ".cs", ".txt", ".pdf"))
+                foreach (FileInfo file in di.GetFilesByExtensions(ExtensionsList))
                 {
                     item1 = new FileItem
                     {
@@ -206,7 +217,7 @@ namespace mouse_tracking_web_app.NavigationTree
                 if (IncludeFileChildren)
                 {
                     // TODO: treat all getfiles by ext. together
-                    foreach (FileInfo file in di.GetFilesByExtensions(".jpg", ".exe", ".gif", ".cs", ".txt", ".pdf"))
+                    foreach (FileInfo file in di.GetFilesByExtensions(ExtensionsList))
                     {
                         item1 = new FileItem
                         {
