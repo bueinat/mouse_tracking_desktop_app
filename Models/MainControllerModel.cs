@@ -57,6 +57,17 @@ namespace mouse_tracking_web_app.Models
             }
         }
 
+        private bool dragEnabled = false;
+        public bool DragEnabled
+        {
+            get => dragEnabled;
+            set
+            {
+                dragEnabled = value;
+                NotifyPropertyChanged("DragEnabled");
+            }
+        }
+
         public bool HasErrorMessage => !string.IsNullOrEmpty(ErrorMessage);
         public double IsDrinkingPercent => VideoStats is null ? 0 : VideoStats.IsDrinkingPercent;
         public bool IsLoading

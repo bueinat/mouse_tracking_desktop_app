@@ -260,6 +260,9 @@
     <Compile Include="ViewModels\PlottingControllerViewModel.cs" />
     <Compile Include="ViewModels\SingleTreeViewModel.cs" />
     <Compile Include="ViewModels\VideoControllerViewModel.cs" />
+    <Compile Include="Views\UserControls\DragArea.xaml.cs">
+      <DependentUpon>DragArea.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\UserControls\FileExplorerWrapper.xaml.cs">
       <DependentUpon>FileExplorerWrapper.xaml</DependentUpon>
     </Compile>
@@ -304,6 +307,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="CustomStyles\VideoSlider.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UserControls\DragArea.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

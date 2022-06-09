@@ -94,6 +94,12 @@
                     Visibility="{Binding VM_HasErrorMessage, Converter={StaticResource BooleanToVisibilityConverter}}" />
             </Grid>
         </GroupBox>
+        <usercontrols:DragArea
+            Grid.Row="1"
+            Grid.ColumnSpan="2"
+            Panel.ZIndex="100"
+            Opacity="0.8"
+            Visibility="{Binding VM_DragEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" />
         <usercontrols:VideoController
             Grid.Row="1"
             Grid.Column="0"

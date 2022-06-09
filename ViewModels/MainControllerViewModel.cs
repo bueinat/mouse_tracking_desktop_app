@@ -7,6 +7,8 @@ namespace mouse_tracking_web_app.ViewModels
         private readonly Models.MainControllerModel model;
         public NavigationTreeViewModel NTVM { get; internal set; }
 
+        public bool VM_DragEnabled => model.DragEnabled;
+
         public MainControllerViewModel(Models.MainControllerModel mainController, NavigationTreeViewModel NTVM)
         {
             model = mainController;
