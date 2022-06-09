@@ -98,7 +98,7 @@
             Grid.Row="1"
             Grid.ColumnSpan="2"
             Panel.ZIndex="100"
-            Opacity="0.8"
+            Opacity="0.4"
             Visibility="{Binding VM_DragEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" />
         <usercontrols:VideoController
             Grid.Row="1"

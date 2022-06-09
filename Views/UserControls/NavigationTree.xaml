@@ -32,6 +32,7 @@
                     Orientation="Horizontal">
                     <Image Source="{Binding Path=MyIcon, Mode=OneTime}" Stretch="Fill" />
                     <TextBlock Margin="5,0,0,0" Text="{Binding FriendlyName, Mode=OneTime}" />
+                    <TextBlock Height="0" Text="{Binding FullPathName}" />
                 </StackPanel>
             </Button>
 
@@ -40,7 +41,6 @@
     <StackPanel>
 
         <TreeView
-            AllowDrop="True"
             BorderThickness="0"
             ItemTemplate="{StaticResource NavTreeTempl}"
             ItemsSource="{Binding Path=RootChildren}">
@@ -51,12 +51,6 @@
                 </Style>
             </TreeView.ItemContainerStyle>
         </TreeView>
-        <Rectangle
-            x:Name="redRectangle"
-            Width="50"
-            Height="50"
-            Fill="IndianRed"
-            MouseLeftButtonDown="TreeItem_MouseLeftButtonDown" />
     </StackPanel>
 
 </UserControl>

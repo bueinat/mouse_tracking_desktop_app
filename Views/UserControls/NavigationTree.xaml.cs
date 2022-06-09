@@ -23,10 +23,10 @@ namespace mouse_tracking_web_app.Views
         {
             if (sender.GetType().Name == "StackPanel")
             {
-                string fileName = ((sender as StackPanel).Children[1] as TextBlock).Text;
+                string fileName = ((sender as StackPanel).Children[2] as TextBlock).Text;
                 if (vm.DragStarted(fileName))
                 {
-                    DragDrop.DoDragDrop(this, new DataObject(), DragDropEffects.Copy | DragDropEffects.Move);
+                    DragDrop.DoDragDrop(this, new DataObject(DataFormats.Serializable, fileName), DragDropEffects.Copy | DragDropEffects.Move);
                     vm.DragEnded();
                 }
             }
