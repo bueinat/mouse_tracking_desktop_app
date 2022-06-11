@@ -35,46 +35,71 @@ warnings.filterwarnings("ignore")
 
 # %%
 try:
-    if len(sys.argv) == 1:
-        VIDEO_PATH = 'videos/examples/Odor28.avi'
-    else:
-        VIDEO_PATH = sys.argv[1]
+    args = pandas.read_csv(sys.argv[1], header=None, index_col=0)[1]
+
+    args["override"] = eval(args["override"])
+    # OVERRIDE = eval(sys.argv[1])
+    # CONNECTION_STRING = sys.argv[2]
+    # args["video_path"] = sys.argv[3]
+    # args["archive_path"] = sys.argv[4]
     FUNCTION_NAME = 'alternative_rat_path'
     MAXD = 10
-    VIDEO_NAME = VIDEO_PATH.split('\\')[-1].split('.')[0]
 
-    # os.chdir('cv')
-    archive_path = f".\\archive"
-    os.makedirs(archive_path, exist_ok=True)
-    video_name = VIDEO_PATH.split('\\')[-1].split('.')[0]
-    data_path = f"{archive_path}\\{video_name}"
-    frames_path = f".\\archive\\{video_name}\\frames"
-    print(f"archive path: {os.getcwd()}")
-    print(f"video path: {os.getcwd()}\\archive\\{video_name}")
-    video_path = f"{os.getcwd()}\\archive\\{video_name}"
-    print(f"nframes: {len(os.listdir(frames_path))}")
-    print("video id: 625862ccddd13c6e2add1ec3")
+    os.makedirs(args["archive_path"], exist_ok=True)
+    video_name = args["video_path"].split('\\')[-1].split('.')[0]
+    # data_path = os.path.join(args['archive_path'], video_name)
+    data_path = f"{args['archive_path']}\\{video_name}"
+    frames_path = u"{}\\{}\\frames".format(args['archive_path'], video_name) # os.path.join(f"{args['archive_path']}\\{video_name}", u"frames")
+    # frames_path = f"{args['archive_path']}\\{video_name}\\frames"
+
+    # print(args["connection_string"])
+    # print(f"archive path: {os.getcwd()}")
+    # print(f"video path: {os.getcwd()}\\archive\\{video_name}")
+    # print(f"nframes: {len(os.listdir(frames_path))}")
+    # print("video id: 625862ccddd13c6e2add1ec3")
+    
+    # print(OVERRIDE, CONNECTION_STRING)
+    # print(args["video_path"])
+    # print(args["archive_path"], FUNCTION_NAME, VIDEO_NAME, data_path, frames_path)
+    # if os.path.exists(data_path):
+
     try:
         os.mkdir(data_path)
-    except FileExistsError:
-        raise FileExistsError(
-            f'a video named {video_name} already exists in archive. You can use it or give the new video a different name')
-    shutil.copy2(VIDEO_PATH, data_path)
-    frames_path = f".\\archive\\{video_name}\\frames"
-    nframes = video_to_frames(VIDEO_PATH, frames_path)
-    print(f"frames path: {os.getcwd()}{frames_path[1:]}")
+        args["override"] = False
+    except Exception as e:
+        if args["override"]:
+            print(f"message: note: overriding {video_name} which already existed in the archive.")
+        else:
+            mnge.register_connection(alias='core', host=args["connection_string"])
+            videoq = Video.objects(name=video_name).order_by('-registered_date')
+            # return an already existing video
+            if len(videoq) > 0:
+                video_id = videoq.first().id
+                # TODO: is this the right notation?
+                print(f"video id: {video_id}")
+                raise FileExistsError(f"message: loading existing data of {video_name} which already exists in the archive.")
+            else:
+                os.makedirs(data_path, exist_ok=True)
+
+
+    shutil.copy2(args["video_path"], data_path)
+    # frames_path = f"{args['archive_path']}\\{video_name}\\frames"
+    # if args["override"]:
+    nframes = video_to_frames(args["video_path"], frames_path, override=args['override'])
+    # print(f"frames path: {frames_path}")
     print(f"nframes: {nframes}")
 
+    # raise Exception("done.")
     # %%
     # extracting data from video
     if FUNCTION_NAME == 'rat_path':
-        frames, rat_rects, alims = rat_path(VIDEO_PATH)
+        frames, rat_rects, alims = rat_path(args["video_path"])
 
         # show track of rat in time
         raw_data = pandas.DataFrame(rat_rects).T
    
     elif FUNCTION_NAME == 'alternative_rat_path':
-        frames, eframes, nose_pos, max_vals = alternative_rat_path(VIDEO_PATH)
+        frames, eframes, nose_pos, max_vals = alternative_rat_path(args["video_path"])
         dfnose = pandas.DataFrame(nose_pos, index=['y', 'x']).T
         # dfnose.y = frames[0].shape[0] - dfnose.y
         dfnose = pandas.concat([dfnose, pandas.Series(max_vals)], axis=1)
@@ -149,27 +174,41 @@ try:
     # cluster = "mongodb+srv://john:1234@cluster0.9txls.mongodb.net/real_test?retryWrites=true&w=majority" 
     # in order to run this, you have first to run MongoDB server using:
     # `C:\Program Files\MongoDB\Server\5.0\bin\mongo.exe`
-    cluster = "mongodb://127.0.0.1:27017/test_dbs"    
-    mnge.register_connection(alias='core', host=cluster)
+    mnge.register_connection(alias='core', host=args["connection_string"])
 
     # %%
     video = Video()
-    video.name = VIDEO_PATH.split('\\')[-1] # VIDEO_NAME # VIDEO_PATH.split('/')[-1]
-    # video.length = VideoFileClip(VIDEO_PATH).duration
-    video.length = 10.1
+    video.name = args["video_path"].split('\\')[-1]
+    frame_rate = 45
+    total_length = nframes / frame_rate
+    td = datetime.timedelta(seconds=total_length)
+    minutes, seconds = divmod(td.seconds, 60)
+    millis = round(td.microseconds/1000, 0)
+    video.length = f"{seconds:02}:{int(millis) // 10}"
     video.nframes = len(os.listdir(frames_path))
+    video.modification_date = datetime.datetime.now
 
-    working_path = os.getcwd()
     video.description = "dummy video\nthis is just meant for testing."
-    video.link_to_data = f"{working_path}\\{data_path[2:]}"
-    video.save()
+    video.link_to_data = data_path
 
-    print(f"video id: {video.id}")
+    update_video = Video.objects(name=video_name).order_by('-registered_date')
+    print(args["override"], len(update_video))
+    if args["override"] and len(update_video) > 0:
+        update_video.update_one(set__length=video.length,
+                                set__nframes=video.nframes,
+                                set__modification_date=video.modification_date,
+                                set__description=video.description,
+                                set__link_to_data=video.link_to_data)
+        video_id = update_video.first().id 
+    else:
+        video.save()
+        video_id = video.id
+    print(f"video id: {video_id}")
 
     # %%
     uploadabale_data = raw_data[['x', 'y', 'vx', 'vy', 'ax', 'ay']]
     uploadabale_data.loc[:, 'curviness'] = raw_data.adist / raw_data.rdist
-    uploadabale_data['path'] = [f"{working_path}\\{frames_path[2:]}\\frame{i}.jpg"
+    uploadabale_data['path'] = [f"{frames_path[2:]}\\frame{i}.jpg"
                                 for i in uploadabale_data.index]
     uploadabale_data.index -= 1
     
@@ -178,6 +217,7 @@ try:
     #                             for i in uploadabale_data.index]
 
     ### I read dummy predictions
+    # TODO: read real predictions 
     pred_df = pandas.read_csv('C:/Users/buein/OneDrive - Bar-Ilan University/שנה ג/פרוייקט שנתי/mouse_tracking/cv/videos/examples/testing_project_deepethogram/DATA/odor28/odor28_predictions.csv',
                               index_col=0).drop('background',1).astype(bool)[1:]
     pred_df.columns = pred_df.columns.map(lambda s: "is_" + s.replace(' ', '_'))
@@ -189,17 +229,27 @@ try:
     uploadabale_data = pandas.concat([uploadabale_data, pred_df], axis=1)
 
     # %%
-    video = Video.objects(id=video.id).first()
+    video = Video.objects(id=video_id).first()
     ana = Analysis()
     ana.timestep = list(uploadabale_data.index)
 
     for c in uploadabale_data.columns:
         exec(f"ana.{c} = list(uploadabale_data['{c}'])")
 
-    ana.video = video.id
+    if args["override"]:
+        try:
+            video.analysis.delete()
+        except mnge.DoesNotExist:
+            pass
+
+    ana.video = video_id
     video.analysis = ana
     ana.save()
     video.update(analysis=ana.id)
     video.save()
+    print(f"analysis id: {ana.id}")
 except Exception as e:
-    print(f"error: {e.__class__.__name__}: {e}")
+    if str(e).startswith("message"):
+        print(e)
+    else:
+        print(f"error: {e.__class__.__name__}: {e}")

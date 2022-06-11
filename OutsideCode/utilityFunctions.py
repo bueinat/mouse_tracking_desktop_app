@@ -10,7 +10,7 @@ import os
 import shutil
 import sys
 import mongoengine as mnge
-from utilityFunctions import *
+from PIL import Image
 
 import scipy.ndimage as ndimage
 import scipy.ndimage.filters as filters
@@ -23,26 +23,55 @@ warnings.filterwarnings("ignore")
 # this code roughly finds the path in which the rat went. It goes over the frames and tries to detect from the edges where the rat is
 
 
-def video_to_frames(video_path, frames_path, video_name=None, include_video_name=False):
+def video_to_frames(video_path, frames_path, video_name=None, include_video_name=False, override=False):
     # create filename if doesn't exist and capture whole video
     if video_name == None:
         video_name = video_path.split('/')[-1].split('.')[0]
     vidcap = cv2.VideoCapture(video_path)
-    os.makedirs(frames_path, exist_ok=True)
+    if os.path.exists(frames_path):
+        if override:
+            shutil.rmtree(frames_path)
+            os.makedirs(frames_path)
+        else:
+             raise FileExistsError(f"{frames_path} already exists and override is false")
+    else:
+        os.makedirs(frames_path)
+
+    # try:
+    #     os.makedirs(frames_path)
+    # except Exception as e:
+    #     print(e)
+    #     if override:
+    #        shutil.rmtree(frames_path)
+    #        os.makedirs(frames_path)
+    #    else:
+    #        raise Exception(e)
+    # os.makedirs(frames_path, exist_ok=True)
     count = 0
 
     # make sure the video wasn't extracted already
     success, image = vidcap.read()
-    frame_name = f"{frames_path}\\{video_name}_frame{count}.jpg" if include_video_name else f"{frames_path}\\frame{count}.jpg"
+    # frame_name = f"{frames_path}\\{video_name}_frame{count}.jpg" if include_video_name else f"{frames_path}\\frame{count}.jpg"
+    frame_name = u"{}\\frame{}.jpg".format(frames_path, count)
+    # print(frame_name)
     if os.path.exists(frame_name):
         raise Exception('the video was already extracted')
 
     # write all frames to images
     while success:
-        frame_name = f"{frames_path}\\{video_name}_frame{count}.jpg" if include_video_name else f"{frames_path}\\frame{count}.jpg"
-        s = cv2.imwrite(frame_name, image)
-        if not s:
-            raise Exception(f'frame {count} was not written')
+        frame_name = u"{}\\frame{}.jpg".format(frames_path, count)
+        # frame_name = f"{frames_path}\\{video_name}_frame{count}.jpg" if include_video_name else f"{frames_path}\\frame{count}.jpg"
+        # frame_name = os.path.join(u'', frame_name)
+        # frame_name = frame_name.encode('utf-8')
+        # print(os.path.join(u'', frame_name))
+        # print(frame_name.encode('utf-8'))
+        # print(frame_name)
+        
+        Image.fromarray(image).save(frame_name)
+        # s = cv2.imwrite(frame_name, image)
+        # s2 = cv2.imencode(".jpg", image)[1].tofile(frame_name)
+        # if not s:
+        #    raise Exception(f'frame {count} was not written, name: {frame_name}')
         success, image = vidcap.read()
         count += 1
     return count
@@ -262,13 +291,12 @@ class Analysis(mnge.Document):
     }
 
 # %%
-
-
 class Video(mnge.Document):
     registered_date = mnge.DateTimeField(default=datetime.datetime.now)
+    modification_date = mnge.DateTimeField()
     name = mnge.StringField(required=True)
     nframes = mnge.IntField(reqiured=True)
-    length = mnge.IntField(required=True)
+    length = mnge.StringField(required=True)
     description = mnge.StringField(required=True)
     link_to_data = mnge.StringField(required=True)
     analysis = mnge.ReferenceField(Analysis)

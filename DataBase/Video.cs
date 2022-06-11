@@ -12,6 +12,9 @@ namespace mouse_tracking_web_app.DataBase
         [BsonElement("registered_date")]
         public DateTime RegisteredDate { get; set; }
 
+        [BsonElement("modification_date")]
+        public DateTime ModificationDate { get; set; }
+
         [BsonElement("name")]
         [BsonRepresentation(BsonType.String)]
         public string Name { get; set; }

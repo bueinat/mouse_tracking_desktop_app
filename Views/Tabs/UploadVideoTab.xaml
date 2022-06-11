@@ -38,11 +38,17 @@
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="*" />
+                    <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" />
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="2.5*" />
                 </Grid.ColumnDefinitions>
+                <CheckBox
+                    Grid.Row="2"
+                    Grid.ColumnSpan="2"
+                    Content="Override Data in Archive"
+                    IsChecked="{Binding VM_OverrideInDB, Mode=TwoWay}" />
                 <Button
                     x:Name="BtnUploadsVideo"
                     Grid.Row="0"
@@ -78,15 +84,17 @@
                     Background="#FFCBEAD7"
                     Click="ProcessVideoButtonClicked"
                     Content="Process" />
+
                 <fa:ImageAwesome
                     Grid.Row="2"
+                    Grid.RowSpan="2"
                     Grid.ColumnSpan="2"
-                    Height="10"
+                    Height="15"
                     Icon="CircleOutlineNotch"
                     Spin="True"
                     Visibility="{Binding VM_IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}" />
                 <TextBlock
-                    Grid.Row="2"
+                    Grid.Row="3"
                     Grid.ColumnSpan="2"
                     Foreground="DarkRed"
                     Text="{Binding VM_ErrorMessage}"

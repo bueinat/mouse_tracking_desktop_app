@@ -5,9 +5,6 @@ namespace mouse_tracking_web_app.ViewModels
     public class MainControllerViewModel : INotifyPropertyChanged
     {
         private readonly Models.MainControllerModel model;
-        public NavigationTreeViewModel NTVM { get; internal set; }
-
-        public bool VM_DragEnabled => model.DragEnabled;
 
         public MainControllerViewModel(Models.MainControllerModel mainController, NavigationTreeViewModel NTVM)
         {
@@ -18,12 +15,20 @@ namespace mouse_tracking_web_app.ViewModels
             {
                 NotifyPropertyChanged("VM_" + e.PropertyName);
             };
-            //VM_VideoControllerViewModel = (Application.Current as App).VCVM;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public NavigationTreeViewModel NTVM { get; internal set; }
+
         public string VM_CSVString => model.CSVString;
+        public bool VM_DragEnabled => model.DragEnabled;
+
+        public bool VM_OverrideInDB
+        {
+            get => model.OverrideInDB;
+            set => model.OverrideInDB = value;
+        }
 
         public string VM_ErrorMessage
         {

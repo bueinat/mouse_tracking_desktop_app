@@ -1,4 +1,5 @@
-﻿using mouse_tracking_web_app.DataBase;
+﻿using MongoDB.Bson;
+using mouse_tracking_web_app.DataBase;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -169,11 +170,25 @@ namespace mouse_tracking_web_app.Models
             return 0;
         }
 
-        public void InitializeVideo(string videoID)
+        //private ObjectId _id = default(ObjectId);
+        //private ObjectId? _id = null;
+
+
+        public bool InitializeVideo(string videoID)
         {
-            Video video = model.DBHandler.GetVideoByID(videoID);
-            VC_VideoAnalysis = model.DBHandler.GetAnalysisByID(video.Analysis);
-            VC_StepCounter = 0;
+            if (!string.IsNullOrEmpty(videoID))
+            {
+                Video video = model.DBHandler.GetVideoByID(videoID);
+                // TODO: here there's a bug for some reason
+                //if (video.Analysis is null)
+                if (!(video is null))
+                {
+                    VC_VideoAnalysis = model.DBHandler.GetAnalysisByID(video.Analysis);
+                    VC_StepCounter = 0;
+                }
+                return true;
+            }
+            return false;
         }
 
         public void NotifyPropertyChanged(string propertyName)
