@@ -148,7 +148,7 @@ namespace mouse_tracking_web_app.Models
             set
             {
                 model.VideoAnalysis = value;
-                VC_NFrames = VC_VideoAnalysis.TimeStep.Count - 1;
+                VC_NFrames = VC_VideoAnalysis.TimeStep.Count;
                 VC_StepCounter = 0;
                 NotifyPropertyChanged("VC_VideoAnalysis");
                 NotifyPropertyChanged("VC_FeaturesTimeRanges");
@@ -213,7 +213,7 @@ namespace mouse_tracking_web_app.Models
                 {
                     if (!VC_Pause)
                     {
-                        if (VC_StepCounter < VC_NFrames)
+                        if (VC_StepCounter < VC_NFrames - 1)
                             VC_StepCounter++;
                         else
                             VC_Pause = true;

@@ -162,7 +162,7 @@ def rat_path(video_path):
 def alternative_rat_path(video_path):
     vs = cv2.VideoCapture(video_path)
     prevFrame = None
-    frame_num = 0
+    frame_num = -1
     nose_pos = {}
     frames = []
     maxvals = {}
@@ -186,6 +186,8 @@ def alternative_rat_path(video_path):
         
         # if the first frame is None, initialize it
         if prevFrame is None:
+            nose_pos[frame_num] = np.nan
+            maxvals[frame_num] = np.nan
             prevFrame = frame
             continue
 
@@ -265,7 +267,7 @@ class Analysis(mnge.Document):
     timestep = mnge.ListField(mnge.IntField())
     
 class Video(mnge.Document):
-    registered_date = mnge.DateTimeField(default=datetime.datetime.now)
+    registration_date = mnge.DateTimeField(default=datetime.datetime.now)
     
 #%%
 class Analysis(mnge.Document):
@@ -292,7 +294,7 @@ class Analysis(mnge.Document):
 
 # %%
 class Video(mnge.Document):
-    registered_date = mnge.DateTimeField(default=datetime.datetime.now)
+    registration_date = mnge.DateTimeField(default=datetime.datetime.now)
     modification_date = mnge.DateTimeField()
     name = mnge.StringField(required=True)
     nframes = mnge.IntField(reqiured=True)

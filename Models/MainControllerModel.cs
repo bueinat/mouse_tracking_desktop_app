@@ -23,6 +23,7 @@ namespace mouse_tracking_web_app.Models
             {
                 videoProcessed = value;
                 NotifyPropertyChanged("VideoProcessed");
+                NotifyPropertyChanged("IsVideoLoaded");
             }
         }
 
@@ -154,6 +155,7 @@ namespace mouse_tracking_web_app.Models
                 videoName = value;
                 NotifyPropertyChanged("VideoName");
                 _ = ProcessVideo(value);
+                NotifyPropertyChanged("IsVideoLoaded");
             }
         }
 
@@ -213,8 +215,8 @@ namespace mouse_tracking_web_app.Models
             OverrideInDB = false;
             if (VC.InitializeVideo(videoID))
             {
-                VC.Run();
                 VideoProcessed = true;
+                VC.Run();
             }
         }
 

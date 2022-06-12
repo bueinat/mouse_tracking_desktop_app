@@ -9,7 +9,7 @@ namespace mouse_tracking_web_app.DataBase
         [BsonElement("_id")]
         public ObjectId ID { get; set; }
 
-        [BsonElement("registered_date")]
+        [BsonElement("registration_date")]
         public DateTime RegisteredDate { get; set; }
 
         [BsonElement("modification_date")]
@@ -23,7 +23,7 @@ namespace mouse_tracking_web_app.DataBase
         public int NFrames { get; set; }
 
         [BsonElement("length")]
-        public int Length { get; set; }
+        public string Length { get; set; }
 
         [BsonElement("description")]
         public string Description { get; set; }

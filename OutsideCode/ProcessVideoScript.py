@@ -49,6 +49,7 @@ try:
     video_name = args["video_path"].split('\\')[-1].split('.')[0]
     # data_path = os.path.join(args['archive_path'], video_name)
     data_path = f"{args['archive_path']}\\{video_name}"
+    working_path = f"@WORKING_PATH\\{video_name}"
     frames_path = u"{}\\{}\\frames".format(args['archive_path'], video_name) # os.path.join(f"{args['archive_path']}\\{video_name}", u"frames")
     # frames_path = f"{args['archive_path']}\\{video_name}\\frames"
 
@@ -71,22 +72,23 @@ try:
             print(f"message: note: overriding {video_name} which already existed in the archive.")
         else:
             mnge.register_connection(alias='core', host=args["connection_string"])
+            print(Video.objects)
+            print(len(Video.objects), video_name)
             videoq = Video.objects(name=video_name).order_by('-registered_date')
             # return an already existing video
             if len(videoq) > 0:
                 video_id = videoq.first().id
-                # TODO: is this the right notation?
                 print(f"video id: {video_id}")
                 raise FileExistsError(f"message: loading existing data of {video_name} which already exists in the archive.")
             else:
                 os.makedirs(data_path, exist_ok=True)
 
-
-    shutil.copy2(args["video_path"], data_path)
-    # frames_path = f"{args['archive_path']}\\{video_name}\\frames"
-    # if args["override"]:
-    nframes = video_to_frames(args["video_path"], frames_path, override=args['override'])
-    # print(f"frames path: {frames_path}")
+    if not os.path.exists(os.path.join(args["video_path"], data_path)) or args["override"]:
+        shutil.copy2(args["video_path"], data_path)
+    if not os.path.exists(frames_path) or len(os.listdir(frames_path)) == 0 or args["override"]:
+        nframes = video_to_frames(args["video_path"], frames_path, override=args['override'])
+    else:
+        nframes = len(os.listdir(frames_path))
     print(f"nframes: {nframes}")
 
     # raise Exception("done.")
@@ -141,6 +143,7 @@ try:
         raw_data = dfnose[['real_x', 'real_y']].rename(columns={'real_x': 'x', 'real_y': 'y'})
 
     raw_data.index.name = 'timestep'
+    print(raw_data.index[0])
     raw_data['time'] = raw_data.index
     path = raw_data.set_index('x').y
 
@@ -178,7 +181,7 @@ try:
 
     # %%
     video = Video()
-    video.name = args["video_path"].split('\\')[-1]
+    video.name = video_name # args["video_path"].split('\\')[-1]
     frame_rate = 45
     total_length = nframes / frame_rate
     td = datetime.timedelta(seconds=total_length)
@@ -189,7 +192,7 @@ try:
     video.modification_date = datetime.datetime.now
 
     video.description = "dummy video\nthis is just meant for testing."
-    video.link_to_data = data_path
+    video.link_to_data = f"{working_path}\\{video_name}" # data_path
 
     update_video = Video.objects(name=video_name).order_by('-registered_date')
     print(args["override"], len(update_video))
@@ -208,9 +211,13 @@ try:
     # %%
     uploadabale_data = raw_data[['x', 'y', 'vx', 'vy', 'ax', 'ay']]
     uploadabale_data.loc[:, 'curviness'] = raw_data.adist / raw_data.rdist
-    uploadabale_data['path'] = [f"{frames_path[2:]}\\frame{i}.jpg"
+    frames_path = f"{working_path}\\frames"
+    print(f"frames_path: {frames_path}")
+    print(uploadabale_data.index[0])
+    uploadabale_data['path'] = [f"{frames_path}\\frame{i}.jpg"
                                 for i in uploadabale_data.index]
-    uploadabale_data.index -= 1
+    # print(uploadabale_data.path.values)
+    # uploadabale_data.index -= 1
     
     # uploadabale_data.index -= 1
     # uploadabale_data['path'] = [f"{working_path}\\{frames_path[2:]}\\frame{i-uploadabale_data.index[0]}.jpg"
@@ -219,7 +226,7 @@ try:
     ### I read dummy predictions
     # TODO: read real predictions 
     pred_df = pandas.read_csv('C:/Users/buein/OneDrive - Bar-Ilan University/שנה ג/פרוייקט שנתי/mouse_tracking/cv/videos/examples/testing_project_deepethogram/DATA/odor28/odor28_predictions.csv',
-                              index_col=0).drop('background',1).astype(bool)[1:]
+                              index_col=0).drop('background',1).astype(bool)
     pred_df.columns = pred_df.columns.map(lambda s: "is_" + s.replace(' ', '_'))
     # pred_df.index += 1
 
@@ -239,7 +246,8 @@ try:
     if args["override"]:
         try:
             video.analysis.delete()
-        except mnge.DoesNotExist:
+        except Exception:
+            print(f"error: {e.__class__.__name__}: {e}")
             pass
 
     ana.video = video_id
