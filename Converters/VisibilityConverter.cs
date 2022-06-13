@@ -8,6 +8,36 @@ using System.Windows.Media;
 
 namespace mouse_tracking_web_app.Converters
 {
+    [ValueConversion(typeof(bool), typeof(string))]
+    public class BooleanToIcon : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is null)
+                value = false;
+            return (bool)value ? "PlayCircleOutline" : "PauseCircleOutline";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return (string)value == "PlayCircleOutline";
+        }
+    }
+
+    [ValueConversion(typeof(bool), typeof(string))]
+    public class BooleanToOpenCloseConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return (bool)value ? "Close Features Panel" : "Open Features Panel";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return string.Equals((string)value, "Close Features Panel");
+        }
+    }
+
     [ValueConversion(typeof(bool), typeof(SolidColorBrush))]
     public class BoolToColorConverter : IValueConverter
     {
@@ -15,6 +45,35 @@ namespace mouse_tracking_web_app.Converters
         {
             Color color = (bool)value ? Colors.LimeGreen : Colors.IndianRed;
             return new SolidColorBrush(color);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    [ValueConversion(typeof(bool), typeof(double))]
+    public class BoolToOpacityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return (bool)value ? 0.5 : 1.0;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    [ValueConversion(typeof(string), typeof(bool))]
+    public class DoesStringExist : IValueConverter
+    {
+        // c# to view
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return !string.IsNullOrEmpty((string)value);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -41,6 +100,35 @@ namespace mouse_tracking_web_app.Converters
         }
     }
 
+    [ValueConversion(typeof(string), typeof(string))]
+    public class EnableDefaultImage : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return File.Exists((string)value) ? value : "/Images/default_image.png";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    [ValueConversion(typeof(float), typeof(string))]
+    public class FillnaConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            float v = (float)value;
+            return float.IsNaN(v) ? "-" : v.ToString();
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     [ValueConversion(typeof(bool), typeof(Visibility))]
     public class InverseBooleanToVisibilityConverter : IValueConverter
     {
@@ -61,80 +149,6 @@ namespace mouse_tracking_web_app.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return value is null ? Visibility.Hidden : Visibility.Visible;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    [ValueConversion(typeof(bool), typeof(string))]
-    public class BooleanToOpenCloseConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return (bool)value ? "Close Features Panel" : "Open Features Panel";
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return string.Equals((string)value, "Close Features Panel");
-        }
-    }
-
-    [ValueConversion(typeof(float), typeof(string))]
-    public class FillnaConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            float v = (float)value;
-            return float.IsNaN(v) ? "-" : v.ToString();
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    [ValueConversion(typeof(string), typeof(bool))]
-    public class DoesStringExist : IValueConverter
-    {
-        // c# to view
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return !string.IsNullOrEmpty((string)value);
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    [ValueConversion(typeof(bool), typeof(string))]
-    public class BooleanToIcon : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (value is null)
-                value = false;
-            return (bool)value ? "PlayCircleOutline" : "PauseCircleOutline";
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return (string)value == "PlayCircleOutline";
-        }
-    }
-
-    [ValueConversion(typeof(string), typeof(string))]
-    public class EnableDefaultImage : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return File.Exists((string)value) ? value : "/Images/default_image.png";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

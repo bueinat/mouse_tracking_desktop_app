@@ -23,22 +23,23 @@ namespace mouse_tracking_web_app.ViewModels
         public float VMVC_AccelerationX => Model.VC_AccelerationX;
         public float VMVC_AccelerationY => Model.VC_AccelerationY;
         public float VMVC_Curviness => Model.VC_Curviness;
-        public string VMVC_FramePath => Model.VC_FramePath;
-        public bool VMVC_IsDrinking => Model.VC_IsDrinking;
-        public bool VMVC_IsNoseCasting => Model.VC_IsNoseCasting;
-        public bool VMVC_IsSniffing => Model.VC_IsSniffing;
-        public bool VMVC_IsVideoLoaded => Model.VC_IsVideoLoaded;
-        public int VMVC_NFrames => Model.VC_NFrames;
-
+        public bool VMVC_DragEnabled => Model.VC_DragEnabled;
         public List<string> VMVC_FeaturesList => Model.VC_FeaturesList;
-        public Dictionary<string, List<Tuple<int, int>>> VMVC_FeaturesTimeRanges => Model.VC_FeaturesTimeRanges;
-        public int VMVC_NFeatures => Model.VC_NFeatures;
 
         public bool VMVC_FeaturesPanelFlag
         {
             get => Model.VC_FeaturesPanelFlag;
             set => Model.VC_FeaturesPanelFlag = value;
         }
+
+        public Dictionary<string, List<Tuple<int, int>>> VMVC_FeaturesTimeRanges => Model.VC_FeaturesTimeRanges;
+        public string VMVC_FramePath => Model.VC_FramePath;
+        public bool VMVC_IsDrinking => Model.VC_IsDrinking;
+        public bool VMVC_IsNoseCasting => Model.VC_IsNoseCasting;
+        public bool VMVC_IsSniffing => Model.VC_IsSniffing;
+        public bool VMVC_IsVideoLoaded => Model.VC_IsVideoLoaded;
+        public int VMVC_NFeatures => Model.VC_NFeatures;
+        public int VMVC_NFrames => Model.VC_NFrames;
 
         public bool VMVC_Pause
         {

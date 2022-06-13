@@ -38,96 +38,6 @@ namespace mouse_tracking_web_app.NavigationTree
         // For resetting the tree
         void DeleteChildren();
     }
-    // Abstact classs next step to implementation
-    public abstract class NavTreeItem : INotifyPropertyChanged, INavTreeItem
-    {
-        // Question/ to do. Note that to be sure we use ObservableCollection as property with a notification, remove notification??
-        protected ObservableCollection<INavTreeItem> children;
-
-        protected BitmapSource myIcon;
-
-        private bool isExpanded;
-
-
-        private static readonly List<string> extensionsList = new List<string>(ConfigurationManager.AppSettings["FileTypesList"].Split(',')).Select(ext => "." + ext).ToList();
-        public List<string> ExtensionsList => extensionsList;
-
-        //public NavTreeItem()
-        //{
-        //private static readonly List<string> helpoutList = new List<string>(ConfigurationManager.AppSettings["FileTypesList"].Split(','));
-        //    extentionsList = helpoutList.Select(ext => "." + ext).ToList();
-        //}
-
-        public void NotifyPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        public ObservableCollection<INavTreeItem> Children
-        {
-            get => children ?? (children = GetMyChildren());
-            set
-            {
-                children = value;
-                NotifyPropertyChanged("Children");
-            }
-        }
-
-        // for display in tree
-        public string FriendlyName { get; set; }
-
-        // .. to retrieve info
-        public string FullPathName { get; set; }
-
-        public bool IncludeFileChildren { get; set; }
-
-        public bool IsExpanded
-        {
-            get => isExpanded;
-            set
-            {
-                isExpanded = value;
-                NotifyPropertyChanged("IsExpanded");
-            }
-        }
-
-        public BitmapSource MyIcon
-        {
-            get => myIcon ?? (myIcon = GetMyIcon());
-            set => myIcon = value;
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        // Question, not enough C#/Wpf knowledge:
-        // - If we delete an NavTreeItem in the root are all its children and corresponding treeview elements garbage collected??
-        // - If not, does DeleteChildren() does the work??
-        // - For now we decide to use DeleteChildren() but no destructor ~NavTreeItem() that calls DeleteChildren.
-        public void DeleteChildren()
-        {
-            if (children != null)
-            {
-                // Console.WriteLine(this.FullPathName);
-
-                for (int i = children.Count - 1; i >= 0; i--)
-                {
-                    children[i].DeleteChildren();
-                    children[i] = null;
-                    children.RemoveAt(i);
-                }
-
-                children = null;
-            }
-        }
-
-        public abstract ObservableCollection<INavTreeItem> GetMyChildren();
-
-        // We will define these Methods in other derived classes ...
-        public abstract BitmapSource GetMyIcon();
-
-        // DeleteChildren, used to
-        // 1) remove old tree 2) set children=null, so a new tree is build
-    }
 
     public class DriveItem : NavTreeItem
     {
@@ -241,4 +151,93 @@ namespace mouse_tracking_web_app.NavigationTree
         }
     }
 
+    // Abstact classs next step to implementation
+    public abstract class NavTreeItem : INotifyPropertyChanged, INavTreeItem
+    {
+        // Question/ to do. Note that to be sure we use ObservableCollection as property with a notification, remove notification??
+        protected ObservableCollection<INavTreeItem> children;
+
+        protected BitmapSource myIcon;
+
+        private static readonly List<string> extensionsList = new List<string>(ConfigurationManager.AppSettings["FileTypesList"].Split(',')).Select(ext => "." + ext).ToList();
+        private bool isExpanded;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public ObservableCollection<INavTreeItem> Children
+        {
+            get => children ?? (children = GetMyChildren());
+            set
+            {
+                children = value;
+                NotifyPropertyChanged("Children");
+            }
+        }
+
+        public List<string> ExtensionsList => extensionsList;
+
+        //public NavTreeItem()
+        //{
+        //private static readonly List<string> helpoutList = new List<string>(ConfigurationManager.AppSettings["FileTypesList"].Split(','));
+        //    extentionsList = helpoutList.Select(ext => "." + ext).ToList();
+        //}
+
+        // for display in tree
+        public string FriendlyName { get; set; }
+
+        // .. to retrieve info
+        public string FullPathName { get; set; }
+
+        public bool IncludeFileChildren { get; set; }
+
+        public bool IsExpanded
+        {
+            get => isExpanded;
+            set
+            {
+                isExpanded = value;
+                NotifyPropertyChanged("IsExpanded");
+            }
+        }
+
+        public BitmapSource MyIcon
+        {
+            get => myIcon ?? (myIcon = GetMyIcon());
+            set => myIcon = value;
+        }
+
+        // Question, not enough C#/Wpf knowledge:
+        // - If we delete an NavTreeItem in the root are all its children and corresponding treeview elements garbage collected??
+        // - If not, does DeleteChildren() does the work??
+        // - For now we decide to use DeleteChildren() but no destructor ~NavTreeItem() that calls DeleteChildren.
+        public void DeleteChildren()
+        {
+            if (children != null)
+            {
+                // Console.WriteLine(this.FullPathName);
+
+                for (int i = children.Count - 1; i >= 0; i--)
+                {
+                    children[i].DeleteChildren();
+                    children[i] = null;
+                    children.RemoveAt(i);
+                }
+
+                children = null;
+            }
+        }
+
+        public abstract ObservableCollection<INavTreeItem> GetMyChildren();
+
+        // We will define these Methods in other derived classes ...
+        public abstract BitmapSource GetMyIcon();
+
+        public void NotifyPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        // DeleteChildren, used to
+        // 1) remove old tree 2) set children=null, so a new tree is build
     }
+}

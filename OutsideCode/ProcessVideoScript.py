@@ -3,14 +3,6 @@
 #
 # 16/11/2021
 # read images from video and analyze them.
-#
-
-# TODO:
-# * allow user to add input (like video path)
-# * change the archive path
-# * show error in dialog
-# * manage to also add the suffix
-# * start with frame0
 
 # %%
 import numpy as np
@@ -38,31 +30,15 @@ try:
     args = pandas.read_csv(sys.argv[1], header=None, index_col=0)[1]
 
     args["override"] = eval(args["override"])
-    # OVERRIDE = eval(sys.argv[1])
-    # CONNECTION_STRING = sys.argv[2]
-    # args["video_path"] = sys.argv[3]
-    # args["archive_path"] = sys.argv[4]
     FUNCTION_NAME = 'alternative_rat_path'
     MAXD = 10
 
     os.makedirs(args["archive_path"], exist_ok=True)
     video_name = args["video_path"].split('\\')[-1].split('.')[0]
-    # data_path = os.path.join(args['archive_path'], video_name)
     data_path = f"{args['archive_path']}\\{video_name}"
     working_path = f"@WORKING_PATH\\{video_name}"
     frames_path = u"{}\\{}\\frames".format(args['archive_path'], video_name) # os.path.join(f"{args['archive_path']}\\{video_name}", u"frames")
-    # frames_path = f"{args['archive_path']}\\{video_name}\\frames"
 
-    # print(args["connection_string"])
-    # print(f"archive path: {os.getcwd()}")
-    # print(f"video path: {os.getcwd()}\\archive\\{video_name}")
-    # print(f"nframes: {len(os.listdir(frames_path))}")
-    # print("video id: 625862ccddd13c6e2add1ec3")
-    
-    # print(OVERRIDE, CONNECTION_STRING)
-    # print(args["video_path"])
-    # print(args["archive_path"], FUNCTION_NAME, VIDEO_NAME, data_path, frames_path)
-    # if os.path.exists(data_path):
 
     try:
         os.mkdir(data_path)
@@ -91,8 +67,7 @@ try:
         nframes = len(os.listdir(frames_path))
     print(f"nframes: {nframes}")
 
-    # raise Exception("done.")
-    # %%
+
     # extracting data from video
     if FUNCTION_NAME == 'rat_path':
         frames, rat_rects, alims = rat_path(args["video_path"])
@@ -103,7 +78,6 @@ try:
     elif FUNCTION_NAME == 'alternative_rat_path':
         frames, eframes, nose_pos, max_vals = alternative_rat_path(args["video_path"])
         dfnose = pandas.DataFrame(nose_pos, index=['y', 'x']).T
-        # dfnose.y = frames[0].shape[0] - dfnose.y
         dfnose = pandas.concat([dfnose, pandas.Series(max_vals)], axis=1)
         dfnose = dfnose[['x', 'y', 0]].rename(columns={0: 'minvals'})
         dfnose.index.name = 'timestep'
@@ -120,7 +94,6 @@ try:
     
         dfnose['replace'] = False
         dfnose.loc[dfnose.query(f'd > {MAXD}').index, 'replace'] = True
-        # print((dfnose.query(f'd > {MAXD}').reset_index()['timestep'].diff().dropna() == 1).any())
     
         dfnose['new_x'] = dfnose.x
         dfnose['new_y'] = dfnose.y
@@ -181,7 +154,7 @@ try:
 
     # %%
     video = Video()
-    video.name = video_name # args["video_path"].split('\\')[-1]
+    video.name = video_name
     frame_rate = 45
     total_length = nframes / frame_rate
     td = datetime.timedelta(seconds=total_length)
@@ -191,8 +164,9 @@ try:
     video.nframes = len(os.listdir(frames_path))
     video.modification_date = datetime.datetime.now
 
+    # TODO: enable passing this as an argument
     video.description = "dummy video\nthis is just meant for testing."
-    video.link_to_data = f"{working_path}\\{video_name}" # data_path
+    video.link_to_data = f"{working_path}\\{video_name}"
 
     update_video = Video.objects(name=video_name).order_by('-registered_date')
     print(args["override"], len(update_video))
@@ -216,19 +190,12 @@ try:
     print(uploadabale_data.index[0])
     uploadabale_data['path'] = [f"{frames_path}\\frame{i}.jpg"
                                 for i in uploadabale_data.index]
-    # print(uploadabale_data.path.values)
-    # uploadabale_data.index -= 1
-    
-    # uploadabale_data.index -= 1
-    # uploadabale_data['path'] = [f"{working_path}\\{frames_path[2:]}\\frame{i-uploadabale_data.index[0]}.jpg"
-    #                             for i in uploadabale_data.index]
 
     ### I read dummy predictions
     # TODO: read real predictions 
     pred_df = pandas.read_csv('C:/Users/buein/OneDrive - Bar-Ilan University/שנה ג/פרוייקט שנתי/mouse_tracking/cv/videos/examples/testing_project_deepethogram/DATA/odor28/odor28_predictions.csv',
                               index_col=0).drop('background',1).astype(bool)
     pred_df.columns = pred_df.columns.map(lambda s: "is_" + s.replace(' ', '_'))
-    # pred_df.index += 1
 
     if len(uploadabale_data) != len(pred_df):
         raise Exception("features and path files are not in the same length. Are you sure they were generated for the same video?")

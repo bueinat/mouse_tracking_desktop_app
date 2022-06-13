@@ -2,6 +2,7 @@
     x:Class="mouse_tracking_web_app.Views.UploadVideoTab"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="clr-namespace:mouse_tracking_web_app.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fa="http://schemas.fontawesome.io/icons/"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -14,6 +15,8 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+            <converters:BoolToOpacityConverter x:Key="BoolToOpacityConverter" />
+
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -112,11 +115,13 @@
             Grid.Row="1"
             Grid.Column="0"
             d:DataContext="{d:DesignInstance Type=viewmodels:VideoControllerViewModel}"
+            Opacity="{Binding VMVC_DragEnabled, Converter={StaticResource BoolToOpacityConverter}}"
             Visibility="{Binding VMVC_IsVideoLoaded, Converter={StaticResource BooleanToVisibilityConverter}}" />
         <usercontrols:CurrentDataPresentor
             Grid.Row="1"
             Grid.Column="1"
             d:DataContext="{d:DesignInstance Type=viewmodels:VideoControllerViewModel}"
+            Opacity="{Binding VMVC_DragEnabled, Converter={StaticResource BoolToOpacityConverter}}"
             Visibility="{Binding VMVC_IsVideoLoaded, Converter={StaticResource BooleanToVisibilityConverter}}" />
     </Grid>
 </UserControl>

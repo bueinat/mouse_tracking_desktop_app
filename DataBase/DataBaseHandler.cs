@@ -55,13 +55,7 @@ namespace mouse_tracking_web_app.DataBase
         public Video GetVideoByID(string videoID)
         {
             ObjectId id = ObjectId.Parse(videoID);
-            var v1 = videoCollection.Find(x => x.ID == id);
-            System.Console.WriteLine(v1.CountDocuments());
-            return v1.First();
-            //var video = v1.First();
-            //var v2 = videoCollection.Find(Builders<Video>.Filter.Eq("ID", id));
-            //video = v2.FirstOrDefault();
-            //return video;
+            return videoCollection.Find(x => x.ID == id).First();
         }
 
         public void NotifyPropertyChanged(string propertyName)
