@@ -15,7 +15,6 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-
                 <ResourceDictionary Source="pack://application:,,,/mouse_tracking_web_app;component/CustomStyles/VideoSlider.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/mouse_tracking_web_app;component/CustomStyles/ButtonsStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
