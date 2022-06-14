@@ -19,28 +19,23 @@ namespace mouse_tracking_web_app.Views
             mainGrid.DataContext = this;
         }
 
-        public List<Tuple<int, int>> TimesList => TimesDictionary is null ? null : TimesDictionary.ContainsKey(FeatureName) ? TimesDictionary[FeatureName] : null;
-
         private void OnLoad(object sender, RoutedEventArgs e)
         {
             Button button;
             normFactor = ActualWidth / MaxLength;
-            if (!(TimesList is null))
+            foreach (Tuple<int, int> timeRange in TimesList)
             {
-                foreach (Tuple<int, int> timeRange in TimesList)
+                button = new Button
                 {
-                    button = new Button
-                    {
-                        Width = (timeRange.Item2 - timeRange.Item1) * normFactor,
-                        Height = 10,
-                        Background = new SolidColorBrush(Colors.Navy), // TODO: pass this color as well
-                        Margin = new Thickness(timeRange.Item1 * normFactor, 0, 0, 0),
-                        HorizontalAlignment = HorizontalAlignment.Left,
-                        Style = FindResource("NoHoverButton") as Style
-                    };
-                    button.Click += TimeRangeClicked;
-                    _ = mainGrid.Children.Add(button);
-                }
+                    Width = (timeRange.Item2 - timeRange.Item1) * normFactor,
+                    Height = 10,
+                    Background = new SolidColorBrush(Colors.Navy),
+                    Margin = new Thickness(timeRange.Item1 * normFactor, 0, 0, 0),
+                    HorizontalAlignment = HorizontalAlignment.Left,
+                    Style = FindResource("NoHoverButton") as Style
+                };
+                button.Click += TimeRangeClicked;
+                _ = mainGrid.Children.Add(button);
             }
         }
 
@@ -78,6 +73,8 @@ namespace mouse_tracking_web_app.Views
             DependencyProperty.Register("MaxLength", typeof(int),
               typeof(ColoredTimeBar), new PropertyMetadata(0));
 
+        // TODO: maybe there's no need with two different controllers for this stuff. Maybe we can combine it into one.
+
         /// <summary>
         /// Gets or sets the MaxLength which is displayed next to the field
         /// </summary>
@@ -109,24 +106,24 @@ namespace mouse_tracking_web_app.Views
 
         #endregion Time DP
 
-        #region TimesDictionary DP
+        #region TimesList DP
 
         /// <summary>
-        /// Identified the TimesDictionary dependency property
+        /// Identified the TimesList dependency property
         /// </summary>
-        public static readonly DependencyProperty TimesDictionaryProperty =
-            DependencyProperty.Register("TimesDictionary", typeof(Dictionary<string, List<Tuple<int, int>>>),
+        public static readonly DependencyProperty TimesListProperty =
+            DependencyProperty.Register("TimesList", typeof(List<Tuple<int, int>>),
               typeof(ColoredTimeBar), new PropertyMetadata(null));
 
         /// <summary>
-        /// Gets or sets the TimesDictionary which is displayed next to the field
+        /// Gets or sets the TimesList which is displayed next to the field
         /// </summary>
-        public Dictionary<string, List<Tuple<int, int>>> TimesDictionary
+        public List<Tuple<int, int>> TimesList
         {
-            get => (Dictionary<string, List<Tuple<int, int>>>)GetValue(TimesDictionaryProperty);
-            set => SetValue(TimesDictionaryProperty, value);
+            get => (List<Tuple<int, int>>)GetValue(TimesListProperty);
+            set => SetValue(TimesListProperty, value);
         }
 
-        #endregion TimesDictionary DP
+        #endregion Times DP
     }
 }

@@ -17,7 +17,49 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid
+    <Grid>
+        <ListView
+            Name="lvFeatures"
+            Margin="10"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            HorizontalContentAlignment="Stretch"
+            VerticalContentAlignment="Stretch"
+            Focusable="False">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Name">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock
+                                    VerticalAlignment="Center"
+                                    FontWeight="Bold"
+                                    Foreground="#476D76"
+                                    Text="{Binding Label}" />
+                                <!--<local:ColoredTimeBar
+                                        Margin="5,5"
+                                        FeatureName="{Binding Name}"
+                                        MaxLength="{Binding MaxLength, Mode=OneWay}"
+                                        TimesList="{Binding TimesList, Mode=OneWay}" />-->
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Line">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Rectangle
+                                    Width="100"
+                                    Height="10"
+                                    Fill="LightGray" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+
+    <!--<Grid
         x:Name="LayoutRoot"
         local:GridHelpers.ColumnCount="2"
         local:GridHelpers.RowCount="3"
@@ -79,5 +121,5 @@
             Minimum="0"
             Style="{StaticResource ResourceKey=Horizontal_Slider}"
             Value="{Binding VMVC_StepCounter}" />
-    </Grid>
+    </Grid>-->
 </UserControl>

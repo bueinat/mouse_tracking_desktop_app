@@ -126,6 +126,8 @@
                 <local:FeaturesPanel
                     Grid.Row="3"
                     Grid.ColumnSpan="4"
+                    MaxLength="{Binding VMVC_NFrames}"
+                    TimesDictionary="{Binding VMVC_FeaturesTimeRanges}"
                     Visibility="{Binding VMVC_FeaturesPanelFlag, Converter={StaticResource BooleanToVisibilityConverter}}" />
             </Grid>
         </GroupBox>
