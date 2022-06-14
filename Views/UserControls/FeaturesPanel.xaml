@@ -2,7 +2,6 @@
     x:Class="mouse_tracking_web_app.Views.FeaturesPanel"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:converters="clr-namespace:mouse_tracking_web_app.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:mouse_tracking_web_app.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -15,177 +14,10 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/mouse_tracking_web_app;component/CustomStyles/InvisibleSlider.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/mouse_tracking_web_app;component/CustomStyles/NonSelectableItem.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <converters:Converter x:Key="converter" />
-            <converters:MultiConverter x:Key="multiConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
-
-    <!--<Grid Margin="10">
-        <ItemsControl
-            Name="lvFeatures"
-            VerticalAlignment="Center"
-            Grid.IsSharedSizeScope="True">
-            <ItemsControl.ItemContainerStyle>
-                <Style TargetType="ContentPresenter">
-                    <Setter Property="VerticalAlignment" Value="Stretch" />
-                    <Setter Property="HorizontalAlignment" Value="Stretch" />
-                </Style>
-            </ItemsControl.ItemContainerStyle>
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Grid>
-                        <Grid.Height>
-                            <MultiBinding Converter="{StaticResource multiConverter}">
-                                <Binding ElementName="lvFeatures" Path="." />
-                                <Binding ElementName="lvFeatures" Path="ActualHeight" />
-                            </MultiBinding>
-                        </Grid.Height>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto" SharedSizeGroup="Content" />
-                            <ColumnDefinition Width="*" SharedSizeGroup="Content" />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock
-                            Grid.Column="0"
-                            VerticalAlignment="Center"
-                            FontWeight="Bold"
-                            Foreground="#476D76"
-                            Text="{Binding Label}" />
-                        <Rectangle
-                            Grid.Column="1"
-                            Height="10"
-                            Fill="LightGray" />
-                    </Grid>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-    </Grid>-->
-
-    <Grid Margin="0,10,0,0">
-        <ListBox
-            Name="lvFeatures"
-            HorizontalContentAlignment="Stretch"
-            BorderThickness="0"
-            ItemContainerStyle="{StaticResource NonSelectableLBStyle}">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <Grid Margin="0,5">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
-                        <TextBlock
-                            Grid.Column="0"
-                            VerticalAlignment="Center"
-                            FontWeight="Bold"
-                            Foreground="#476D76"
-                            Text="{Binding Label}" />
-                        <Grid
-                            x:Name="rectGrid"
-                            Grid.Column="1"
-                            Loaded="RectGridLoaded">
-                            <Rectangle Height="10" Fill="LightGray" />
-                        </Grid>
-                    </Grid>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-    </Grid>
-
-    <!--<Grid Margin="10">
-        <ListBox
-            Name="lvFeatures"
-            HorizontalContentAlignment="Stretch"
-            VerticalContentAlignment="Stretch"
-            BorderThickness="1"
-            ItemContainerStyle="{StaticResource NonSelectableLBStyle}">
-            <ListBox.ItemTemplate>
-                <DataTemplate />
-            </ListBox.ItemTemplate>
-        </ListBox>
-        <ListBox>
-            <ItemsControl Grid.IsSharedSizeScope="True" ItemsSource="{Binding Path=Items}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition SharedSizeGroup="Content" />
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="1" Text="{Binding Path=Name}" />
-                            </Grid>
-                        </StackPanel>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ListBox>
-    </Grid>-->
-
-    <!--<Grid Margin="0,2">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="100" />
-        </Grid.ColumnDefinitions>
-        <TextBlock
-                            VerticalAlignment="Center"
-                            FontWeight="Bold"
-                            Foreground="#476D76"
-                            Text="{Binding Label}" />
-        <Rectangle
-                            Grid.Column="1"
-                            Height="10"
-                            Fill="LightGray" />
-    </Grid>-->
-
-    <!--<Grid>
-        <ListView
-            Name="lvFeatures"
-            Margin="10"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch"
-            HorizontalContentAlignment="Stretch"
-            VerticalContentAlignment="Stretch"
-            Focusable="False">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Name">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock
-                                    VerticalAlignment="Center"
-                                    FontWeight="Bold"
-                                    Foreground="#476D76"
-                                    Text="{Binding Label}" />
-    -->
-    <!--<local:ColoredTimeBar
-                                        Margin="5,5"
-                                        FeatureName="{Binding Name}"
-                                        MaxLength="{Binding MaxLength, Mode=OneWay}"
-                                        TimesList="{Binding TimesList, Mode=OneWay}" />-->
-    <!--
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <GridViewColumn Header="Line">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <Rectangle
-                                    Width="100"
-                                    Height="10"
-                                    Fill="LightGray" />
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                </GridView>
-            </ListView.View>
-        </ListView>
-    </Grid>-->
-
-    <!--<Grid
+    <Grid
         x:Name="LayoutRoot"
         local:GridHelpers.ColumnCount="2"
         local:GridHelpers.RowCount="3"
@@ -247,5 +79,5 @@
             Minimum="0"
             Style="{StaticResource ResourceKey=Horizontal_Slider}"
             Value="{Binding VMVC_StepCounter}" />
-    </Grid>-->
+    </Grid>
 </UserControl>

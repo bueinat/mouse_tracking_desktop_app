@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Shapes;
 
 namespace mouse_tracking_web_app.Views
 {
@@ -13,28 +10,30 @@ namespace mouse_tracking_web_app.Views
     /// </summary>
     public partial class FeaturesPanel : UserControl
     {
-        private readonly List<string> featuresNames = new List<string>(ConfigurationManager.AppSettings["FeaturesList"].Split(','));
-
         public FeaturesPanel()
         {
             InitializeComponent();
-            LoadItems();
         }
 
-        public List<Feature> Items { get; set; }
+        #region TimesDictionary DP
 
-        public void LoadItems()
+        /// <summary>
+        /// Identified the TimesDictionary dependency property
+        /// </summary>
+        public static readonly DependencyProperty TimesDictionaryProperty =
+            DependencyProperty.Register("TimesDictionary", typeof(Dictionary<string, List<Tuple<int, int>>>),
+              typeof(FeaturesPanel), new PropertyMetadata(null));
+
+        /// <summary>
+        /// Gets or sets the TimesDictionary which is displayed next to the field
+        /// </summary>
+        public Dictionary<string, List<Tuple<int, int>>> TimesDictionary
         {
-            if (!(TimesDictionary is null))
-            {
-
-                List<Feature> items = new List<Feature>();
-                foreach (string feature in featuresNames)
-                    items.Add(new Feature() { Name = feature, Label = $"{feature}: ", TimesList = TimesDictionary[feature] });
-                lvFeatures.ItemsSource = items;
-                Items = items;
-            }
+            get => (Dictionary<string, List<Tuple<int, int>>>)GetValue(TimesDictionaryProperty);
+            set => SetValue(TimesDictionaryProperty, value);
         }
+
+        #endregion TimesDictionary DP
 
         #region MaxLength DP
 
@@ -43,7 +42,7 @@ namespace mouse_tracking_web_app.Views
         /// </summary>
         public static readonly DependencyProperty MaxLengthProperty =
             DependencyProperty.Register("MaxLength", typeof(int),
-              typeof(FeaturesPanel), new PropertyMetadata(1, OnPropertyChanged));
+              typeof(FeaturesPanel), new PropertyMetadata(0));
 
         /// <summary>
         /// Gets or sets the MaxLength which is displayed next to the field
@@ -56,91 +55,25 @@ namespace mouse_tracking_web_app.Views
 
         #endregion MaxLength DP
 
-        #region TimesDictionary DP
+        #region FeatureName DP
 
         /// <summary>
-        /// Identified the TimesDictionary dependency property
+        /// Identified the FeatureName dependency property
         /// </summary>
-        public static readonly DependencyProperty TimesDictionaryProperty =
-            DependencyProperty.Register("TimesDictionary", typeof(Dictionary<string, List<Tuple<int, int>>>),
-              typeof(FeaturesPanel), new PropertyMetadata(null, OnPropertyChanged));
-
-        private static void OnPropertyChanged(DependencyObject dependencyObject,
-           DependencyPropertyChangedEventArgs e)
-        {
-            if (dependencyObject is FeaturesPanel panel)
-            {
-                Console.WriteLine("test");
-                panel.LoadItems();
-                //if (e.Property.Name == "TimesDictionary")
-                //    TimesDictionary = (Dictionary<string, List<Tuple<int, int>>>)e.NewValue;
-            }
-        }
+        public static readonly DependencyProperty FeatureNameProperty =
+            DependencyProperty.Register("FeatureName", typeof(string),
+              typeof(FeaturesPanel), new PropertyMetadata(""));
 
         /// <summary>
-        /// Gets or sets the TimesDictionary which is displayed next to the field
+        /// Gets or sets the FeatureName which is displayed next to the field
         /// </summary>
-        public Dictionary<string, List<Tuple<int, int>>> TimesDictionary
+        public string FeatureName
         {
-            get => (Dictionary<string, List<Tuple<int, int>>>)GetValue(TimesDictionaryProperty);
-            set => SetValue(TimesDictionaryProperty, value);
+            get => (string)GetValue(FeatureNameProperty);
+            set => SetValue(FeatureNameProperty, value);
         }
 
-        #endregion TimesDictionary DP
-        private double normFactor = 1;
-
-        private void RectGridLoaded(object sender, RoutedEventArgs e)
-        {
-            Button button;
-            normFactor = ((Rectangle)((Grid)sender).Children[0]).ActualWidth / MaxLength;
-            foreach (Tuple<int, int> timeRange in ((Feature)((Grid)sender).DataContext).TimesList)
-            {
-                button = new Button
-                {
-                    Width = (timeRange.Item2 - timeRange.Item1) * normFactor,
-                    Height = 10,
-                    Background = new SolidColorBrush(Colors.Navy),
-                    Margin = new Thickness(timeRange.Item1 * normFactor, 0, 0, 0),
-                    HorizontalAlignment = HorizontalAlignment.Left,
-                    Style = FindResource("NoHoverButton") as Style
-                };
-                button.Click += TimeRangeClicked;
-                _ = ((Grid)sender).Children.Add(button);
-            }
-        }
-
-        private void TimeRangeClicked(object sender, RoutedEventArgs e)
-        {
-            Time = (int)(((Button)sender).Margin.Left / normFactor);
-        }
-
-        #region Time DP
-
-        /// <summary>
-        /// Identified the Time dependency property
-        /// </summary>
-        public static readonly DependencyProperty TimeProperty =
-            DependencyProperty.Register("Time", typeof(int),
-              typeof(FeaturesPanel), new PropertyMetadata(0));
-
-        /// <summary>
-        /// Gets or sets the Time which is displayed next to the field
-        /// </summary>
-        public int Time
-        {
-            get => (int)GetValue(TimeProperty);
-            set => SetValue(TimeProperty, value);
-        }
-
-        #endregion Time DP
+        #endregion FeatureName DP
     }
-    public class Feature
-    {
-        public string Name { get; set; }
 
-        public string Label { get; set; }
-
-        public List<Tuple<int, int>> TimesList { get; set; }
-
-    }
 }
