@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace mouse_tracking_web_app.Views
 {
@@ -17,14 +18,29 @@ namespace mouse_tracking_web_app.Views
         {
             InitializeComponent();
             mainGrid.DataContext = this;
+            SizeChanged += OnLoad;
         }
 
         public List<Tuple<int, int>> TimesList => TimesDictionary is null ? null : TimesDictionary.ContainsKey(FeatureName) ? TimesDictionary[FeatureName] : null;
 
         private void OnLoad(object sender, RoutedEventArgs e)
         {
-            Button button;
+            // remove previouse children
+            mainGrid.Children.Clear();
+
+            // add a base gray bar
             normFactor = ActualWidth / MaxLength;
+            Rectangle rectangle = new Rectangle
+            {
+                Width = ActualWidth,
+                Height = 10,
+                Fill = new SolidColorBrush(Colors.LightGray),
+                HorizontalAlignment = HorizontalAlignment.Left,
+            };
+            mainGrid.Children.Add(rectangle);
+
+            // add time buttons if exist
+            Button button;
             if (!(TimesList is null))
             {
                 foreach (Tuple<int, int> timeRange in TimesList)
@@ -33,13 +49,13 @@ namespace mouse_tracking_web_app.Views
                     {
                         Width = (timeRange.Item2 - timeRange.Item1) * normFactor,
                         Height = 10,
-                        Background = new SolidColorBrush(Colors.Navy), // TODO: pass this color as well
+                        Background = new SolidColorBrush(Colors.Navy),
                         Margin = new Thickness(timeRange.Item1 * normFactor, 0, 0, 0),
                         HorizontalAlignment = HorizontalAlignment.Left,
                         Style = FindResource("NoHoverButton") as Style
                     };
                     button.Click += TimeRangeClicked;
-                    _ = mainGrid.Children.Add(button);
+                    mainGrid.Children.Add(button);
                 }
             }
         }

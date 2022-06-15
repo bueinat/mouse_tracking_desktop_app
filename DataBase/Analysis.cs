@@ -74,7 +74,7 @@ namespace mouse_tracking_web_app.DataBase
 
         public DataTable AnalysisDataTable => AnalysisToDataTable();
 
-        public string GetCSVString()
+        public string GetCSVString(string archivePath)
         {
             StringBuilder sb = new StringBuilder();
 
@@ -88,7 +88,7 @@ namespace mouse_tracking_web_app.DataBase
                 _ = sb.AppendLine(string.Join(",", fields));
             }
 
-            return sb.ToString();
+            return sb.ToString().Replace("@WORKING_PATH", archivePath);
         }
 
         private DataTable AnalysisToDataTable()

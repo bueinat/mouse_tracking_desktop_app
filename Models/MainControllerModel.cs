@@ -41,7 +41,7 @@ namespace mouse_tracking_web_app.Models
 
         public OuterCodeRunner CodeRunner { get; }
 
-        public string CSVString => VideoAnalysis.GetCSVString();
+        public string CSVString => VideoAnalysis.GetCSVString(ArchivePath);
 
         public DataBaseHandler DBHandler { get; }
 
@@ -184,15 +184,13 @@ namespace mouse_tracking_web_app.Models
             {
                 if (rawResult[i].StartsWith("e"))
                     result["ErrorMessage"] = rawResult[i].Substring(7);
-                //if (rawResult[i].StartsWith("video path"))
-                //    result["VideoPath"] = rawResult[i].Substring(12);
-                //if (rawResult[i].StartsWith("archive path"))
-                //    result["ArchivePath"] = rawResult[i].Substring(13);
-                //if (rawResult[i].StartsWith("nframes"))
-                //    result["FramesNumber"] = rawResult[i].Substring(9);
+                if (rawResult[i].StartsWith("message"))
+                    result["Message"] = rawResult[i].Substring(9);
                 if (rawResult[i].StartsWith("video id"))
                     result["VideoID"] = rawResult[i].Substring(10);
             }
+            if (result.ContainsKey("Message") && (!result.ContainsKey("ErrorMessage")))
+                result["ErrorMessage"] = result["Message"];
             NotifyPropertyChanged("IsVideoLoaded");
             return result;
         }
