@@ -7,5 +7,12 @@
     d:DesignHeight="30"
     d:DesignWidth="800"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/mouse_tracking_web_app;component/CustomStyles/ButtonsStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid x:Name="mainGrid" Loaded="OnLoad" />
 </UserControl>

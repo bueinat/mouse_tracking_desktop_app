@@ -18,62 +18,19 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid
-        x:Name="LayoutRoot"
+        x:Name="layoutRoot"
         local:GridHelpers.ColumnCount="2"
         local:GridHelpers.RowCount="3"
         local:GridHelpers.StarColumns="1"
-        local:GridHelpers.StarRows="0,1,2">
-        <TextBlock
-            Grid.Row="0"
-            Grid.Column="0"
-            VerticalAlignment="Center"
-            FontWeight="Bold"
-            Foreground="#476D76"
-            Text="Sniffing: " />
-        <local:ColoredTimeBar
-            Grid.Row="0"
-            Grid.Column="1"
-            Margin="5,5"
-            FeatureName="IsSniffing"
-            MaxLength="{Binding VMVC_NFrames}"
-            TimesDictionary="{Binding VMVC_FeaturesTimeRanges}" />
-
-        <TextBlock
-            Grid.Row="1"
-            Grid.Column="0"
-            VerticalAlignment="Center"
-            FontWeight="Bold"
-            Foreground="#476D76"
-            Text="Drinking: " />
-        <local:ColoredTimeBar
-            Grid.Row="1"
-            Grid.Column="1"
-            Margin="5,5"
-            FeatureName="IsDrinking"
-            MaxLength="{Binding VMVC_NFrames}"
-            Time="{Binding VMVC_StepCounter, Mode=OneWayToSource}"
-            TimesDictionary="{Binding VMVC_FeaturesTimeRanges}" />
-
-        <TextBlock
-            Grid.Row="2"
-            Grid.Column="0"
-            VerticalAlignment="Center"
-            FontWeight="Bold"
-            Foreground="#476D76"
-            Text="Nose Casting: " />
-        <local:ColoredTimeBar
-            Grid.Row="2"
-            Grid.Column="1"
-            Margin="5,5"
-            FeatureName="IsNoseCasting"
-            MaxLength="{Binding VMVC_NFrames}"
-            TimesDictionary="{Binding VMVC_FeaturesTimeRanges}" />
+        local:GridHelpers.StarRows="0,1,2"
+        Loaded="OnLoad">
         <Slider
             x:Name="timeSlider"
             Grid.RowSpan="3"
             Grid.Column="1"
-            Height="{Binding Path=ActualHeight, ElementName=LayoutRoot}"
-            Margin="5,5"
+            Height="{Binding Path=ActualHeight, ElementName=layoutRoot}"
+            Margin="5,0,0,0"
+            Panel.ZIndex="10"
             IsEnabled="False"
             Maximum="{Binding VMVC_NFrames}"
             Minimum="0"

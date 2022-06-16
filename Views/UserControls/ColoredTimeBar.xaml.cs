@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using mouse_tracking_web_app.ViewModels;
 
 namespace mouse_tracking_web_app.Views
 {
@@ -17,6 +18,7 @@ namespace mouse_tracking_web_app.Views
         public ColoredTimeBar()
         {
             InitializeComponent();
+            
             mainGrid.DataContext = this;
             SizeChanged += OnLoad;
         }
@@ -34,7 +36,7 @@ namespace mouse_tracking_web_app.Views
             {
                 Width = ActualWidth,
                 Height = 10,
-                Fill = new SolidColorBrush(Colors.LightGray),
+                Fill = Brushes.LightGray,
                 HorizontalAlignment = HorizontalAlignment.Left,
             };
             mainGrid.Children.Add(rectangle);
@@ -49,7 +51,7 @@ namespace mouse_tracking_web_app.Views
                     {
                         Width = (timeRange.Item2 - timeRange.Item1) * normFactor,
                         Height = 10,
-                        Background = new SolidColorBrush(Colors.Navy),
+                        Background = Brushes.Navy,
                         Margin = new Thickness(timeRange.Item1 * normFactor, 0, 0, 0),
                         HorizontalAlignment = HorizontalAlignment.Left,
                         Style = FindResource("NoHoverButton") as Style
@@ -113,7 +115,6 @@ namespace mouse_tracking_web_app.Views
         public static readonly DependencyProperty TimeProperty =
             DependencyProperty.Register("Time", typeof(int),
               typeof(ColoredTimeBar), new PropertyMetadata(0));
-
         /// <summary>
         /// Gets or sets the Time which is displayed next to the field
         /// </summary>
