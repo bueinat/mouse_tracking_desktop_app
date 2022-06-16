@@ -1,5 +1,4 @@
-﻿using mouse_tracking_web_app.MVVM;
-using mouse_tracking_web_app.NavigationTree;
+﻿using mouse_tracking_web_app.NavigationTree;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -10,7 +9,6 @@ namespace mouse_tracking_web_app.ViewModels
 {
     public class NavTreeVm : INotifyPropertyChanged
     {
-
         // RootChildren are used to bind to TreeView
         private ObservableCollection<INavTreeItem> rootChildren = new ObservableCollection<INavTreeItem> { };
 
@@ -43,6 +41,7 @@ namespace mouse_tracking_web_app.ViewModels
         public NavTreeVm(string nTreePath) : this(nTreePath, 0)
         {
         }
+
         public void NotifyPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -77,6 +76,7 @@ namespace mouse_tracking_web_app.ViewModels
                 NotifyPropertyChanged("TreeName");
             }
         }
+
         public void RebuildTree(int pRootNr = -1, bool pIncludeFileChildren = false)
         {
             // First take snapshot of current expanded items

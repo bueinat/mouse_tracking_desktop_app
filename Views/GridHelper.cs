@@ -46,6 +46,7 @@ namespace mouse_tracking_web_app.Views
         {
             obj.SetValue(RowCountProperty, value);
         }
+
         #endregion RowCount Property
 
         #region ColumnCount Property
@@ -87,6 +88,7 @@ namespace mouse_tracking_web_app.Views
         {
             obj.SetValue(ColumnCountProperty, value);
         }
+
         #endregion ColumnCount Property
 
         #region StarRows Property

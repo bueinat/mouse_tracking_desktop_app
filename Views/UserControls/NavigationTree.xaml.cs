@@ -1,7 +1,7 @@
-﻿using System.Windows;
+﻿using mouse_tracking_web_app.ViewModels;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using mouse_tracking_web_app.ViewModels;
 
 namespace mouse_tracking_web_app.Views
 {
@@ -10,8 +10,7 @@ namespace mouse_tracking_web_app.Views
     /// </summary>
     public partial class NavigationTree : UserControl
     {
-
-        private readonly NavigationTreeViewModel vm; 
+        private readonly NavigationTreeViewModel vm;
 
         public NavigationTree()
         {

@@ -35,7 +35,6 @@
                     <TextBlock Height="0" Text="{Binding FullPathName}" />
                 </StackPanel>
             </Button>
-
         </HierarchicalDataTemplate>
     </UserControl.Resources>
     <StackPanel>
@@ -52,5 +51,4 @@
             </TreeView.ItemContainerStyle>
         </TreeView>
     </StackPanel>
-
 </UserControl>

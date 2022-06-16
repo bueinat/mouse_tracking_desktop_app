@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.WindowsAPICodePack.Dialogs;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace mouse_tracking_web_app.Views
 {

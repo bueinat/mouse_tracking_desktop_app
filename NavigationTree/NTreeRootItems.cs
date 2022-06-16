@@ -20,7 +20,6 @@ namespace mouse_tracking_web_app.NavigationTree
             ObservableCollection<INavTreeItem> childrenList = new ObservableCollection<INavTreeItem>() { };
             INavTreeItem item1;
 
-
             DriveInfo[] allDrives = DriveInfo.GetDrives();
             foreach (DriveInfo drive in allDrives)
             {
@@ -82,7 +81,6 @@ namespace mouse_tracking_web_app.NavigationTree
                     IsExpanded = true
                 };
                 childrenList.Add(item1);
-
             }
             catch (UnauthorizedAccessException e)
             {
@@ -96,9 +94,4 @@ namespace mouse_tracking_web_app.NavigationTree
             return myIcon = Utils.GetIconFn.GetIconDll(FullPathName);
         }
     }
-
-
-
-
-
 }

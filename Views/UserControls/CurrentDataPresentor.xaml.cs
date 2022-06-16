@@ -8,7 +8,6 @@ namespace mouse_tracking_web_app.Views
     /// </summary>
     public partial class CurrentDataPresentor : UserControl
     {
-
         public CurrentDataPresentor()
         {
             InitializeComponent();

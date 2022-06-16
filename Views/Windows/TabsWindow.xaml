@@ -23,12 +23,24 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
+        <Menu
+            Grid.Row="0"
+            Grid.Column="0"
+            Grid.ColumnSpan="2">
+            <MenuItem Header="_Options">
+                <MenuItem Click="SettingsButton_Click" Header="_Settings" />
+                <MenuItem Click="SetWorkSpace_Click" Header="_Set Working Directory" />
+                <Separator />
+                <MenuItem Click="ExitButton_Click" Header="_Exit" />
+            </MenuItem>
+        </Menu>
         <TabControl
             x:Name="tabs"
-            Grid.Row="0"
+            Grid.Row="1"
             Grid.RowSpan="2"
             Grid.Column="0">
             <TabItem Header="Videos">
@@ -38,14 +50,10 @@
                 <uc:AnalysisTab />
             </TabItem>
         </TabControl>
-        <uc:FileExplorerWrapper Grid.Row="0" Grid.Column="1" />
-        <!--<uc:NavigationTree
-            Grid.Row="0"
-            Grid.Column="1"
-            NavigationTreePath="{Binding VM_FileExplorerDirectory}" />-->
+        <uc:FileExplorerWrapper Grid.Row="1" Grid.Column="1" />
         <Button
             x:Name="exportButton"
-            Grid.Row="1"
+            Grid.Row="2"
             Grid.Column="1"
             Margin="10"
             HorizontalAlignment="Center"
@@ -54,6 +62,5 @@
             Click="ExportButtonClick"
             Content="Export Data"
             IsEnabled="{Binding VM_VideoName, Converter={StaticResource DoesStringExist}}" />
-        <!--  Click="ExportButtonClick"  -->
     </Grid>
 </Window>

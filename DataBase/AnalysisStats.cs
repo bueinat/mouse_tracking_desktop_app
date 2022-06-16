@@ -19,6 +19,7 @@ namespace mouse_tracking_web_app.DataBase
 
         //public readonly DataRows dataRows;
         public DataRows DataRows { get; }
+
         public double IsDrinkingPercent => analysis.IsDrinking.Sum(x => Convert.ToInt32(x)) / (double)NSteps * 100;
         public double IsNoseCastingPercent => analysis.IsNoseCasting.Sum(x => Convert.ToInt32(x)) / (double)NSteps * 100;
         public double IsSniffingPercent => analysis.IsSniffing.Sum(x => Convert.ToInt32(x)) / (double)NSteps * 100;

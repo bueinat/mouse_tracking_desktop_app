@@ -16,7 +16,6 @@
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
             <converters:BoolToOpacityConverter x:Key="BoolToOpacityConverter" />
-
         </ResourceDictionary>
     </UserControl.Resources>
 

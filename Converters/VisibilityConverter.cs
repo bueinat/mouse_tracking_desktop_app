@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -9,43 +10,6 @@ using System.Windows.Media;
 
 namespace mouse_tracking_web_app.Converters
 {
-    public class MultiConverter : IMultiValueConverter
-    {
-        public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            try
-            {
-                ItemsControl ic = values[0] as ItemsControl;
-                double actualHeigth = System.Convert.ToDouble(values[1]);
-                Console.WriteLine(actualHeigth / ic.Items.Count);
-                return actualHeigth / ic.Items.Count;
-            } catch (Exception e)
-            {
-                Console.WriteLine(e);
-                return 0.0;
-            }
-            
-        }
-
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-    public class Converter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            ItemsControl ic = value as ItemsControl;
-            return ic.ActualHeight / ic.Items.Count;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
     [ValueConversion(typeof(bool), typeof(string))]
     public class BooleanToIcon : IValueConverter
     {
@@ -100,6 +64,20 @@ namespace mouse_tracking_web_app.Converters
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class Converter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            ItemsControl ic = value as ItemsControl;
+            return ic.ActualHeight / ic.Items.Count;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             throw new NotImplementedException();
         }
@@ -176,6 +154,43 @@ namespace mouse_tracking_web_app.Converters
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    [ValueConversion(typeof(int), typeof(string))]
+    public class LengthRange : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return string.Join(",", Enumerable.Range(0, (int)value));
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class MultiConverter : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            try
+            {
+                ItemsControl ic = values[0] as ItemsControl;
+                double actualHeigth = System.Convert.ToDouble(values[1]);
+                Console.WriteLine(actualHeigth / ic.Items.Count);
+                return actualHeigth / ic.Items.Count;
+            }
+            catch (Exception)
+            {
+                return 0.0;
+            }
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture)
         {
             throw new NotImplementedException();
         }

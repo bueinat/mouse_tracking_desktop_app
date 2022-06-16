@@ -72,8 +72,8 @@ namespace mouse_tracking_web_app.ViewModels
             }
         }
 
-
         private readonly Models.MainControllerModel model;
+
         public NavigationTreeViewModel(Models.MainControllerModel mainController)
         {
             model = mainController;
@@ -87,7 +87,6 @@ namespace mouse_tracking_web_app.ViewModels
 
             // Construct Single tree
             //SingleTree = new NavTreeVm(nTreePath);
-
         }
 
         public bool NTVM_DragEnabled

@@ -44,7 +44,6 @@ namespace mouse_tracking_web_app.Utils
             public static extern IntPtr SHGetFileInfo(string pszPath, uint dwFileAttributes, ref SHFILEINFO psfi, uint cbSizeFileInfo, uint uFlags);
         }
 
-
         public ShellIcon()
         { }
 
@@ -76,7 +75,7 @@ namespace mouse_tracking_web_app.Utils
                 File.WriteAllText(tempFileName, "Hello World");
 
                 _ = Win32.SHGetFileInfo(tempFileName, 0, ref shinfo, (uint)Marshal.SizeOf(shinfo), Win32.SHGFI_ICON | Win32.SHGFI_LARGEICON);
-                
+
                 try
                 {
                     Icon icon = (Icon)Icon.FromHandle(shinfo.hIcon).Clone();

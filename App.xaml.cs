@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+
 namespace mouse_tracking_web_app
 {
     /// <summary>

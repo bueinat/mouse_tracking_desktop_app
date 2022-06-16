@@ -12,6 +12,7 @@ namespace mouse_tracking_web_app.DataBase
         private readonly List<float> ayList;
         private readonly List<float> vxList;
         private readonly List<float> vyList;
+
         public DataRows(Analysis analysis)
         {
             AnalysisDataRows = analysis.AnalysisDataTable.Rows.OfType<DataRow>();
@@ -37,6 +38,7 @@ namespace mouse_tracking_web_app.DataBase
         public List<double> V { get; set; }
         public List<double> X { get; set; }
         public List<double> Y { get; set; }
+
         public List<double> NormList(List<double> list, double min, double max)
         {
             if (min == max)

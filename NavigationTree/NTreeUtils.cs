@@ -20,6 +20,7 @@ namespace mouse_tracking_web_app.NavigationTree
             return files.Where(f => extensions.Contains(f.Extension));
         }
     }
+
     public static class NavTreeRootItemUtils
     {
         // See NavTreeItems for our Model of the tree with RootNode and RootItems

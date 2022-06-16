@@ -1,10 +1,6 @@
 ﻿using Microsoft.Win32;
 using mouse_tracking_web_app.ViewModels;
-using System.Collections.Generic;
-using System.Data;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Windows;
 
 namespace mouse_tracking_web_app.Views
@@ -15,6 +11,7 @@ namespace mouse_tracking_web_app.Views
     public partial class TabsWindow : Window
     {
         private readonly MainControllerViewModel vm;
+
         public TabsWindow()
         {
             InitializeComponent();
@@ -35,6 +32,21 @@ namespace mouse_tracking_web_app.Views
             };
             if (saveFileDialog.ShowDialog() == true)
                 File.WriteAllText(saveFileDialog.FileName, vm.VM_CSVString);
+        }
+
+        private void ExitButton_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+        private void SettingsButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void SetWorkSpace_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

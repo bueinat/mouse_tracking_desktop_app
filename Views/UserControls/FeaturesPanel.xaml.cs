@@ -1,10 +1,10 @@
-﻿using System;
+﻿using mouse_tracking_web_app.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
-using mouse_tracking_web_app.ViewModels;
 
 namespace mouse_tracking_web_app.Views
 {
@@ -21,23 +21,12 @@ namespace mouse_tracking_web_app.Views
         private void OnLoad(object sender, RoutedEventArgs e)
         {
             layoutRoot.Children.RemoveRange(1, layoutRoot.Children.Count - 1);
-            //< Slider
-            //x: Name = "timeSlider"
-            //Grid.RowSpan = "3"
-            //Grid.Column = "1"
-            //Height = "{Binding Path=ActualHeight, ElementName=layoutRoot}"
-            //Margin = "5,5"
-            //IsEnabled = "False"
-            //Maximum = "{Binding VMVC_NFrames}"
-            //Minimum = "0"
-            //Style = "{StaticResource ResourceKey=Horizontal_Slider}"
-            //Value = "{Binding VMVC_StepCounter}" />
 
             for (int i = 0; i < layoutRoot.RowDefinitions.Count; i++)
             {
                 TextBlock tb = new TextBlock()
                 {
-                    Text = FeaturesList[i] + ": ",
+                    Text = FeaturesList[i].Substring(2) + ": ",
                     VerticalAlignment = VerticalAlignment.Center,
                     FontWeight = FontWeights.Bold,
                     Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#476D76"))
@@ -51,7 +40,7 @@ namespace mouse_tracking_web_app.Views
                     Margin = new Thickness(5, 5, 0, 0),
                     FeatureName = FeaturesList[i],
                     MaxLength = MaxLength,
-                    TimesDictionary = TimesDictionary,
+                    TimesList = TimesDictionary is null ? null : TimesDictionary.ContainsKey(FeaturesList[i]) ? TimesDictionary[FeaturesList[i]] : null
                 };
                 Binding binding = new Binding("VMVC_StepCounter")
                 {
@@ -125,25 +114,5 @@ namespace mouse_tracking_web_app.Views
         }
 
         #endregion MaxLength DP
-
-        #region FeatureName DP
-
-        /// <summary>
-        /// Identified the FeatureName dependency property
-        /// </summary>
-        public static readonly DependencyProperty FeatureNameProperty =
-            DependencyProperty.Register("FeatureName", typeof(string),
-              typeof(FeaturesPanel), new PropertyMetadata(""));
-
-        /// <summary>
-        /// Gets or sets the FeatureName which is displayed next to the field
-        /// </summary>
-        public string FeatureName
-        {
-            get => (string)GetValue(FeatureNameProperty);
-            set => SetValue(FeatureNameProperty, value);
-        }
-
-        #endregion FeatureName DP
     }
 }

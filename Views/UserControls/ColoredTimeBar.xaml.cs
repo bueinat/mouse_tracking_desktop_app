@@ -4,7 +4,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using mouse_tracking_web_app.ViewModels;
 
 namespace mouse_tracking_web_app.Views
 {
@@ -18,12 +17,9 @@ namespace mouse_tracking_web_app.Views
         public ColoredTimeBar()
         {
             InitializeComponent();
-            
             mainGrid.DataContext = this;
             SizeChanged += OnLoad;
         }
-
-        public List<Tuple<int, int>> TimesList => TimesDictionary is null ? null : TimesDictionary.ContainsKey(FeatureName) ? TimesDictionary[FeatureName] : null;
 
         private void OnLoad(object sender, RoutedEventArgs e)
         {
@@ -115,6 +111,7 @@ namespace mouse_tracking_web_app.Views
         public static readonly DependencyProperty TimeProperty =
             DependencyProperty.Register("Time", typeof(int),
               typeof(ColoredTimeBar), new PropertyMetadata(0));
+
         /// <summary>
         /// Gets or sets the Time which is displayed next to the field
         /// </summary>
@@ -126,24 +123,24 @@ namespace mouse_tracking_web_app.Views
 
         #endregion Time DP
 
-        #region TimesDictionary DP
+        #region TimesList DP
 
         /// <summary>
-        /// Identified the TimesDictionary dependency property
+        /// Identified the TimesList dependency property
         /// </summary>
-        public static readonly DependencyProperty TimesDictionaryProperty =
-            DependencyProperty.Register("TimesDictionary", typeof(Dictionary<string, List<Tuple<int, int>>>),
+        public static readonly DependencyProperty TimesListProperty =
+            DependencyProperty.Register("TimesList", typeof(List<Tuple<int, int>>),
               typeof(ColoredTimeBar), new PropertyMetadata(null));
 
         /// <summary>
-        /// Gets or sets the TimesDictionary which is displayed next to the field
+        /// Gets or sets the TimesList which is displayed next to the field
         /// </summary>
-        public Dictionary<string, List<Tuple<int, int>>> TimesDictionary
+        public List<Tuple<int, int>> TimesList
         {
-            get => (Dictionary<string, List<Tuple<int, int>>>)GetValue(TimesDictionaryProperty);
-            set => SetValue(TimesDictionaryProperty, value);
+            get => (List<Tuple<int, int>>)GetValue(TimesListProperty);
+            set => SetValue(TimesListProperty, value);
         }
 
-        #endregion TimesDictionary DP
+        #endregion TimesList DP
     }
 }
