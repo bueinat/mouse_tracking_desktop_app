@@ -17,6 +17,7 @@ namespace mouse_tracking_web_app.ViewModels
             };
         }
 
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public NavigationTreeViewModel NTVM { get; internal set; }
@@ -28,6 +29,12 @@ namespace mouse_tracking_web_app.ViewModels
         {
             get => model.OverrideInDB;
             set => model.OverrideInDB = value;
+        }
+
+        public string VM_VideosPath
+        {
+            get => model.VideosPath;
+            set => model.VideosPath = value;
         }
 
         public string VM_ErrorMessage

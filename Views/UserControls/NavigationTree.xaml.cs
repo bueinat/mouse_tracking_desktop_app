@@ -25,7 +25,7 @@ namespace mouse_tracking_web_app.Views
                 string fileName = ((sender as StackPanel).Children[2] as TextBlock).Text;
                 if (vm.DragStarted(fileName))
                 {
-                    DragDrop.DoDragDrop(this, new DataObject(DataFormats.Serializable, fileName), DragDropEffects.Copy | DragDropEffects.Move);
+                    _ = DragDrop.DoDragDrop(this, new DataObject(DataFormats.Serializable, fileName), DragDropEffects.Copy | DragDropEffects.Move);
                     vm.DragEnded();
                 }
             }

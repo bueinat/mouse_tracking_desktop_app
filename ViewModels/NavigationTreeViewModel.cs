@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Windows.Input;
 
@@ -103,8 +104,14 @@ namespace mouse_tracking_web_app.ViewModels
 
         public bool DragStarted(string fileName)
         {
+            // enable drag for a video
             if (videoTypesList.Any(s => fileName.EndsWith(s)))
                 NTVM_DragEnabled = true;
+
+            // enable drag for a directory
+            if (File.GetAttributes(fileName).HasFlag(FileAttributes.Directory))
+                NTVM_DragEnabled = true;
+
             return NTVM_DragEnabled;
         }
 

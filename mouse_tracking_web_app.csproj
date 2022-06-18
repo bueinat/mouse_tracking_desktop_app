@@ -428,7 +428,11 @@
     <Content Include="Core\Compression\Zstandard\lib\win\libzstd.dll" />
     <Resource Include="Images\default_image.png" />
     <Content Include="mongocrypt.dll" />
+    <Content Include="OutsideCode\ExtractVideo.py" />
+    <Content Include="OutsideCode\FindRatFeatures.py" />
+    <Content Include="OutsideCode\FindRatPath.py" />
     <Content Include="OutsideCode\ProcessVideoScript.py" />
+    <Content Include="OutsideCode\SaveToDataBase.py" />
     <Content Include="OutsideCode\utilityFunctions.py" />
   </ItemGroup>
   <ItemGroup>

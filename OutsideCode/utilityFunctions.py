@@ -208,6 +208,75 @@ def alternative_rat_path(video_path):
 
     return frames, edited_frames, nose_pos, maxvals
 
+
+def get_raw_data(nose_pos, max_vals, eframes):
+    dfnose = pandas.DataFrame(nose_pos, index=['y', 'x']).T
+    dfnose = pandas.concat([dfnose, pandas.Series(max_vals)], axis=1)
+    dfnose = dfnose[['x', 'y', 0]].rename(columns={0: 'minvals'})
+    dfnose.index.name = 'timestep'
+    dfnose['d'] = np.sqrt(dfnose.x.diff() ** 2 + dfnose.y.diff() ** 2)
+
+    # cut the first frames
+    first_appearance = dfnose[dfnose.d < MAXD].index[0]
+    dfnose.loc[:first_appearance - 1, 'd'] = 100
+
+    # if the mouse is too far, set its position to the previous
+    dfnose.loc[dfnose.eval(f'd > {MAXD}'), ['x', 'y']] = np.NaN
+    dfnose = dfnose.fillna(method='ffill').fillna(method='bfill')
+    dfnose['d'] = np.sqrt(dfnose.x.diff() ** 2 + dfnose.y.diff() ** 2).fillna(0)
+    
+    dfnose['replace'] = False
+    dfnose.loc[dfnose.query(f'd > {MAXD}').index, 'replace'] = True
+    
+    dfnose['new_x'] = dfnose.x
+    dfnose['new_y'] = dfnose.y
+
+    for idx in dfnose.query('replace').index:
+        if idx < dfnose.index[-1]:
+            new_point = find_closest_local_minima_wrapper(eframes[idx] - eframes[idx-1], nose_pos[idx-1],
+                                                        init_threshold=1)
+            dfnose.loc[idx, 'new_x'] = new_point[0]
+            dfnose.loc[idx, 'new_y'] = new_point[1]
+
+    dfnose['new_d'] = np.sqrt(dfnose.new_x.diff() ** 2 + dfnose.new_y.diff() ** 2).fillna(0)
+    
+    dfnose['real_x'] = dfnose.x
+    dfnose.loc[dfnose.d > dfnose.new_d, 'x'] = dfnose.new_x
+    dfnose['real_y'] = dfnose.y
+    dfnose.loc[dfnose.d > dfnose.new_d, 'y'] = dfnose.new_y
+    dfnose['real_d'] = np.sqrt(dfnose.real_x.diff() ** 2 + dfnose.real_y.diff() ** 2).fillna(0)
+    
+    raw_data = dfnose[['real_x', 'real_y']].rename(columns={'real_x': 'x', 'real_y': 'y'})
+    return raw_data
+
+def analyze_raw_data(raw_data):
+    raw_data.index.name = 'timestep'
+    raw_data['time'] = raw_data.index
+    # path = raw_data.set_index('x').y
+
+    # %%
+    raw_data['vx'] = raw_data.x.diff() / raw_data.time.diff()
+    raw_data['vy'] = raw_data.y.diff() / raw_data.time.diff()
+    raw_data['r_tot'] = np.sqrt((raw_data.x - raw_data.x.iloc[0]) ** 2 + (raw_data.y - raw_data.y.iloc[0]) ** 2)
+    raw_data['r'] = np.sqrt(raw_data.x.diff() ** 2 + raw_data.y.diff() ** 2)
+    raw_data['v'] = np.sqrt(raw_data.vx ** 2 + raw_data.vy ** 2)
+
+    raw_data['ax'] = raw_data.vx.diff() / raw_data.time.diff()
+    raw_data['ay'] = raw_data.vy.diff() / raw_data.time.diff()
+    raw_data['a'] = np.sqrt(raw_data.ax ** 2 + raw_data.ay ** 2)
+
+    # %%
+    # dists = np.sqrt(raw_data.x.diff() ** 2 + raw_data.y.diff() ** 2)
+    win_size = 100
+
+    raw_data["adist"] = rolling_apply(
+        aireal_dist, win_size, raw_data.x, raw_data.y)
+    raw_data["rdist"] = raw_data.r.rolling(win_size).sum()
+
+    raw_data = raw_data.fillna(method='backfill')
+    return raw_data # , path
+
+
 def find_closest_local_minima(diff_frames, last_point, neighborhood_size=5, threshold=1.5, maxval=-1,
                               return_all=False):
     data = - np.where(diff_frames < maxval, diff_frames, 0)
