@@ -24,6 +24,11 @@ namespace mouse_tracking_web_app.Views
             tabs.SelectedIndex = index;
         }
 
+        private void ExitButton_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
         private void ExportButtonClick(object sender, RoutedEventArgs e)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog
@@ -33,20 +38,12 @@ namespace mouse_tracking_web_app.Views
             if (saveFileDialog.ShowDialog() == true)
                 File.WriteAllText(saveFileDialog.FileName, vm.VM_CSVString);
         }
-
-        private void ExitButton_Click(object sender, RoutedEventArgs e)
-        {
-            Close();
-        }
-
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
-
         }
 
         private void SetWorkSpace_Click(object sender, RoutedEventArgs e)
         {
-
         }
     }
 }

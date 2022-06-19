@@ -15,7 +15,6 @@ try:
     args = pandas.read_csv(sys.argv[1], header=None, index_col=0)[1]
     args["override"] = eval(args["override"])
     video_name = args["video_path"].split('\\')[-1].split('.')[0]
-    working_path = f"@WORKING_PATH\\{args['video_path']}"
 
     # %%
     # the commented line is used for server storage, but we prefer saving on this computer.
@@ -57,9 +56,7 @@ try:
     # %%
     video = Video.objects(id=video_id).first()
 
-    
-    data_path = f"{args['cache_path']}\\{args['video_path']}"
-    uploadabale_data = pandas.read_csv(f"{data_path}\\uploadable_data.csv", index_col=0)
+    uploadabale_data = pandas.read_csv(f"{argv['data_path']}\\uploadable_data.csv", index_col=0)
     ana = Analysis()
     ana.timestep = list(uploadabale_data.index)
     for c in uploadabale_data.columns:

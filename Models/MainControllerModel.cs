@@ -1,6 +1,8 @@
 ﻿using mouse_tracking_web_app.DataBase;
+using mouse_tracking_web_app.Utils;
+using System;
 using System.Collections.Generic;
-
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Configuration;
 using System.IO;
@@ -35,7 +37,17 @@ namespace mouse_tracking_web_app.Models
 
         public DataRows AnalysisDataRows => VideoStats?.DataRows;
 
-        public string CachePath => VideosPath is null? "" : $"{VideosPath.Split('\\')[0]}\\.cache";
+        public string CachePath
+        {
+            get
+            {
+                if (VideosPath is null)
+                    return "";
+                return File.GetAttributes(VideosPath).HasFlag(FileAttributes.Directory)
+                    ? $"{VideosPath}\\.cache"
+                    : $"{Path.GetDirectoryName(VideosPath)}\\.cache";
+            }
+        }
 
         public double AverageAcceleration => VideoStats is null ? 0 : VideoStats.AverageAcceleration;
 
@@ -70,6 +82,13 @@ namespace mouse_tracking_web_app.Models
                 _ = ProcessFolder();
             }
         }
+        private static string MakeRelative(string filePath, string referencePath)
+        {
+            Uri fileUri = new Uri(filePath);
+            Uri referenceUri = new Uri(referencePath);
+            return Uri.UnescapeDataString(referenceUri.MakeRelativeUri(fileUri).ToString()).Replace('/', Path.DirectorySeparatorChar);
+        }
+
 
         private List<string> GetVideosList()
         {
@@ -80,6 +99,7 @@ namespace mouse_tracking_web_app.Models
                 {
                     if (videoTypesList.Any(s => file.EndsWith(s)))
                         l.Add(file);
+                    //l.Add(MakeRelative(file, VideosPath));
                 }
                 return l;
             }
@@ -236,7 +256,7 @@ namespace mouse_tracking_web_app.Models
                 if (rawResult[i].StartsWith("override"))
                     result["Override"] = rawResult[i].Substring(10);
                 if (rawResult[i].StartsWith("nframes"))
-                    result["VFrames"] = rawResult[i].Substring(9);
+                    result["NFrames"] = rawResult[i].Substring(9);
                 if (rawResult[i].StartsWith("success"))
                     result["Success"] = "True";
 
@@ -284,31 +304,28 @@ namespace mouse_tracking_web_app.Models
         {
             IsLoading = true;
             ErrorMessage = string.Empty;
-            string script = @"OutsideCode\ProcessMultipleVideosScript.py";
-            string connectionString = ConfigurationManager.AppSettings.Get("ConnectionString");
-            string dbName = ConfigurationManager.AppSettings.Get("DataBaseName");
-            Dictionary<string, string> argv = new Dictionary<string, string>
+            displayableVideosDict = new ObservableDictionary<string, DisplayableVideo>();
+
+            //List<Task> tasks = new List<Task>();
+            Collection = new ObservableCollection<string>();
+
+            foreach (string videoPath in VideosList)
             {
-                ["override"] = OverrideInDB ? "True" : "False",
-                ["connection_string"] = $"{connectionString}/{dbName}",
-                ["videos_path"] = VideosPath,
-                ["cache_path"] = CachePath
-            };
-            string[] rawResult = await CodeRunner.RunCmd(script, argv);
-            Dictionary<string, string> processedResult = ProcessResult(rawResult);
-            videoID = null;
-            // TODO: turn videoID to null + make it a feature
-            if (processedResult.ContainsKey("ErrorMessage"))
-                ErrorMessage = processedResult["ErrorMessage"];
-            if (processedResult.ContainsKey("VideoID"))
-                videoID = processedResult["VideoID"];
+                //string relativeVideoPath = MakeRelative(videoPath, VideosPath);
+                Collection.Add(videoPath);
+                displayableVideosDict.Add(videoPath, new DisplayableVideo());
+                await ProcessSingleVideo(videoPath);
+                //tasks.Add(ProcessSingleVideo(videoPath));
+            }
+            //await Task.WhenAll(tasks);
+
             IsLoading = false;
             OverrideInDB = false;
-            if (VC.InitializeVideo(videoID))
-            {
-                VideoProcessed = true;
-                VC.Run();
-            }
+            //if (VC.InitializeVideo(videoID))
+            //{
+            //    VideoProcessed = true;
+            //    VC.Run();
+            //}
         }
 
         public async Task<Dictionary<string, string>> RunPhaseUpdateError(string scriptPath, Dictionary<string, string> argv, string videoPath)
@@ -318,22 +335,44 @@ namespace mouse_tracking_web_app.Models
             if (processedResult.ContainsKey("ErrorMessage"))
             {
                 string eMessage = processedResult["ErrorMessage"];
-                ErrorMessage = $"{ErrorMessage}\r\n{videoPath}: {eMessage}";
+                ErrorMessage = $"{ErrorMessage}\r\n{MakeRelative(videoPath, VideosPath).Split('.')[0]}: {eMessage}";
             }
             return processedResult;
         }
+        private ObservableDictionary<string, DisplayableVideo> displayableVideosDict;
+        private ObservableCollection<string> collection = new ObservableCollection<string>();
+        public ObservableCollection<string> Collection
+        {
+            get => collection;
+            set {
+                collection = value;
+                NotifyPropertyChanged("Collection");
 
+            }
+        }
+        public ObservableDictionary<string, DisplayableVideo> DisplayableVideos
+        {
+            get => displayableVideosDict;
+            set
+            {
+                displayableVideosDict = value;
+                NotifyPropertyChanged("DisplayableVideos");
+            }
+        }
         public async Task ProcessSingleVideo(string videoPath)
         {
+            string relativeVideoPath = MakeRelative(videoPath, VideosPath).Split('.')[0];
+            displayableVideosDict[videoPath].ProcessingState = DisplayableVideo.State.ExtractVideo;
+            displayableVideosDict[videoPath].ReducedName = MakeRelative(videoPath, VideosPath);
+
             string connectionString = ConfigurationManager.AppSettings.Get("ConnectionString");
             string dbName = ConfigurationManager.AppSettings.Get("DataBaseName");
-            string _videoID = "";
 
             Dictionary<string, string> argv = new Dictionary<string, string>
             {
                 ["override"] = OverrideInDB ? "True" : "False",
                 ["video_path"] = videoPath,
-                ["cache_path"] = CachePath,
+                ["data_path"] = $"{CachePath}\\{relativeVideoPath}",
                 ["connection_string"] = $"{connectionString}/{dbName}"
             };
 
@@ -341,75 +380,58 @@ namespace mouse_tracking_web_app.Models
             Dictionary<string, string> processedResult = await RunPhaseUpdateError(@"OutsideCode\ExtractVideo.py", argv, videoPath);
 
             if (processedResult.ContainsKey("VideoID"))
-                _videoID = processedResult["VideoID"];
+            {
+                displayableVideosDict[videoPath].VideoID = processedResult["VideoID"];
+                displayableVideosDict[videoPath].ProcessingState = DisplayableVideo.State.Successful;
+            }
+            //_videoID = processedResult["VideoID"];
 
             if (processedResult["Success"] == "False")
             {
-                // create a video element with unssuccessful state
-                // return it
+                displayableVideosDict[videoPath].ProcessingState = DisplayableVideo.State.Failed;
             }
-            if (!string.IsNullOrEmpty(_videoID))
+            if (!string.IsNullOrEmpty(displayableVideosDict[videoPath].VideoID))
             {
                 // create video element
                 // return it
+                return;
             }
             argv["nframes"] = processedResult["NFrames"];
             argv["override"] = processedResult["Override"];
 
             // run second section
+            displayableVideosDict[videoPath].ProcessingState = DisplayableVideo.State.FindRatPath;
             processedResult = await RunPhaseUpdateError(@"OutsideCode\FindRatPath.py", argv, videoPath);
             if (processedResult["Success"] == "False")
             {
+                displayableVideosDict[videoPath].ProcessingState = DisplayableVideo.State.Failed;
+                return;
                 // create a video element with unssuccessful state
                 // return it
             }
 
             // run third section
+            displayableVideosDict[videoPath].ProcessingState = DisplayableVideo.State.FindRatFeatues;
             processedResult = await RunPhaseUpdateError(@"OutsideCode\FindRatFeatures.py", argv, videoPath);
             if (processedResult["Success"] == "False")
             {
+                displayableVideosDict[videoPath].ProcessingState = DisplayableVideo.State.Failed;
+                return;
                 // create a video element with unssuccessful state
                 // return it
             }
 
             // run fourth section
+            displayableVideosDict[videoPath].ProcessingState = DisplayableVideo.State.SaveToDataBase;
             processedResult = await RunPhaseUpdateError(@"OutsideCode\SaveToDataBase.py", argv, videoPath);
-            _videoID = processedResult["VideoID"];
+            displayableVideosDict[videoPath].VideoID = processedResult["VideoID"];
             if (processedResult["Success"] == "False")
             {
+                displayableVideosDict[videoPath].ProcessingState = DisplayableVideo.State.Failed;
+                return;
                 // create a video element with unssuccessful state
                 // return it
             }
-
-
-
-            //IsLoading = true;
-            //ErrorMessage = string.Empty;
-            //string script = @"OutsideCode\ProcessMultipleVideosScript.py";
-            //string connectionString = ConfigurationManager.AppSettings.Get("ConnectionString");
-            //string dbName = ConfigurationManager.AppSettings.Get("DataBaseName");
-            //Dictionary<string, string> argv = new Dictionary<string, string>
-            //{
-            //    ["override"] = OverrideInDB ? "True" : "False",
-            //    ["connection_string"] = $"{connectionString}/{dbName}",
-            //    ["videos_path"] = VideosPath,
-            //    ["cache_path"] = CachePath
-            //};
-            //string[] rawResult = await CodeRunner.RunCmd(script, argv);
-            //Dictionary<string, string> processedResult = ProcessResult(rawResult);
-            //videoID = null;
-            //// TODO: turn videoID to null + make it a feature
-            //if (processedResult.ContainsKey("ErrorMessage"))
-            //    ErrorMessage = processedResult["ErrorMessage"];
-            //if (processedResult.ContainsKey("VideoID"))
-            //    videoID = processedResult["VideoID"];
-            //IsLoading = false;
-            //OverrideInDB = false;
-            //if (VC.InitializeVideo(videoID))
-            //{
-            //    VideoProcessed = true;
-            //    VC.Run();
-            //}
         }
 
         public void StopMethod()

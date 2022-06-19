@@ -25,6 +25,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
         <Menu
@@ -51,9 +52,10 @@
             </TabItem>
         </TabControl>
         <uc:FileExplorerWrapper Grid.Row="1" Grid.Column="1" />
+        <uc:VideosDisplayer Grid.Row="2" Grid.Column="1" />
         <Button
             x:Name="exportButton"
-            Grid.Row="2"
+            Grid.Row="3"
             Grid.Column="1"
             Margin="10"
             HorizontalAlignment="Center"

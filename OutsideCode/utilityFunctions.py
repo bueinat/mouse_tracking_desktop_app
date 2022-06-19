@@ -210,6 +210,7 @@ def alternative_rat_path(video_path):
 
 
 def get_raw_data(nose_pos, max_vals, eframes):
+    MAXD = 10
     dfnose = pandas.DataFrame(nose_pos, index=['y', 'x']).T
     dfnose = pandas.concat([dfnose, pandas.Series(max_vals)], axis=1)
     dfnose = dfnose[['x', 'y', 0]].rename(columns={0: 'minvals'})

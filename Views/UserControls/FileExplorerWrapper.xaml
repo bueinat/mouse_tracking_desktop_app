@@ -7,17 +7,15 @@
     xmlns:uc="clr-namespace:mouse_tracking_web_app.Views"
     xmlns:viewModels="clr-namespace:mouse_tracking_web_app.ViewModels"
     d:DataContext="{d:DesignInstance Type=viewModels:NavigationTreeViewModel}"
-    d:DesignHeight="300"
-    d:DesignWidth="300"
     mc:Ignorable="d">
-    <Grid>
+    <Grid x:Name="layoutRoot">
         <GroupBox Header="File Explorer">
-            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+            <ScrollViewer
+                Width="{Binding ActualWidth, ElementName=layoutRoot}"
+                HorizontalScrollBarVisibility="Auto"
+                VerticalScrollBarVisibility="Auto">
                 <StackPanel>
-                    <uc:NavigationTree
-                        Grid.Row="0"
-                        Grid.Column="1"
-                        DataContext="{Binding SingleTree}" />
+                    <uc:NavigationTree DataContext="{Binding SingleTree}" />
                 </StackPanel>
             </ScrollViewer>
         </GroupBox>

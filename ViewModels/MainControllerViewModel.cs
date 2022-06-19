@@ -1,4 +1,7 @@
-﻿using System.ComponentModel;
+﻿using mouse_tracking_web_app.DataBase;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace mouse_tracking_web_app.ViewModels
 {
@@ -21,7 +24,8 @@ namespace mouse_tracking_web_app.ViewModels
         public event PropertyChangedEventHandler PropertyChanged;
 
         public NavigationTreeViewModel NTVM { get; internal set; }
-
+        public Utils.ObservableDictionary<string, DisplayableVideo> VM_DisplayableVideos => model.DisplayableVideos;
+        public ObservableCollection<string> VM_Collection => model.Collection;
         public string VM_CSVString => model.CSVString;
         public bool VM_DragEnabled => model.DragEnabled;
 

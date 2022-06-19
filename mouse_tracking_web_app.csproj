@@ -261,6 +261,7 @@
     <Compile Include="DataBase\AnalysisStats.cs" />
     <Compile Include="DataBase\DataBaseHandler.cs" />
     <Compile Include="DataBase\DataRows.cs" />
+    <Compile Include="DataBase\DisplayableVideo.cs" />
     <Compile Include="DataBase\Video.cs" />
     <Compile Include="Models\PlottingControllerModel.cs" />
     <Compile Include="Models\VideoControllerModel.cs" />
@@ -268,6 +269,7 @@
     <Compile Include="NavigationTree\NTreeRootItems.cs" />
     <Compile Include="Utils\GetIconUseDll.cs" />
     <Compile Include="Utils\GetImageFn.cs" />
+    <Compile Include="Utils\ObservableDictionary.cs" />
     <Compile Include="Utils\RelayCommand.cs" />
     <Compile Include="NavigationTree\NTreeItems.cs" />
     <Compile Include="NavigationTree\NTreeUtils.cs" />
@@ -300,6 +302,9 @@
     </Compile>
     <Compile Include="Views\UserControls\FeaturesPanel.xaml.cs">
       <DependentUpon>FeaturesPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UserControls\VideosDisplayer.xaml.cs">
+      <DependentUpon>VideosDisplayer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Windows\TabsWindow.xaml.cs">
       <DependentUpon>TabsWindow.xaml</DependentUpon>
@@ -359,6 +364,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\UserControls\FeaturesPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UserControls\VideosDisplayer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

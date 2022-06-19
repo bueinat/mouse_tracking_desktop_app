@@ -6,18 +6,15 @@ from utilityFunctions import *
 import warnings
 warnings.filterwarnings("ignore")
 
-FUNCTION_NAME == 'alternative_rat_path'
-
 # %%
 
 try:
     # get run arguments
+    FUNCTION_NAME = 'alternative_rat_path'
+
     args = pandas.read_csv(sys.argv[1], header=None, index_col=0)[1]
     args["override"] = eval(args["override"])
-
-    data_path = f"{args['cache_path']}\\{args['video_path']}"
-    working_path = f"@WORKING_PATH\\{args['video_path']}"
-    frames_path = f"{working_path}\\frames"
+    frames_path = f"{args['data_path']}\\frames"
 
     # extracting data from video
     if FUNCTION_NAME == 'rat_path':
@@ -33,12 +30,12 @@ try:
     raw_data = analyze_raw_data(raw_data)
     
     # create uploadabe data
-    uploadabale_data = raw_data[['x', 'y', 'vx', 'vy', 'ax', 'ay']]
-    uploadabale_data.loc[:, 'curviness'] = raw_data.adist / raw_data.rdist
-    uploadabale_data['path'] = [f"{frames_path}\\frame{i}.jpg"
-                                for i in uploadabale_data.index]
+    uploadable_data = raw_data[['x', 'y', 'vx', 'vy', 'ax', 'ay']]
+    uploadable_data.loc[:, 'curviness'] = raw_data.adist / raw_data.rdist
+    uploadable_data['path'] = [f"{frames_path}\\frame{i}.jpg"
+                                for i in uploadable_data.index]
 
-    uploadable_data.to_csv(f"{data_path}\\uploadable_data.csv")
+    uploadable_data.to_csv(f"{args['data_path']}\\uploadable_data.csv")
     print("success")
 
 except Exception as e:
