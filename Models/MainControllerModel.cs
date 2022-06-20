@@ -24,7 +24,7 @@ namespace mouse_tracking_web_app.Models
             {
                 selectedVideo = value;
                 NotifyPropertyChanged("SelectedVideo");
-                if (VC.InitializeVideo(SelectedVideo.VideoID))
+                if (!(selectedVideo is null) && VC.InitializeVideo(SelectedVideo.VideoID))
                 {
                     VideoProcessed = true;
                     VC.Run();
@@ -316,26 +316,16 @@ namespace mouse_tracking_web_app.Models
             {
                 displayableVideosDict[videoPath].VideoID = processedResult["VideoID"];
                 displayableVideosDict[videoPath].VideoItem = DBHandler.GetVideoByID(displayableVideosDict[videoPath].VideoID);
-                if (DBHandler.DoesIDexist(displayableVideosDict[videoPath].VideoItem.Analysis, "analysis"))
-                    displayableVideosDict[videoPath].ProcessingState = DisplayableVideo.State.Successful;
-                else
-                {
-                    displayableVideosDict[videoPath].ProcessingState = DisplayableVideo.State.Failed;
-                    displayableVideosDict[videoPath].ToolTipMessage += "\r\nUnknown Error at ExtractVideo";
-                }
+                displayableVideosDict[videoPath].ProcessingState = DisplayableVideo.State.Successful;
+                return;
             }
-            //_videoID = processedResult["VideoID"];
-
             if (processedResult["Success"] == "False")
             {
                 displayableVideosDict[videoPath].ProcessingState = DisplayableVideo.State.Failed;
-            }
-            if (!string.IsNullOrEmpty(displayableVideosDict[videoPath].VideoID) || displayableVideosDict[videoPath].ProcessingState == DisplayableVideo.State.Failed)
-            {
-                // create video element
-                // return it
+                displayableVideosDict[videoPath].ToolTipMessage += "\r\nUnknown Error at ExtractVideo";
                 return;
             }
+
             argv["nframes"] = processedResult["NFrames"];
             argv["override"] = processedResult["Override"];
 

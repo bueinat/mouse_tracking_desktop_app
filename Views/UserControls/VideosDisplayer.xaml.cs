@@ -24,7 +24,7 @@ namespace mouse_tracking_web_app.Views
             {
                 DisplayableVideo video = ((Grid)sender).DataContext as DisplayableVideo;
                 if (video.ProcessingState == DisplayableVideo.State.Successful)
-                    lbTodoList.SelectedItem = video;
+                    VideosListBox.SelectedItem = video;
             }
             e.Handled = true;
 

@@ -29,14 +29,20 @@ try:
             print("success")
             print(f"message: note: overriding {video_name} which already existed in the archive.")
         else:
+            print("try getting data from database")
+            # video_name = args["video_path"].split('\\')[-1].split('.')[0]
+            # working_path = f"@WORKING_PATH\\{video_name}"
+            # f"{working_path}\\{video_name}"
             mnge.register_connection(alias='core', host=args["connection_string"])
-            videoq = Video.objects(link_to_data=args["video_path"]).order_by('-registered_date')
+            videoq = Video.objects(link_to_data=args["video_path"], analysis__exists=1).order_by('-registered_date')
+            print(len(videoq))
             # return an already existing video
             if len(videoq) > 0:
                 video_id = videoq.first().id
+                analysis_id = videoq.first().analysis.id
                 print(f"video id: {video_id}")
                 print("success")
-                raise FileExistsError(f"message: loading existing data of {video_name} which already exists in the archive.")
+                raise FileExistsError(f"message: loading existing data of {video_name} which already exists in the cache.")
             else:
                 os.makedirs(args["data_path"], exist_ok=True)
 
@@ -48,8 +54,7 @@ try:
     else:
         nframes = len(os.listdir(frames_path))
     print(f"nframes: {nframes}")
-    override = args["override"]
-    print(f"override: {override}")
+    print(f"override: {args['override']}")
     print("success")
 
 except Exception as e:

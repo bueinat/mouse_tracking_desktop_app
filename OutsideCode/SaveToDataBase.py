@@ -40,7 +40,7 @@ try:
     video.description = "dummy video\nthis is just meant for testing."
     video.link_to_data = args["video_path"]
 
-    update_video = Video.objects(name=args["video_path"]).order_by('-registered_date')
+    update_video = Video.objects(link_to_data=args["video_path"], analysis__exists=1).order_by('-registered_date')
     print(args["override"], len(update_video))
     if args["override"] and len(update_video) > 0:
         update_video.update_one(set__length=video.length,

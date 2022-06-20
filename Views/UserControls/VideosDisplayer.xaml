@@ -27,13 +27,13 @@
     <Grid Margin="10">
         <GroupBox Header="Videos Processor">
             <ListBox
-                Name="lbTodoList"
+                Name="VideosListBox"
                 HorizontalContentAlignment="Stretch"
                 BorderThickness="0"
                 ItemsSource="{Binding VM_DispVideosCollection}"
                 SelectedItem="{Binding VM_SelectedVideo}">
                 <ListBox.ItemContainerStyle>
-                    <Style TargetType="{x:Type ListBoxItem}">
+                    <Style BasedOn="{StaticResource {x:Type ListBoxItem}}" TargetType="{x:Type ListBoxItem}">
                         <Style.Triggers>
                             <Trigger Property="IsSelected" Value="True">
                                 <Setter Property="FontWeight" Value="SemiBold" />
@@ -67,7 +67,6 @@
                                             <Setter TargetName="Bd" Property="Background" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
                                             <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}" />
                                         </Trigger>
-
                                         <MultiTrigger>
                                             <MultiTrigger.Conditions>
                                                 <Condition Property="IsSelected" Value="true" />

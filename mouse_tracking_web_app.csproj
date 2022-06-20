@@ -282,7 +282,6 @@
     <Compile Include="NavigationTree\NTreeRootItems.cs" />
     <Compile Include="Utils\GetIconUseDll.cs" />
     <Compile Include="Utils\GetImageFn.cs" />
-    <Compile Include="Utils\ObservableDictionary.cs" />
     <Compile Include="Utils\RelayCommand.cs" />
     <Compile Include="NavigationTree\NTreeItems.cs" />
     <Compile Include="NavigationTree\NTreeUtils.cs" />
