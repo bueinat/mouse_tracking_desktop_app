@@ -8,7 +8,7 @@
     xmlns:uc="clr-namespace:mouse_tracking_web_app.Views"
     xmlns:viewmodels="clr-namespace:mouse_tracking_web_app.ViewModels"
     Title="TabsWindow"
-    Width="800"
+    Width="900"
     Height="600"
     d:DataContext="{d:DesignInstance Type=viewmodels:MainControllerViewModel}"
     mc:Ignorable="d">
@@ -19,7 +19,7 @@
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="2.5*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>

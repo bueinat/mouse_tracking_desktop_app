@@ -1,74 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Media;
 
 namespace mouse_tracking_web_app.Converters
 {
-    [ValueConversion(typeof(bool), typeof(string))]
-    public class BooleanToIcon : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (value is null)
-                value = false;
-            return (bool)value ? "PlayCircleOutline" : "PauseCircleOutline";
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return (string)value == "PlayCircleOutline";
-        }
-    }
-
-    [ValueConversion(typeof(bool), typeof(string))]
-    public class BooleanToOpenCloseConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return (bool)value ? "Close Features Panel" : "Open Features Panel";
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return string.Equals((string)value, "Close Features Panel");
-        }
-    }
-
-    [ValueConversion(typeof(bool), typeof(SolidColorBrush))]
-    public class BoolToColorConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            Color color = (bool)value ? Colors.LimeGreen : Colors.IndianRed;
-            return new SolidColorBrush(color);
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    [ValueConversion(typeof(bool), typeof(double))]
-    public class BoolToOpacityConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return (bool)value ? 0.5 : 1.0;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
     public class Converter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
@@ -86,7 +24,6 @@ namespace mouse_tracking_web_app.Converters
     [ValueConversion(typeof(string), typeof(bool))]
     public class DoesStringExist : IValueConverter
     {
-        // c# to view
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return !string.IsNullOrEmpty((string)value);
@@ -116,20 +53,6 @@ namespace mouse_tracking_web_app.Converters
         }
     }
 
-    [ValueConversion(typeof(string), typeof(string))]
-    public class EnableDefaultImage : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return File.Exists((string)value) ? value : "/Images/default_image.png";
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
     [ValueConversion(typeof(float), typeof(string))]
     public class FillnaConverter : IValueConverter
     {
@@ -137,20 +60,6 @@ namespace mouse_tracking_web_app.Converters
         {
             float v = (float)value;
             return float.IsNaN(v) ? "-" : v.ToString();
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    [ValueConversion(typeof(bool), typeof(Visibility))]
-    public class InverseBooleanToVisibilityConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return (bool)value ? Visibility.Hidden : Visibility.Visible;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -196,20 +105,6 @@ namespace mouse_tracking_web_app.Converters
         }
     }
 
-    [ValueConversion(typeof(object), typeof(Visibility))]
-    public class ObjectToVisibilityConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return value is null ? Visibility.Hidden : Visibility.Visible;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
     [ValueConversion(typeof(double), typeof(string))]
     public class PercentToTimeConverter : IValueConverter
     {
@@ -231,7 +126,6 @@ namespace mouse_tracking_web_app.Converters
         }
     }
 
-    //[ValueConversion(typeof(string), typeof(int))]
     public class SpeedToIndexConverter : IValueConverter
     {
         private readonly List<string> speeds = new List<string>
@@ -273,6 +167,42 @@ namespace mouse_tracking_web_app.Converters
         object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return double.Parse(speeds[(int)value]);
+        }
+    }
+
+    [ValueConversion(typeof(DataBase.DisplayableVideo.State), typeof(int))]
+    public class StateToProgressConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            switch ((DataBase.DisplayableVideo.State)value)
+            {
+                case DataBase.DisplayableVideo.State.ExtractVideo:
+                    return 0;
+
+                case DataBase.DisplayableVideo.State.FindRatPath:
+                    return 1;
+
+                case DataBase.DisplayableVideo.State.FindRatFeatues:
+                    return 2;
+
+                case DataBase.DisplayableVideo.State.SaveToDataBase:
+                    return 3;
+
+                case DataBase.DisplayableVideo.State.Successful:
+                    return 4;
+
+                case DataBase.DisplayableVideo.State.Failed:
+                    return 4;
+
+                default:
+                    return 0;
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
         }
     }
 }

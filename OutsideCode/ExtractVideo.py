@@ -56,4 +56,5 @@ except Exception as e:
     if str(e).startswith("message"):
         print(e)
     else:
-        print(f"error: {e.__class__.__name__}: {e}")
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        print(f"error in line {exc_tb.tb_lineno}: {e.__class__.__name__}: {e}")

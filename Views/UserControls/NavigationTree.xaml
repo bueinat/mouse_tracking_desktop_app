@@ -30,7 +30,7 @@
                     Orientation="Horizontal">
                     <Image Source="{Binding Path=MyIcon, Mode=OneTime}" Stretch="Fill" />
                     <TextBlock Margin="5,0,0,0" Text="{Binding FriendlyName, Mode=OneTime}" />
-                    <TextBlock Height="0" Text="{Binding FullPathName}" />
+                    <TextBlock Width="0" Text="{Binding FullPathName}" />
                 </StackPanel>
             </Button>
         </HierarchicalDataTemplate>

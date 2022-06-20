@@ -14,6 +14,7 @@ try:
     # get run arguments
     args = pandas.read_csv(sys.argv[1], header=None, index_col=0)[1]
     args["override"] = eval(args["override"])
+    args["nframes"] = int(args["nframes"])
     video_name = args["video_path"].split('\\')[-1].split('.')[0]
 
     # %%
@@ -39,7 +40,7 @@ try:
     video.description = "dummy video\nthis is just meant for testing."
     video.link_to_data = args["video_path"]
 
-    update_video = Video.objects(name=link_to_data).order_by('-registered_date')
+    update_video = Video.objects(name=args["video_path"]).order_by('-registered_date')
     print(args["override"], len(update_video))
     if args["override"] and len(update_video) > 0:
         update_video.update_one(set__length=video.length,
@@ -81,4 +82,5 @@ except Exception as e:
     if str(e).startswith("message"):
         print(e)
     else:
-        print(f"error: {e.__class__.__name__}: {e}")
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        print(f"error in line {exc_tb.tb_lineno}: {e.__class__.__name__}: {e}")
