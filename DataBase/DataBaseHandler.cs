@@ -57,6 +57,18 @@ namespace mouse_tracking_web_app.DataBase
             ObjectId id = ObjectId.Parse(videoID);
             return videoCollection.Find(x => x.ID == id).First();
         }
+        public bool DoesIDexist(string id, string collectionName)
+        {
+            return DoesIDexist(ObjectId.Parse(id), collectionName);
+        }
+        public bool DoesIDexist(ObjectId id, string collectionName)
+        {
+            if (collectionName == "video")
+                return videoCollection.Find(x => x.ID == id).CountDocuments() > 0;
+            return collectionName == "analysis"
+                ? analysisCollection.Find(x => x.ID == id).CountDocuments() > 0
+                : throw new InvalidEnumArgumentException("collection name must be one of [video, analysis]");
+        }
 
         public void NotifyPropertyChanged(string propertyName)
         {

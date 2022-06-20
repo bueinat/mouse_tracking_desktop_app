@@ -57,7 +57,7 @@ try:
     # %%
     video = Video.objects(id=video_id).first()
 
-    uploadabale_data = pandas.read_csv(f"{argv['data_path']}\\uploadable_data.csv", index_col=0)
+    uploadabale_data = pandas.read_csv(f"{args['data_path']}\\uploadable_data.csv", index_col=0)
     ana = Analysis()
     ana.timestep = list(uploadabale_data.index)
     for c in uploadabale_data.columns:
@@ -66,7 +66,7 @@ try:
     if args["override"]:
         try:
             video.analysis.delete()
-        except Exception:
+        except Exception as e:
             print(f"error: {e.__class__.__name__}: {e}")
             pass
 

@@ -29,10 +29,80 @@
             <ListBox
                 Name="lbTodoList"
                 HorizontalContentAlignment="Stretch"
-                ItemsSource="{Binding VM_DispVideosCollection}">
+                BorderThickness="0"
+                ItemsSource="{Binding VM_DispVideosCollection}"
+                SelectedItem="{Binding VM_SelectedVideo}">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListBoxItem}">
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="FontWeight" Value="SemiBold" />
+                                <Setter Property="Background" Value="Transparent" />
+                                <Setter Property="Foreground" Value="Black" />
+                            </Trigger>
+                        </Style.Triggers>
+                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
+                        <Setter Property="VerticalContentAlignment" Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
+                        <Setter Property="Padding" Value="2,0,0,0" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                    <Border
+                                        x:Name="Bd"
+                                        Padding="{TemplateBinding Padding}"
+                                        Background="{TemplateBinding Background}"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                        SnapsToDevicePixels="true">
+                                        <ContentPresenter
+                                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsSelected" Value="true">
+                                            <Setter Property="Background" Value="Transparent" />
+                                            <Setter Property="Foreground" Value="Black" />
+                                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
+                                            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}" />
+                                        </Trigger>
+
+                                        <MultiTrigger>
+                                            <MultiTrigger.Conditions>
+                                                <Condition Property="IsSelected" Value="true" />
+                                                <Condition Property="Selector.IsSelectionActive" Value="false" />
+                                            </MultiTrigger.Conditions>
+                                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}" />
+                                            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}}" />
+                                        </MultiTrigger>
+                                        <Trigger Property="IsEnabled" Value="false">
+                                            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
+                                        </Trigger>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Opacity" Value="0.8" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListBox.ItemContainerStyle>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Grid Height="30" Background="{Binding Path=ProcessingState, Converter={StaticResource StateToColorConverter}}">
+                        <Grid
+                            Height="30"
+                            Background="{Binding Path=ProcessingState, Converter={StaticResource StateToColorConverter}}"
+                            MouseDown="ListBoxItem_MouseDown">
+                            <ToolTipService.ToolTip>
+                                <StackPanel>
+                                    <TextBlock
+                                        FontWeight="SemiBold"
+                                        Foreground="#10275C"
+                                        Text="{Binding ProcessingState, StringFormat='  current step: {0}'}" />
+                                    <TextBlock FontSize="11" Text="{Binding ToolTipMessage}" />
+                                </StackPanel>
+                            </ToolTipService.ToolTip>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="70" />
@@ -41,19 +111,6 @@
                                 Margin="2"
                                 VerticalAlignment="Center"
                                 Text="{Binding Path=ReducedName}" />
-                            <!--<Border
-                                Grid.Column="1"
-                                Height="15"
-                                BorderBrush="DarkGray"
-                                BorderThickness="1"
-                                CornerRadius="2">
-                                <ProgressBar
-                                    VerticalAlignment="Stretch"
-                                    Foreground="{Binding ProcessingState, Converter={StaticResource StateToProgColorConverter}}"
-                                    Maximum="4"
-                                    Minimum="0"
-                                    Value="{Binding Path=ProcessingState, Converter={StaticResource StateToProgressConverter}}" />-->
-                            <!--</Border>-->
                             <ProgressBar
                                 Grid.Row="0"
                                 Grid.Column="1"

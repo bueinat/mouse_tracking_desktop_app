@@ -71,6 +71,8 @@ namespace mouse_tracking_web_app.Models
         public bool VC_IsVideoLoaded => model.IsVideoLoaded;
         public int VC_NFeatures => VC_FeaturesList.Count;
 
+        //public DisplayableVideo VC_SelectedVideo => model.SelectedVideo;
+
         public int VC_NFrames
         {
             get => nframes;

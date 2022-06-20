@@ -21,12 +21,21 @@ namespace mouse_tracking_web_app.ViewModels
         public event PropertyChangedEventHandler PropertyChanged;
 
         public NavigationTreeViewModel NTVM { get; internal set; }
-        public Utils.ObservableDictionary<string, DisplayableVideo> VM_DisplayableVideos => model.DisplayableVideos;
 
         public BindingList<DisplayableVideo> VM_DispVideosCollection => model.DispVideosCollection;
 
         public string VM_CSVString => model.CSVString;
         public bool VM_DragEnabled => model.DragEnabled;
+
+        public DisplayableVideo VM_SelectedVideo
+        {
+            get => model.SelectedVideo;
+            set
+            {
+                model.SelectedVideo = value;
+                NotifyPropertyChanged("VM_SelectedVideo");
+            }
+        }
 
         public bool VM_OverrideInDB
         {
@@ -59,8 +68,6 @@ namespace mouse_tracking_web_app.ViewModels
             get => model.IsLoading;
             set => model.IsLoading = value;
         }
-
-        //public VideoControllerViewModel VM_VideoControllerViewModel { get; set; }
 
         public string VM_VideoName
         {

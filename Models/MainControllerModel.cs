@@ -12,13 +12,30 @@ namespace mouse_tracking_web_app.Models
 {
     public class MainControllerModel : INotifyPropertyChanged
     {
-        //// enable drag for a directory
-        //if (File.GetAttributes(fileName).HasFlag(FileAttributes.Directory))
-        //    NTVM_DragEnabled = true;
         private readonly List<string> videoTypesList = new List<string>(ConfigurationManager.AppSettings["VideoTypesList"].Split(','));
 
+        #region selectedVideo
+
+        private DisplayableVideo selectedVideo;
+        public DisplayableVideo SelectedVideo
+        {
+            get => selectedVideo;
+            set
+            {
+                selectedVideo = value;
+                NotifyPropertyChanged("SelectedVideo");
+                if (VC.InitializeVideo(SelectedVideo.VideoID))
+                {
+                    VideoProcessed = true;
+                    VC.Run();
+                }
+            }
+        }
+
+        #endregion selectedVideo
+
         private Analysis analysis;
-        private ObservableDictionary<string, DisplayableVideo> displayableVideosDict;
+        private Dictionary<string, DisplayableVideo> displayableVideosDict;
         private BindingList<DisplayableVideo> dispVideosCollection = new BindingList<DisplayableVideo>();
         private bool dragEnabled = false;
         private string errorMessage = "";
@@ -65,16 +82,6 @@ namespace mouse_tracking_web_app.Models
         public string CSVString => VideoAnalysis.GetCSVString(CachePath);
 
         public DataBaseHandler DBHandler { get; }
-
-        public ObservableDictionary<string, DisplayableVideo> DisplayableVideos
-        {
-            get => displayableVideosDict;
-            set
-            {
-                displayableVideosDict = value;
-                NotifyPropertyChanged("DisplayableVideos");
-            }
-        }
 
         public BindingList<DisplayableVideo> DispVideosCollection
         {
@@ -210,9 +217,6 @@ namespace mouse_tracking_web_app.Models
             }
         }
 
-        //// enable drag for a video
-        //if (videoTypesList.Any(s => fileName.EndsWith(s)))
-        //    NTVM_DragEnabled = true;
         public List<string> VideosList { get; set; }
 
         public string VideosPath
@@ -239,7 +243,7 @@ namespace mouse_tracking_web_app.Models
         {
             IsLoading = true;
             ErrorMessage = string.Empty;
-            displayableVideosDict = new ObservableDictionary<string, DisplayableVideo>();
+            displayableVideosDict = new Dictionary<string, DisplayableVideo>();
 
             //List<Task> tasks = new List<Task>();
             DispVideosCollection = new BindingList<DisplayableVideo>();
@@ -256,12 +260,7 @@ namespace mouse_tracking_web_app.Models
             //await Task.WhenAll(tasks);
 
             IsLoading = false;
-            OverrideInDB = false;
-            //if (VC.InitializeVideo(videoID))
-            //{
-            //    VideoProcessed = true;
-            //    VC.Run();
-            //}
+            //OverrideInDB = false;
         }
 
         public Dictionary<string, string> ProcessResult(string[] rawResult)
@@ -293,6 +292,7 @@ namespace mouse_tracking_web_app.Models
         public async Task ProcessSingleVideo(string videoPath)
         {
             string relativeVideoPath = MakeRelative(videoPath, VideosPath).Split('.')[0];
+            string errorKey = "ErrorMessage";
             displayableVideosDict[videoPath].ProcessingState = DisplayableVideo.State.ExtractVideo;
             displayableVideosDict[videoPath].ReducedName = MakeRelative(videoPath, VideosPath);
 
@@ -309,11 +309,20 @@ namespace mouse_tracking_web_app.Models
 
             // run first section
             Dictionary<string, string> processedResult = await RunPhaseUpdateError(@"OutsideCode\ExtractVideo.py", argv, videoPath);
+            if (processedResult.ContainsKey(errorKey))
+                displayableVideosDict[videoPath].ToolTipMessage += $"ExtractVideo: {processedResult[errorKey]}";
 
             if (processedResult.ContainsKey("VideoID"))
             {
                 displayableVideosDict[videoPath].VideoID = processedResult["VideoID"];
-                displayableVideosDict[videoPath].ProcessingState = DisplayableVideo.State.Successful;
+                displayableVideosDict[videoPath].VideoItem = DBHandler.GetVideoByID(displayableVideosDict[videoPath].VideoID);
+                if (DBHandler.DoesIDexist(displayableVideosDict[videoPath].VideoItem.Analysis, "analysis"))
+                    displayableVideosDict[videoPath].ProcessingState = DisplayableVideo.State.Successful;
+                else
+                {
+                    displayableVideosDict[videoPath].ProcessingState = DisplayableVideo.State.Failed;
+                    displayableVideosDict[videoPath].ToolTipMessage += "\r\nUnknown Error at ExtractVideo";
+                }
             }
             //_videoID = processedResult["VideoID"];
 
@@ -321,7 +330,7 @@ namespace mouse_tracking_web_app.Models
             {
                 displayableVideosDict[videoPath].ProcessingState = DisplayableVideo.State.Failed;
             }
-            if (!string.IsNullOrEmpty(displayableVideosDict[videoPath].VideoID))
+            if (!string.IsNullOrEmpty(displayableVideosDict[videoPath].VideoID) || displayableVideosDict[videoPath].ProcessingState == DisplayableVideo.State.Failed)
             {
                 // create video element
                 // return it
@@ -333,33 +342,41 @@ namespace mouse_tracking_web_app.Models
             // run second section
             displayableVideosDict[videoPath].ProcessingState = DisplayableVideo.State.FindRatPath;
             processedResult = await RunPhaseUpdateError(@"OutsideCode\FindRatPath.py", argv, videoPath);
+            if (processedResult.ContainsKey(errorKey))
+                displayableVideosDict[videoPath].ToolTipMessage += $"\r\nFindRatPath: {processedResult[errorKey]}";
             if (processedResult["Success"] == "False")
             {
                 displayableVideosDict[videoPath].ProcessingState = DisplayableVideo.State.Failed;
+                displayableVideosDict[videoPath].ToolTipMessage += "\r\nUnknown Error at FindRatPath";
                 return;
-                // create a video element with unssuccessful state
-                // return it
             }
 
             // run third section
             displayableVideosDict[videoPath].ProcessingState = DisplayableVideo.State.FindRatFeatues;
             processedResult = await RunPhaseUpdateError(@"OutsideCode\FindRatFeatures.py", argv, videoPath);
+            if (processedResult.ContainsKey(errorKey))
+                displayableVideosDict[videoPath].ToolTipMessage += $"\r\nFindRatFeatues: {processedResult[errorKey]}";
             if (processedResult["Success"] == "False")
             {
                 displayableVideosDict[videoPath].ProcessingState = DisplayableVideo.State.Failed;
+                displayableVideosDict[videoPath].ToolTipMessage += "\r\nUnknown Error at FindRatFeatures";
                 return;
-                // create a video element with unssuccessful state
-                // return it
             }
 
             // run fourth section
             displayableVideosDict[videoPath].ProcessingState = DisplayableVideo.State.SaveToDataBase;
             processedResult = await RunPhaseUpdateError(@"OutsideCode\SaveToDataBase.py", argv, videoPath);
+            if (processedResult.ContainsKey(errorKey))
+                displayableVideosDict[videoPath].ToolTipMessage += $"\r\nSaveToDataBase: {processedResult[errorKey]}";
             displayableVideosDict[videoPath].VideoID = processedResult["VideoID"];
+            displayableVideosDict[videoPath].VideoItem = DBHandler.GetVideoByID(displayableVideosDict[videoPath].VideoID);
             if (processedResult["Success"] == "True")
                 displayableVideosDict[videoPath].ProcessingState = DisplayableVideo.State.Successful;
             else
+            {
                 displayableVideosDict[videoPath].ProcessingState = DisplayableVideo.State.Failed;
+                displayableVideosDict[videoPath].ToolTipMessage += "\r\nUnknown Error at SaveToDataBase";
+            }
         }
 
         public async Task ProcessVideo()
@@ -424,7 +441,7 @@ namespace mouse_tracking_web_app.Models
                 List<string> l = new List<string>();
                 foreach (string file in Directory.EnumerateFiles(VideosPath, "*.*", SearchOption.AllDirectories))
                 {
-                    if (videoTypesList.Any(s => file.EndsWith(s)))
+                    if (!file.Contains(CachePath) && videoTypesList.Any(s => file.EndsWith(s)))
                         l.Add(file);
                     //l.Add(MakeRelative(file, VideosPath));
                 }

@@ -5,12 +5,16 @@ namespace mouse_tracking_web_app.DataBase
 {
     public class DisplayableVideo : INotifyPropertyChanged
     {
-        private State processingState;
-        private string reducedName;
-        private string videoID;
-        private Video videoItem;
-
         public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged([CallerMemberName] string name = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
+        #region processingState
+
+        private State processingState;
 
         public enum State
         { ExtractVideo, FindRatPath, FindRatFeatues, SaveToDataBase, Successful, Failed };
@@ -25,6 +29,12 @@ namespace mouse_tracking_web_app.DataBase
             }
         }
 
+        #endregion processingState
+
+        #region reducedName
+
+        private string reducedName;
+
         public string ReducedName
         {
             get => reducedName;
@@ -34,6 +44,12 @@ namespace mouse_tracking_web_app.DataBase
                 OnPropertyChanged();
             }
         }
+
+        #endregion reducedName
+
+        #region videoID
+
+        private string videoID;
 
         public string VideoID
         {
@@ -45,6 +61,12 @@ namespace mouse_tracking_web_app.DataBase
             }
         }
 
+        #endregion videoID
+
+        #region videoItem
+
+        private Video videoItem;
+
         public Video VideoItem
         {
             get => videoItem;
@@ -55,9 +77,22 @@ namespace mouse_tracking_web_app.DataBase
             }
         }
 
-        protected void OnPropertyChanged([CallerMemberName] string name = null)
+        #endregion videoItem
+
+        #region toolTipMessage
+
+        private string toolTipMessage = "";
+
+        public string ToolTipMessage
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            get => toolTipMessage;
+            set
+            {
+                toolTipMessage = value;
+                OnPropertyChanged();
+            }
         }
+
+        #endregion toolTipMessage
     }
 }
