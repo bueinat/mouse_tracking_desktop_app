@@ -290,6 +290,7 @@
     <Compile Include="ViewModels\PlottingControllerViewModel.cs" />
     <Compile Include="ViewModels\SingleTreeViewModel.cs" />
     <Compile Include="ViewModels\VideoControllerViewModel.cs" />
+    <Compile Include="ViewModels\VideoProcessingManager.cs" />
     <Compile Include="Views\UserControls\DragArea.xaml.cs">
       <DependentUpon>DragArea.xaml</DependentUpon>
     </Compile>

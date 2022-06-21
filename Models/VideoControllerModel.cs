@@ -68,7 +68,7 @@ namespace mouse_tracking_web_app.Models
 
         public bool VC_IsSniffing => !(VC_VideoAnalysis is null) && VC_VideoAnalysis.IsSniffing[VC_StepCounter];
 
-        public bool VC_IsVideoLoaded => model.IsVideoLoaded;
+        //public bool VC_IsVideoLoaded => model.IsVideoLoaded;
         public int VC_NFeatures => VC_FeaturesList.Count;
 
         //public DisplayableVideo VC_SelectedVideo => model.SelectedVideo;

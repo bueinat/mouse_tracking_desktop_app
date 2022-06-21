@@ -17,7 +17,7 @@ namespace mouse_tracking_web_app.DataBase
         private State processingState;
 
         public enum State
-        { ExtractVideo, FindRatPath, FindRatFeatues, SaveToDataBase, Successful, Failed };
+        { Waiting, ExtractVideo, FindRatPath, FindRatFeatues, SaveToDataBase, Successful, Failed };
 
         public State ProcessingState
         {
@@ -27,6 +27,16 @@ namespace mouse_tracking_web_app.DataBase
                 processingState = value;
                 OnPropertyChanged();
             }
+        }
+
+        public bool HasFailed()
+        {
+            return ProcessingState == State.Failed;
+        }
+
+        public bool HasTerminated()
+        {
+            return ProcessingState == State.Failed || ProcessingState == State.Successful;
         }
 
         #endregion processingState

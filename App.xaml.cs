@@ -12,6 +12,7 @@ namespace mouse_tracking_web_app
         public ViewModels.VideoControllerViewModel VCVM { get; internal set; }
         public ViewModels.PlottingControllerViewModel PCVM { get; internal set; }
         public ViewModels.NavigationTreeViewModel NTVM { get; internal set; }
+        public ViewModels.VideoProcessingManager VPM { get; internal set; }
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
@@ -21,6 +22,7 @@ namespace mouse_tracking_web_app
             MainVM = new ViewModels.MainControllerViewModel(Model, NTVM);
             VCVM = new ViewModels.VideoControllerViewModel(Model.VC);
             PCVM = new ViewModels.PlottingControllerViewModel(Model.PC);
+            VPM = new ViewModels.VideoProcessingManager(Model);
 
             Views.IntroWindow introWindow = new Views.IntroWindow();
             introWindow.Show();

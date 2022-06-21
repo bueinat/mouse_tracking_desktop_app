@@ -14,7 +14,7 @@ namespace mouse_tracking_web_app.Views
         public VideosDisplayer()
         {
             InitializeComponent();
-            DataContext = (Application.Current as App).MainVM;
+            DataContext = (Application.Current as App).VPM;
         }
 
         private void ListBoxItem_MouseDown(object sender, MouseButtonEventArgs e)

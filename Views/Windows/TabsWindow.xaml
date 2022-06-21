@@ -52,7 +52,10 @@
             </TabItem>
         </TabControl>
         <uc:FileExplorerWrapper Grid.Row="1" Grid.Column="1" />
-        <uc:VideosDisplayer Grid.Row="2" Grid.Column="1" />
+        <uc:VideosDisplayer
+            Grid.Row="2"
+            Grid.Column="1"
+            d:DataContext="{d:DesignInstance Type=viewmodels:VideoProcessingManager}" />
         <Button
             x:Name="exportButton"
             Grid.Row="3"

@@ -8,7 +8,7 @@
     xmlns:local="clr-namespace:mouse_tracking_web_app.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewmodels="clr-namespace:mouse_tracking_web_app.ViewModels"
-    d:DataContext="{d:DesignInstance Type=viewmodels:MainControllerViewModel}"
+    d:DataContext="{d:DesignInstance Type=viewmodels:VideoProcessingManager}"
     d:DesignHeight="300"
     d:DesignWidth="300"
     mc:Ignorable="d">
@@ -30,8 +30,8 @@
                 Name="VideosListBox"
                 HorizontalContentAlignment="Stretch"
                 BorderThickness="0"
-                ItemsSource="{Binding VM_DispVideosCollection}"
-                SelectedItem="{Binding VM_SelectedVideo}">
+                ItemsSource="{Binding VideosCollection}"
+                SelectedItem="{Binding VPM_SelectedVideo}">
                 <ListBox.ItemContainerStyle>
                     <Style BasedOn="{StaticResource {x:Type ListBoxItem}}" TargetType="{x:Type ListBoxItem}">
                         <Style.Triggers>
