@@ -26,7 +26,7 @@ try:
         args["override"] = False
     except Exception as e:
         if args["override"]:
-            print("success")
+            # print("success")
             print(f"message: note: overriding {video_name} which already existed in the archive.")
         else:
             print("try getting data from database")

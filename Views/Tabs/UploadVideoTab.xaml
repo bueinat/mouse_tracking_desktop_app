@@ -46,11 +46,7 @@
                     <ColumnDefinition Width="auto" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <CheckBox
-                    Grid.Row="2"
-                    Grid.ColumnSpan="2"
-                    Content="Override Data in Archive"
-                    IsChecked="{Binding VM_OverrideInDB, Mode=TwoWay}" />
+
                 <Button
                     x:Name="BtnUploadsVideo"
                     Grid.Row="0"
@@ -104,6 +100,12 @@
                     Visibility="{Binding VM_HasErrorMessage, Converter={StaticResource BooleanToVisibilityConverter}}" />
             </Grid>
         </GroupBox>-->
+        <CheckBox
+            Grid.Row="0"
+            Grid.ColumnSpan="2"
+            Margin="10,30,10,10"
+            Content="Override Data in Cache"
+            IsChecked="{Binding VM_OverrideInDB, Mode=TwoWay}" />
         <usercontrols:DragArea
             Grid.Row="1"
             Grid.ColumnSpan="2"

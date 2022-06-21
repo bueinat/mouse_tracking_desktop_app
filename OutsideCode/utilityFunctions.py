@@ -8,7 +8,6 @@ import datetime
 
 import os
 import shutil
-import sys
 import mongoengine as mnge
 from PIL import Image
 

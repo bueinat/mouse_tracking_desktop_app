@@ -1,6 +1,9 @@
 ﻿import pandas
 from utilityFunctions import *
-# import sys
+import sys
+
+import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
 
 # suppress all warnings
 import warnings
@@ -35,6 +38,13 @@ try:
     uploadable_data['path'] = [f"{frames_path}\\frame{i}.jpg"
                                 for i in uploadable_data.index]
 
+    for i, r in uploadable_data.iterrows():
+        fig, ax = plt.subplots()
+        plt.imshow(mpimg.imread(r.path))
+        plt.plot([r.x], [r.y], ".", ms=10, alpha=0.8, c="cadetblue")
+        plt.axis('off')
+        plt.savefig(r.path, dpi=120, bbox_inches='tight',pad_inches = 0)
+    # print(f"path: {r.path}")
     uploadable_data.to_csv(f"{args['data_path']}\\uploadable_data.csv")
     print("success")
 
