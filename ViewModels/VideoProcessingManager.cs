@@ -179,6 +179,7 @@ namespace mouse_tracking_web_app.ViewModels
             // initialization
             string relativeVideoPath = MakeRelative(videoPath, VPM_VideosPath).Split('.')[0];
             DisplayableVideo currentVideo = videosDictionary[videoPath];
+            
             string connectionString = ConfigurationManager.AppSettings.Get("ConnectionString");
             string dbName = ConfigurationManager.AppSettings.Get("DataBaseName");
 
@@ -188,7 +189,7 @@ namespace mouse_tracking_web_app.ViewModels
                 ["video_path"] = videoPath,
                 ["data_path"] = $"{VPM_CachePath}\\{relativeVideoPath}",
                 ["connection_string"] = $"{connectionString}/{dbName}"
-            };
+        };
 
             // run first
             currentVideo.ProcessingState = DisplayableVideo.State.ExtractVideo;

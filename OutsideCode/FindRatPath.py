@@ -1,23 +1,30 @@
-﻿import pandas
+﻿print("imports 0")
+import torch
+import pandas
 from utilityFunctions import *
+print("imports 1")
 import sys
-
+import os
+print("imports 2")
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 
 # suppress all warnings
 import warnings
 warnings.filterwarnings("ignore")
+print("imports done")
 
 # %%
 
 try:
-    # get run arguments
-    FUNCTION_NAME = 'alternative_rat_path'
+        # get run arguments
+    FUNCTION_NAME = 'yolov5_algorithm'
 
     args = pandas.read_csv(sys.argv[1], header=None, index_col=0)[1]
     args["override"] = eval(args["override"])
     frames_path = f"{args['data_path']}\\frames"
+
+    print("init")
 
     # extracting data from video
     if FUNCTION_NAME == 'rat_path':
@@ -30,20 +37,40 @@ try:
         frames, eframes, nose_pos, max_vals = alternative_rat_path(args["video_path"])
         raw_data = get_raw_data(nose_pos, max_vals, eframes)
 
+    elif FUNCTION_NAME == 'yolov5_algorithm':
+        print("strarting algo")
+        PATH = f"C:/ProgramData/yolov5/models/best_trained_model.pt"
+        model = torch.hub.load('ultralytics/yolov5', 'custom', path=PATH)  # local model
+        dscript_detect = {int(filename.split(".")[0][5:]): model(f"{frames_path}/{filename}")
+                                    for filename in os.listdir(frames_path)}
+
+        dff = pandas.concat({key: dscript_detect[key].pandas().xyxy[0] for key in dscript_detect.keys()})
+        dff.insert(0, 'confidence', dff.pop('confidence'))
+        dff = dff.sort_values("confidence").query("name == 'nose'").groupby(level=0).last()
+        dff["x"] = (dff.xmin + dff.xmax) / 2
+        dff["y"] = (dff.ymin + dff.ymax) / 2
+        dff["width"] = dff.xmax - dff.xmin
+        dff["height"] = dff.ymax - dff.ymin
+
+        df = dff[["x", "y", "width", "height"]]
+        df.index.name = "timestep"
+        df = df.reindex(np.arange(df.index.min(), df.index.max() + 1)).interpolate(method="pchip")
+        raw_data = df.reindex(np.arange(0, len(dscript_detect))).fillna(method="bfill").fillna(method="ffill")[["x", "y"]]
+
     raw_data = analyze_raw_data(raw_data)
     
     # create uploadabe data
-    uploadable_data = raw_data[['x', 'y', 'vx', 'vy', 'ax', 'ay']]
-    uploadable_data.loc[:, 'curviness'] = raw_data.adist / raw_data.rdist
-    uploadable_data['path'] = [f"{frames_path}\\frame{i}.jpg"
-                                for i in uploadable_data.index]
+    raw_data['path'] = [f"{frames_path}\\frame{i}.jpg"
+                                    for i in raw_data.index]
 
-    for i, r in uploadable_data.iterrows():
-        fig, ax = plt.subplots()
-        plt.imshow(mpimg.imread(r.path))
-        plt.plot([r.x], [r.y], ".", ms=10, alpha=0.8, c="cadetblue")
-        plt.axis('off')
-        plt.savefig(r.path, dpi=120, bbox_inches='tight',pad_inches = 0)
+    uploadable_data = raw_data[['x', 'y', 'vx', 'vy', 'ax', 'ay', 'curviness', 'path']]
+
+    # for i, r in uploadable_data.iterrows():
+    #     fig, ax = plt.subplots()
+    #     plt.imshow(mpimg.imread(r.path))
+    #     plt.plot([r.x], [r.y], ".", ms=10, alpha=0.8, c="cadetblue")
+    #     plt.axis('off')
+    #     plt.savefig(r.path, dpi=120, bbox_inches='tight',pad_inches = 0)
     # print(f"path: {r.path}")
     uploadable_data.to_csv(f"{args['data_path']}\\uploadable_data.csv")
     print("success")

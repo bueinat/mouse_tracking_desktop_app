@@ -18,21 +18,27 @@ namespace mouse_tracking_web_app.DataBase
         public List<int> TimeStep { get; set; }
 
         [BsonElement("x")]
+        [BsonRepresentation(BsonType.Decimal128, AllowTruncation = true)]
         public List<float> X { get; set; }
 
         [BsonElement("y")]
+        [BsonRepresentation(BsonType.Decimal128, AllowTruncation = true)]
         public List<float> Y { get; set; }
 
         [BsonElement("vx")]
+        [BsonRepresentation(BsonType.Decimal128, AllowTruncation = true)]
         public List<float> VelocityX { get; set; }
 
         [BsonElement("vy")]
+        [BsonRepresentation(BsonType.Decimal128, AllowTruncation = true)]
         public List<float> VelocityY { get; set; }
 
         [BsonElement("ax")]
+        [BsonRepresentation(BsonType.Decimal128, AllowTruncation = true)]
         public List<float> AccelerationX { get; set; }
 
         [BsonElement("ay")]
+        [BsonRepresentation(BsonType.Decimal128, AllowTruncation = true)]
         public List<float> AccelerationY { get; set; }
 
         [BsonElement("curviness")]

@@ -266,14 +266,13 @@ def analyze_raw_data(raw_data):
     raw_data['a'] = np.sqrt(raw_data.ax ** 2 + raw_data.ay ** 2)
 
     # %%
-    # dists = np.sqrt(raw_data.x.diff() ** 2 + raw_data.y.diff() ** 2)
     win_size = 100
 
-    raw_data["adist"] = rolling_apply(
-        aireal_dist, win_size, raw_data.x, raw_data.y)
+    raw_data["adist"] = rolling_apply(aireal_dist, win_size, raw_data.x, raw_data.y)
     raw_data["rdist"] = raw_data.r.rolling(win_size).sum()
+    raw_data['curviness'] = (raw_data.adist / raw_data.rdist).shift(-win_size // 2)
 
-    raw_data = raw_data.fillna(method='backfill')
+    raw_data = raw_data.fillna(method='bfill').fillna(method='ffill')
     return raw_data # , path
 
 
