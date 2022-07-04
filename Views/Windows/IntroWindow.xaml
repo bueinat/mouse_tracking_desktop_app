@@ -34,7 +34,7 @@
                 Content="What would you like to do?"
                 FontSize="20"
                 FontWeight="Bold"
-                Foreground="#000000" />
+                Foreground="Black" />
             <Button
                 x:Name="workspace_button"
                 Width="170"
@@ -72,16 +72,15 @@
                 Content="analyze experiments"
                 IsEnabled="{Binding VM_FileExplorerDirectory, Converter={StaticResource DoesStringExist}}" />
             <Button
-                x:Name="go_to_screen3"
+                x:Name="settings_button"
                 Width="170"
                 Height="25"
                 Margin="10,10"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                Background="#FFD6EBF2"
-                Click="Go_to_screen_Click"
-                Content="export reports"
-                Visibility="Collapsed" />
+                Background="#FFCBEAD7"
+                Click="Settings_Click"
+                Content="edit settings" />
         </StackPanel>
     </Grid>
 </Window>

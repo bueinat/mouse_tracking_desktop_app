@@ -14,7 +14,7 @@ namespace mouse_tracking_web_app.Models
     public class PlottingControllerModel : INotifyPropertyChanged
     {
         public List<double> PC_ColorList;
-        private readonly double defaultMarkerSize = double.Parse(ConfigurationManager.AppSettings.Get("PlotDefaultMarkerSize"));
+        private readonly double defaultMarkerSize = double.Parse(ConfigurationManager.AppSettings.Get("PlotMarkerSize"));
         private readonly MainControllerModel model;
 
         private readonly Dictionary<string, MarkerType> scatterTypes = new Dictionary<string, MarkerType>

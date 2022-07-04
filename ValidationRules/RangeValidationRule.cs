@@ -6,9 +6,6 @@ namespace mouse_tracking_web_app.Converters
 {
     public class RangeValidationRule : ValidationRule
     {
-        public RangeValidationRule()
-        { }
-
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
             string v = (string)value;

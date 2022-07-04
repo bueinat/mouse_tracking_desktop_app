@@ -7,6 +7,7 @@ namespace mouse_tracking_web_app
     /// </summary>
     public partial class App : Application
     {
+        public ViewModels.SettingsManager SM { get; internal set; }
         public Models.MainControllerModel Model { get; internal set; }
         public ViewModels.MainControllerViewModel MainVM { get; internal set; }
         public ViewModels.VideoControllerViewModel VCVM { get; internal set; }
@@ -17,7 +18,8 @@ namespace mouse_tracking_web_app
         private void Application_Startup(object sender, StartupEventArgs e)
         {
             // create models and view models
-            Model = new Models.MainControllerModel();
+            SM = new ViewModels.SettingsManager();
+            Model = new Models.MainControllerModel(SM);
             NTVM = new ViewModels.NavigationTreeViewModel(Model);
             MainVM = new ViewModels.MainControllerViewModel(Model, NTVM);
             VCVM = new ViewModels.VideoControllerViewModel(Model.VC);

@@ -1,5 +1,6 @@
 ﻿using mouse_tracking_web_app.DataBase;
 using mouse_tracking_web_app.Utils;
+using mouse_tracking_web_app.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -86,15 +87,16 @@ namespace mouse_tracking_web_app.Models
         private string videoName = "";
         private bool videoProcessed = false;
 
-        
 
-        public MainControllerModel()
+
+        public MainControllerModel(SettingsManager sManager)
         {
             DBHandler = new DataBaseHandler(this);
             DBHandler.Connect();
             CodeRunner = new OuterCodeRunner();
             VC = new VideoControllerModel(this);
             PC = new PlottingControllerModel(this);
+            SM = sManager;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -171,6 +173,7 @@ namespace mouse_tracking_web_app.Models
         }
 
         public PlottingControllerModel PC { get; }
+        public SettingsManager SM { get; }
 
         public bool Stop { get; set; }
 

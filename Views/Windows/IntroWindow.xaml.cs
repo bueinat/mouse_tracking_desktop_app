@@ -47,5 +47,14 @@ namespace mouse_tracking_web_app.Views
             tabsWindow.SetTab(buttonToWindow[clicked.Content.ToString()]);
             Close();
         }
+
+        private void Settings_Click(object sender, RoutedEventArgs e)
+        {
+            SettingsDialog inputDialog = new SettingsDialog();
+            if (inputDialog.ShowDialog() == true)
+                System.Console.WriteLine("dialog success");
+            else
+                System.Console.WriteLine("dialog closed");
+        }
     }
 }
