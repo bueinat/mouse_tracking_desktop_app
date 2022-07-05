@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Globalization;
+using System.Text.RegularExpressions;
 using System.Windows.Controls;
 
 namespace mouse_tracking_web_app.ValidationRules
@@ -48,6 +49,17 @@ namespace mouse_tracking_web_app.ValidationRules
             {
                 return new ValidationResult(false, "not a python path");
             }
+        }
+    }
+
+    public class DatabaseNameValidationRule : ValidationRule
+    {
+        public override ValidationResult Validate(object value, CultureInfo cultureInfo)
+        {
+            if (string.IsNullOrWhiteSpace((string)value))
+                return ValidationResult.ValidResult;
+            Regex rgx = new Regex("[^A-Za-z0-9]");
+            return rgx.IsMatch((string)value) ? new ValidationResult(false, "illegal characters") : ValidationResult.ValidResult;
         }
     }
 

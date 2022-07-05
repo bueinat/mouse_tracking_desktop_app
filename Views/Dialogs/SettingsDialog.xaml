@@ -103,8 +103,18 @@
             Grid.Row="3"
             Grid.Column="1"
             VerticalAlignment="Center"
-            materialDesign:HintAssist.Hint="{Binding CurrentSettings.DatabaseName}"
-            Text="{Binding UpdatableSettings.DatabaseName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            materialDesign:HintAssist.Hint="{Binding CurrentSettings.DatabaseName}">
+            <TextBox.Text>
+                <Binding
+                    Mode="TwoWay"
+                    Path="UpdatableSettings.DatabaseName"
+                    UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <valRules:DatabaseNameValidationRule />
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
         <Label
             Grid.Row="4"
             Grid.Column="0"
@@ -189,6 +199,15 @@
                     <Style BasedOn="{StaticResource MaterialDesignRaisedLightButton}" TargetType="Button">
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding ElementName=plotMarkerSize, Path=(Validation.HasError)}" Value="True">
+                                <Setter Property="IsEnabled" Value="False" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=pythonPath, Path=(Validation.HasError)}" Value="True">
+                                <Setter Property="IsEnabled" Value="False" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=connectionString, Path=(Validation.HasError)}" Value="True">
+                                <Setter Property="IsEnabled" Value="False" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=databaseName, Path=(Validation.HasError)}" Value="True">
                                 <Setter Property="IsEnabled" Value="False" />
                             </DataTrigger>
                         </Style.Triggers>
