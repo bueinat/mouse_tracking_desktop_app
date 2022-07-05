@@ -4,12 +4,17 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:converters="clr-namespace:mouse_tracking_web_app.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewmodels="clr-namespace:mouse_tracking_web_app.ViewModels"
     Title="IntroWindow"
     Width="800"
     Height="450"
     d:DataContext="{d:DesignInstance Type=viewmodels:MainControllerViewModel}"
+    Background="{DynamicResource MaterialDesignPaper}"
+    FontFamily="{materialDesign:MaterialDesignFont}"
+    Icon="../../Images/Rodent.ico"
+    TextElement.Foreground="{DynamicResource MaterialDesignBody}"
     mc:Ignorable="d">
     <Window.Resources>
         <converters:DoesStringExist x:Key="DoesStringExist" />
@@ -38,14 +43,14 @@
             <Button
                 x:Name="workspace_button"
                 Width="170"
-                Height="30"
+                Height="25"
                 Margin="10,10"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Background="#FFCBEAD7"
                 Click="Button_Workspace"
                 Content="select working directory"
-                FontSize="13"
+                FontSize="12"
                 FontWeight="Normal"
                 Foreground="Black" />
             <TextBlock
@@ -55,42 +60,42 @@
             <Button
                 x:Name="go_to_screen1"
                 Width="170"
-                Height="30"
+                Height="25"
                 Margin="10,10"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Background="#FFD6EBF2"
                 Click="Go_to_screen_Click"
                 Content="upload and watch videos"
-                FontSize="13"
+                FontSize="12"
                 FontWeight="Normal"
                 Foreground="Black"
                 IsEnabled="{Binding VM_FileExplorerDirectory, Converter={StaticResource DoesStringExist}}" />
             <Button
                 x:Name="go_to_screen2"
                 Width="170"
-                Height="30"
+                Height="25"
                 Margin="10,10"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Background="#FFD6EBF2"
                 Click="Go_to_screen_Click"
                 Content="analyze experiments"
-                FontSize="13"
+                FontSize="12"
                 FontWeight="Normal"
                 Foreground="Black"
                 IsEnabled="{Binding VM_FileExplorerDirectory, Converter={StaticResource DoesStringExist}}" />
             <Button
                 x:Name="settings_button"
                 Width="170"
-                Height="30"
+                Height="25"
                 Margin="10,10"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Background="#FFCBEAD7"
                 Click="Settings_Click"
                 Content="edit settings"
-                FontSize="13"
+                FontSize="12"
                 FontWeight="Normal"
                 Foreground="Black" />
         </StackPanel>

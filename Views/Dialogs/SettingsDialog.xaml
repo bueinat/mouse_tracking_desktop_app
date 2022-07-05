@@ -12,6 +12,7 @@
     Width="350"
     Height="400"
     d:DataContext="{d:DesignInstance Type=viewmodels:SettingsManager}"
+    Icon="../../Images/Settings.ico"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
     <Window.Resources>

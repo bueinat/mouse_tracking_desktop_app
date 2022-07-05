@@ -33,6 +33,7 @@ namespace mouse_tracking_web_app
         private void Application_Exit(object sender, ExitEventArgs e)
         {
             Model.StopMethod();
+            SM.SaveSettings();
         }
     }
 }
