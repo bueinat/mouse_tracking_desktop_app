@@ -53,8 +53,23 @@ namespace mouse_tracking_web_app.Converters
         }
     }
 
-    [ValueConversion(typeof(double), typeof(string))]
+    [ValueConversion(typeof(float), typeof(string))]
     public class FillnaConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            float v = (float)value;
+            return float.IsNaN(v) ? "-" : v.ToString();
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    [ValueConversion(typeof(double), typeof(string))]
+    public class DoubleFillnaConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

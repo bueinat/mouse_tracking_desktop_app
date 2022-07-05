@@ -38,13 +38,16 @@
             <Button
                 x:Name="workspace_button"
                 Width="170"
-                Height="25"
+                Height="30"
                 Margin="10,10"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Background="#FFCBEAD7"
                 Click="Button_Workspace"
-                Content="select working directory" />
+                Content="select working directory"
+                FontSize="13"
+                FontWeight="Normal"
+                Foreground="Black" />
             <TextBlock
                 x:Name="dirName"
                 Height="0"
@@ -52,35 +55,44 @@
             <Button
                 x:Name="go_to_screen1"
                 Width="170"
-                Height="25"
+                Height="30"
                 Margin="10,10"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Background="#FFD6EBF2"
                 Click="Go_to_screen_Click"
                 Content="upload and watch videos"
+                FontSize="13"
+                FontWeight="Normal"
+                Foreground="Black"
                 IsEnabled="{Binding VM_FileExplorerDirectory, Converter={StaticResource DoesStringExist}}" />
             <Button
                 x:Name="go_to_screen2"
                 Width="170"
-                Height="25"
+                Height="30"
                 Margin="10,10"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Background="#FFD6EBF2"
                 Click="Go_to_screen_Click"
                 Content="analyze experiments"
+                FontSize="13"
+                FontWeight="Normal"
+                Foreground="Black"
                 IsEnabled="{Binding VM_FileExplorerDirectory, Converter={StaticResource DoesStringExist}}" />
             <Button
                 x:Name="settings_button"
                 Width="170"
-                Height="25"
+                Height="30"
                 Margin="10,10"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Background="#FFCBEAD7"
                 Click="Settings_Click"
-                Content="edit settings" />
+                Content="edit settings"
+                FontSize="13"
+                FontWeight="Normal"
+                Foreground="Black" />
         </StackPanel>
     </Grid>
 </Window>
