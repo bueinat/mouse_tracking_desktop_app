@@ -2,8 +2,6 @@
 using RunProcessAsTask;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -28,6 +26,7 @@ namespace mouse_tracking_web_app.Models
     public class OuterCodeRunner
     {
         public SettingsManager SM;
+
         public OuterCodeRunner(SettingsManager sManager)
         {
             SM = sManager;
@@ -37,6 +36,7 @@ namespace mouse_tracking_web_app.Models
             //        NotifyPropertyChanged("DBH_" + e.PropertyName);
             //    };
         }
+
         public static string WriteDictToCSV(Dictionary<string, string> data)
         {
             string csv = string.Join(

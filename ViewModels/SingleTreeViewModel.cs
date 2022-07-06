@@ -19,6 +19,7 @@ namespace mouse_tracking_web_app.ViewModels
         private string treeName = "";
 
         public event PropertyChangedEventHandler PropertyChanged;
+
         public SettingsManager SM;
 
         // Constructors

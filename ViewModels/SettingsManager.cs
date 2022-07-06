@@ -41,6 +41,7 @@ namespace mouse_tracking_web_app.ViewModels
             CurrentSettings.UpdateBasedOnSource(UpdatableSettings);
             UpdatableSettings = new SettingsInstance();
         }
+
         #endregion settingsMethods
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -49,6 +50,7 @@ namespace mouse_tracking_web_app.ViewModels
 
         private SettingsInstance currentSettings;
         private SettingsInstance updatableSettings;
+
         public SettingsInstance CurrentSettings
         {
             get => currentSettings;

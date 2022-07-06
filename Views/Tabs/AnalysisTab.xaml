@@ -12,6 +12,8 @@
     d:DataContext="{d:DesignInstance Type=viewmodels:PlottingControllerViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
+    Background="{DynamicResource MaterialDesignPaper}"
+    TextElement.Foreground="{DynamicResource MaterialDesignBody}"
     mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -35,6 +37,7 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <GroupBox Grid.Row="0" Header="Path Parameters">
+
                 <Grid Margin="10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto" />
@@ -72,13 +75,13 @@
                         x:Name="applyButton"
                         Grid.Row="0"
                         Grid.Column="1"
-                        Width="90"
-                        Margin="0,3"
+                        Height="25"
                         VerticalAlignment="Bottom"
-                        Background="#FFD6EBF2"
                         Click="ApplyButtonClicked"
                         Content="apply changes"
-                        IsEnabled="{Binding VMPC_IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                        FontSize="12"
+                        IsEnabled="{Binding VMPC_IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"
+                        Style="{DynamicResource MaterialDesignFlatDarkBgButton}" />
 
                     <StackPanel Grid.Row="0" Grid.Column="0">
                         <Label Content="Size" FontWeight="Bold" />
@@ -148,6 +151,7 @@
             </GroupBox>
             <GroupBox
                 Grid.Row="1"
+                Margin="0,5,0,0"
                 Padding="5"
                 Header="Path Statistics">
                 <usercontrols:PathStatisticsPresentor Grid.Row="1" Visibility="{Binding VMPC_VideoAnalysis, Converter={StaticResource ObjectToVisibilityConverter}}" />

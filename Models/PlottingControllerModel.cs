@@ -6,7 +6,6 @@ using OxyPlot.Series;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -52,7 +51,6 @@ namespace mouse_tracking_web_app.Models
                 if (e.PropertyName == "PlotMarkerSize")
                     DefaultMarkerSize = SM.PlotMarkerSize;
             };
-
 
             PC_PlotController = new PlotController();
             PC_PlotController.UnbindMouseDown(OxyMouseButton.Left);

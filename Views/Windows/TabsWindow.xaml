@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:converters="clr-namespace:mouse_tracking_web_app.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:uc="clr-namespace:mouse_tracking_web_app.Views"
     xmlns:viewmodels="clr-namespace:mouse_tracking_web_app.ViewModels"
@@ -11,7 +12,14 @@
     Width="900"
     Height="600"
     d:DataContext="{d:DesignInstance Type=viewmodels:MainControllerViewModel}"
+    Background="{DynamicResource MaterialDesignPaper}"
+    FontFamily="{DynamicResource MaterialDesignFont}"
     Icon="../../Images/Rodent.ico"
+    TextElement.FontSize="13"
+    TextElement.FontWeight="Normal"
+    TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+    TextOptions.TextFormattingMode="Ideal"
+    TextOptions.TextRenderingMode="Auto"
     mc:Ignorable="d">
     <Window.Resources>
         <ResourceDictionary>
@@ -24,49 +32,46 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto" />
+            <RowDefinition Height="1.5*" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
-        <Menu
-            Grid.Row="0"
-            Grid.Column="0"
-            Grid.ColumnSpan="2">
-            <MenuItem Header="_Options">
-                <MenuItem Click="SettingsButton_Click" Header="_Settings" />
-                <MenuItem Click="SetWorkSpace_Click" Header="_Set Working Directory" />
-                <Separator />
-                <MenuItem Click="ExitButton_Click" Header="_Exit" />
-            </MenuItem>
-        </Menu>
+
         <TabControl
             x:Name="tabs"
-            Grid.Row="1"
+            Grid.Row="0"
             Grid.RowSpan="2"
-            Grid.Column="0">
-            <TabItem Header="Videos">
+            Grid.Column="0"
+            Style="{StaticResource MaterialDesignNavigationRailTabControl}"
+            TabStripPlacement="Top">
+            <TabItem Height="50" Header="Videos">
                 <uc:UploadVideoTab />
             </TabItem>
-            <TabItem Header="Analyze">
+            <TabItem Height="50" Header="Analyze">
                 <uc:AnalysisTab />
             </TabItem>
         </TabControl>
-        <uc:FileExplorerWrapper Grid.Row="1" Grid.Column="1" />
+        <uc:FileExplorerWrapper Grid.Row="0" Grid.Column="1" />
         <uc:VideosDisplayer
-            Grid.Row="2"
+            Grid.Row="1"
             Grid.Column="1"
             d:DataContext="{d:DesignInstance Type=viewmodels:VideoProcessingManager}" />
         <Button
-            x:Name="exportButton"
-            Grid.Row="3"
-            Grid.Column="1"
-            Margin="10"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            Background="#FFD6EBF2"
-            Click="ExportButtonClick"
-            Content="Export Data"
-            IsEnabled="{Binding VM_VideoName, Converter={StaticResource DoesStringExist}}" />
+            Grid.Row="0"
+            Grid.Column="0"
+            Width="50"
+            Height="50"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            Click="SettingsButton_Click"
+            Style="{DynamicResource MaterialDesignIconButton}">
+            <Button.Content>
+                <materialDesign:PackIcon
+                    Width="30"
+                    Height="30"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Kind="Settings" />
+            </Button.Content>
+        </Button>
     </Grid>
 </Window>

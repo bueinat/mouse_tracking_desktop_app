@@ -38,12 +38,14 @@ namespace mouse_tracking_web_app.Views
             if (saveFileDialog.ShowDialog() == true)
                 File.WriteAllText(saveFileDialog.FileName, vm.VM_CSVString);
         }
+
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
-        }
-
-        private void SetWorkSpace_Click(object sender, RoutedEventArgs e)
-        {
+            SettingsDialog inputDialog = new SettingsDialog();
+            if (inputDialog.ShowDialog() == true)
+                System.Console.WriteLine("dialog success");
+            else
+                System.Console.WriteLine("dialog closed");
         }
     }
 }

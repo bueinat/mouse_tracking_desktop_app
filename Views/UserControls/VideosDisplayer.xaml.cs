@@ -1,5 +1,4 @@
 ﻿using mouse_tracking_web_app.DataBase;
-using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -27,7 +26,6 @@ namespace mouse_tracking_web_app.Views
                     VideosListBox.SelectedItem = video;
             }
             e.Handled = true;
-
         }
     }
 }

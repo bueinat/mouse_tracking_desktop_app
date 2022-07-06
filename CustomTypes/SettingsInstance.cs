@@ -8,6 +8,7 @@ namespace mouse_tracking_web_app
     public class SettingsInstance : INotifyPropertyChanged
     {
         #region CTORs
+
         public SettingsInstance()
         {
             PythonPath = "";

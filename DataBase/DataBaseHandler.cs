@@ -7,6 +7,7 @@ namespace mouse_tracking_web_app.DataBase
     public class DataBaseHandler : INotifyPropertyChanged
     {
         public ViewModels.SettingsManager SM;
+
         //private readonly Models.MainControllerModel model;
         private IMongoCollection<Analysis> analysisCollection;
 
@@ -50,6 +51,7 @@ namespace mouse_tracking_web_app.DataBase
                 GetDataBase();
             }
         }
+
         public void GetDataBase()
         {
             database = client.GetDatabase(SM.DatabaseName);
@@ -81,6 +83,7 @@ namespace mouse_tracking_web_app.DataBase
             ObjectId id = ObjectId.Parse(videoID);
             return videoCollection.Find(x => x.ID == id).First();
         }
+
         public void NotifyPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

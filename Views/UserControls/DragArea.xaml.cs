@@ -19,7 +19,7 @@ namespace mouse_tracking_web_app.Views
             object data = e.Data.GetData(DataFormats.Serializable);
             if (data is string fileName)
                 (DataContext as ViewModels.MainControllerViewModel).VM_VideosPath = fileName;
-                //(DataContext as ViewModels.MainControllerViewModel).VM_VideoName = fileName;
+            //(DataContext as ViewModels.MainControllerViewModel).VM_VideoName = fileName;
         }
     }
 }

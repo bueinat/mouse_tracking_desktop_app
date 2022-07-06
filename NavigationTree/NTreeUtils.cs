@@ -214,7 +214,10 @@ namespace mouse_tracking_web_app.NavigationTree
     // Supporting class, some Tree Operations are easier on (Dummy) RootNode then on RootChildren
     public class RootNode : NavTreeItem
     {
-        public RootNode(SettingsManager sManager) : base(sManager) { }
+        public RootNode(SettingsManager sManager) : base(sManager)
+        {
+        }
+
         public override ObservableCollection<INavTreeItem> GetMyChildren()
         {
             return new ObservableCollection<INavTreeItem> { };

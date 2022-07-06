@@ -2,7 +2,6 @@
 using mouse_tracking_web_app.ViewModels;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Configuration;
 using System.IO;
 using System.Linq;
 
@@ -10,10 +9,12 @@ namespace mouse_tracking_web_app.Models
 {
     public class MainControllerModel : INotifyPropertyChanged
     {
-        public List<string>  VideoTypesList => SM.VideoTypesList;
+        public List<string> VideoTypesList => SM.VideoTypesList;
+
         #region selectedVideo
 
         private DisplayableVideo selectedVideo;
+
         public DisplayableVideo SelectedVideo
         {
             get => selectedVideo;
@@ -25,7 +26,6 @@ namespace mouse_tracking_web_app.Models
         }
 
         #endregion selectedVideo
-
 
         #region videosPath
 
@@ -51,7 +51,6 @@ namespace mouse_tracking_web_app.Models
                     : File.GetAttributes(VideosPath).HasFlag(FileAttributes.Directory)
                     ? $"{VideosPath}\\.cache"
                     : $"{Path.GetDirectoryName(VideosPath)}\\.cache";
-
 
         private List<string> GetVideosList()
         {
@@ -83,8 +82,6 @@ namespace mouse_tracking_web_app.Models
         private string videoName = "";
         private bool videoProcessed = false;
 
-
-
         public MainControllerModel(SettingsManager sManager)
         {
             DBHandler = new DataBaseHandler(this, sManager);
@@ -102,7 +99,6 @@ namespace mouse_tracking_web_app.Models
         public double AverageAcceleration => VideoStats is null ? 0 : VideoStats.AverageAcceleration;
 
         public double AverageSpeed => VideoStats is null ? 0 : VideoStats.AverageSpeed;
-
 
         public OuterCodeRunner CodeRunner { get; }
 
@@ -220,6 +216,5 @@ namespace mouse_tracking_web_app.Models
         {
             Stop = true;
         }
-
     }
 }

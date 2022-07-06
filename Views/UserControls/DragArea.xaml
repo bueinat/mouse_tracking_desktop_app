@@ -16,7 +16,7 @@
             RadiusX="10"
             RadiusY="10"
             SnapsToDevicePixels="True"
-            Stroke="CadetBlue"
+            Stroke="{DynamicResource SecondaryHueLightBrush}"
             StrokeDashArray="2 3"
             StrokeThickness="5" />
         <TextBlock
@@ -24,7 +24,7 @@
             VerticalAlignment="Center"
             FontSize="50"
             FontWeight="Bold"
-            Foreground="CadetBlue"
+            Foreground="{DynamicResource SecondaryHueLightBrush}"
             Text="Drop Here" />
     </Grid>
 </UserControl>

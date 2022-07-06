@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Windows.Media.Imaging;
@@ -42,10 +41,12 @@ namespace mouse_tracking_web_app.NavigationTree
 
     public class DriveItem : NavTreeItem
     {
-        public DriveItem(SettingsManager sManager) : base(sManager) { }
+        public DriveItem(SettingsManager sManager) : base(sManager)
+        {
+        }
+
         public override ObservableCollection<INavTreeItem> GetMyChildren()
         {
-
             ObservableCollection<INavTreeItem> childrenList = new ObservableCollection<INavTreeItem>() { };
             INavTreeItem item1;
 
@@ -92,7 +93,10 @@ namespace mouse_tracking_web_app.NavigationTree
 
     public class FileItem : NavTreeItem
     {
-        public FileItem(SettingsManager sManager) : base(sManager) { }
+        public FileItem(SettingsManager sManager) : base(sManager)
+        {
+        }
+
         public override ObservableCollection<INavTreeItem> GetMyChildren()
         {
             ObservableCollection<INavTreeItem> childrenList = new ObservableCollection<INavTreeItem>() { };
@@ -108,7 +112,10 @@ namespace mouse_tracking_web_app.NavigationTree
 
     public class FolderItem : NavTreeItem
     {
-        public FolderItem(SettingsManager sManager) : base(sManager) { }
+        public FolderItem(SettingsManager sManager) : base(sManager)
+        {
+        }
+
         public override ObservableCollection<INavTreeItem> GetMyChildren()
         {
             ObservableCollection<INavTreeItem> childrenList = new ObservableCollection<INavTreeItem>() { };

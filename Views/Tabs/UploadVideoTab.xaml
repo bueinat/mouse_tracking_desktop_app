@@ -11,6 +11,8 @@
     d:DataContext="{d:DesignInstance Type=viewmodels:MainControllerViewModel}"
     d:DesignHeight="300"
     d:DesignWidth="400"
+    Background="{DynamicResource MaterialDesignPaper}"
+    FontFamily="{DynamicResource MaterialDesignFont}"
     mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>

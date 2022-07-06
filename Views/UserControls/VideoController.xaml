@@ -6,18 +6,17 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fa="http://schemas.fontawesome.io/icons/"
     xmlns:local="clr-namespace:mouse_tracking_web_app.Views"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewmodels="clr-namespace:mouse_tracking_web_app.ViewModels"
     d:DataContext="{d:DesignInstance Type=viewmodels:VideoControllerViewModel}"
     d:DesignHeight="300"
     d:DesignWidth="300"
+    Background="{DynamicResource MaterialDesignPaper}"
+    FontFamily="{DynamicResource MaterialDesignFont}"
     mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/mouse_tracking_web_app;component/CustomStyles/VideoSlider.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/mouse_tracking_web_app;component/CustomStyles/ButtonsStyles.xaml" />
-            </ResourceDictionary.MergedDictionaries>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
             <converters:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" />
             <converters:PercentToTimeConverter x:Key="PercentToTimeConverter" />
@@ -26,7 +25,6 @@
             <converters:BooleanToIcon x:Key="BooleanToIcon" />
             <converters:BooleanToOpenCloseConverter x:Key="BooleanToOpenCloseConverter" />
             <BitmapImage x:Key="DefaultImage" UriSource="/Images/default_image.png" />
-            <!--  This style is used for buttons, to remove the WPF default 'animated' mouse over effect  -->
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
@@ -50,15 +48,36 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <Border Grid.Row="0" Grid.ColumnSpan="4">
-                    <Image Source="{Binding VMVC_FramePath, Converter={StaticResource EnableDefaultImage}}" Stretch="Uniform" />
+                    <Canvas>
+                        <Image Source="{Binding VMVC_FramePath, Converter={StaticResource EnableDefaultImage}}" Stretch="Uniform" />
+                        <Ellipse
+                            Width="5"
+                            Height="5"
+                            Margin="4,10"
+                            Fill="DarkBlue" />
+                        <!--  TODO: update margin according to desired position  -->
+                    </Canvas>
                 </Border>
-                <fa:FontAwesome
+                <ToggleButton
+                    x:Name="PlayPauseButton"
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Width="20"
+                    Height="20"
+                    Margin="5"
+                    materialDesign:ToggleButtonAssist.OnContent="{materialDesign:PackIcon Kind=play}"
+                    Content="{materialDesign:PackIcon Kind=pause}"
+                    Foreground="White"
+                    IsChecked="{Binding VMVC_Pause, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                    Style="{StaticResource MaterialDesignActionToggleButton}" />
+
+                <!--<fa:FontAwesome
                     x:Name="FAIcon"
                     Grid.Row="1"
                     Grid.Column="0"
                     VerticalAlignment="Center"
                     FontSize="20"
-                    Foreground="#6DA7AD"
+                    Foreground="{DynamicResource PrimaryHueMidBrush}"
                     Icon="{Binding ElementName=PlayPauseButton, Path=Content, Converter={StaticResource BooleanToIcon}}" />
                 <Button
                     x:Name="PlayPauseButton"
@@ -70,31 +89,34 @@
                     Click="PlayPauseButtonClicked"
                     Content="{Binding VMVC_Pause, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                     Foreground="{x:Null}"
-                    Style="{StaticResource HiddenButtonStyle}" />
+                    Style="{StaticResource HiddenButtonStyle}" />-->
                 <Slider
                     x:Name="VideoTimeSlider"
                     Grid.Row="1"
                     Grid.Column="1"
                     Margin="5"
                     VerticalAlignment="Center"
+                    Foreground="{DynamicResource SecondaryHueDarkBrush}"
                     IsMoveToPointEnabled="True"
                     Maximum="{Binding VMVC_NFrames}"
                     Minimum="0"
-                    Style="{StaticResource ResourceKey=Horizontal_Slider}"
+                    Style="{StaticResource MaterialDesignDiscreteHorizontalSlider}"
                     Value="{Binding VMVC_StepCounter, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
                 <TextBlock
                     Name="textBlockMessage"
                     Grid.Row="1"
                     Grid.Column="2"
-                    Margin="2"
+                    Margin="5,0,5,0"
                     VerticalAlignment="Center"
                     Text="{Binding ElementName=VideoTimeSlider, Path=Value, Converter={StaticResource PercentToTimeConverter}}" />
                 <ComboBox
                     Grid.Row="1"
                     Grid.Column="3"
-                    Height="20"
                     VerticalAlignment="Center"
-                    SelectedIndex="{Binding VMVC_Speed, Converter={StaticResource SpeedToIndexConverter}}">
+                    materialDesign:TextFieldAssist.UnderlineBrush="{DynamicResource SecondaryHueDarkBrush}"
+                    Foreground="Black"
+                    SelectedIndex="{Binding VMVC_Speed, Converter={StaticResource SpeedToIndexConverter}}"
+                    Style="{StaticResource MaterialDesignComboBox}">
                     <ComboBoxItem>x0.25</ComboBoxItem>
                     <ComboBoxItem>x0.50</ComboBoxItem>
                     <ComboBoxItem>x1.00</ComboBoxItem>
@@ -110,18 +132,10 @@
                     Grid.ColumnSpan="4"
                     HorizontalAlignment="Center"
                     Click="FPanelButtonClicked"
-                    Content="{Binding VMVC_FeaturesPanelFlag, Converter={StaticResource BooleanToOpenCloseConverter}, Mode=TwoWay}">
-                    <Button.Template>
-                        <ControlTemplate TargetType="{x:Type Button}">
-                            <ContentPresenter />
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Foreground" Value="#616C7B" />
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Button.Template>
-                </Button>
+                    Content="{Binding VMVC_FeaturesPanelFlag, Converter={StaticResource BooleanToOpenCloseConverter}, Mode=TwoWay}"
+                    Foreground="{DynamicResource PrimaryHueDarkBrush}"
+                    Style="{DynamicResource MaterialDesignToolButton}" />
+
                 <local:FeaturesPanel
                     Grid.Row="3"
                     Grid.ColumnSpan="4"

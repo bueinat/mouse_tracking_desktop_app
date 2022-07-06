@@ -9,7 +9,7 @@
     d:DataContext="{d:DesignInstance Type=viewModels:NavigationTreeViewModel}"
     mc:Ignorable="d">
     <Grid x:Name="layoutRoot">
-        <GroupBox Header="File Explorer">
+        <GroupBox Margin="2" Header="File Explorer">
             <ScrollViewer
                 Width="{Binding ActualWidth, ElementName=layoutRoot}"
                 HorizontalScrollBarVisibility="Auto"

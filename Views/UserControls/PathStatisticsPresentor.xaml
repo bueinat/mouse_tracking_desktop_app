@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:converters="clr-namespace:mouse_tracking_web_app.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewmodels="clr-namespace:mouse_tracking_web_app.ViewModels"
     d:DataContext="{d:DesignInstance Type=viewmodels:PlottingControllerViewModel}"
@@ -12,8 +13,12 @@
     mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
-            <converters:FillnaConverter x:Key="FillnaConverter" />
-            <converters:BoolToColorConverter x:Key="BoolToColorConverter" />
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary>
+                    <converters:FillnaConverter x:Key="FillnaConverter" />
+                    <converters:BoolToColorConverter x:Key="BoolToColorConverter" />
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
@@ -34,108 +39,115 @@
         <TextBlock
             Grid.Row="0"
             Grid.Column="0"
+            Margin="0,0,5,0"
             VerticalAlignment="Center"
-            FontSize="11"
             FontWeight="SemiBold"
-            Foreground="#3D6069"
+            Foreground="{StaticResource SecondaryHueDarkBrush}"
+            Style="{StaticResource MaterialDesignCaptionTextBlock}"
             Text="number of time steps: " />
         <TextBlock
             Grid.Row="0"
             Grid.Column="1"
             VerticalAlignment="Center"
-            FontSize="11"
             Foreground="#646464"
+            Style="{StaticResource MaterialDesignCaptionTextBlock}"
             Text="{Binding VMPC_NSteps}" />
         <TextBlock
             Grid.Row="1"
             Grid.Column="0"
+            Margin="0,0,5,0"
             VerticalAlignment="Center"
-            FontSize="11"
             FontWeight="SemiBold"
-            Foreground="#3D6069"
+            Foreground="{StaticResource SecondaryHueDarkBrush}"
+            Style="{StaticResource MaterialDesignCaptionTextBlock}"
             Text="total distance:" />
         <TextBlock
             Grid.Row="1"
             Grid.Column="1"
             VerticalAlignment="Center"
-            FontSize="11"
             Foreground="#646464"
+            Style="{StaticResource MaterialDesignCaptionTextBlock}"
             Text="{Binding VMPC_TotalDistance, StringFormat={}{0:0.00}}" />
         <TextBlock
             Grid.Row="2"
             Grid.Column="0"
+            Margin="0,0,5,0"
             VerticalAlignment="Center"
-            FontSize="11"
             FontWeight="SemiBold"
-            Foreground="#3D6069"
+            Foreground="{StaticResource SecondaryHueDarkBrush}"
+            Style="{StaticResource MaterialDesignCaptionTextBlock}"
             Text="average speed:" />
         <TextBlock
             Grid.Row="2"
             Grid.Column="1"
             VerticalAlignment="Center"
-            FontSize="11"
             Foreground="#646464"
+            Style="{StaticResource MaterialDesignCaptionTextBlock}"
             Text="{Binding VMPC_AverageSpeed, StringFormat={}{0:0.00}}" />
         <TextBlock
             Grid.Row="3"
             Grid.Column="0"
+            Margin="0,0,5,0"
             VerticalAlignment="Center"
-            FontSize="11"
             FontWeight="SemiBold"
-            Foreground="#3D6069"
+            Foreground="{StaticResource SecondaryHueDarkBrush}"
+            Style="{StaticResource MaterialDesignCaptionTextBlock}"
             Text="average acceleration: " />
         <TextBlock
             Grid.Row="3"
             Grid.Column="1"
             VerticalAlignment="Center"
-            FontSize="11"
             Foreground="#646464"
+            Style="{StaticResource MaterialDesignCaptionTextBlock}"
             Text="{Binding VMPC_AverageAcceleration, StringFormat={}{0:0.00}}" />
         <TextBlock
             Grid.Row="4"
             Grid.Column="0"
+            Margin="0,0,5,0"
             VerticalAlignment="Center"
-            FontSize="11"
             FontWeight="SemiBold"
-            Foreground="#3D6069"
+            Foreground="{StaticResource SecondaryHueDarkBrush}"
+            Style="{StaticResource MaterialDesignCaptionTextBlock}"
             Text="sniffing time:" />
         <TextBlock
             Grid.Row="4"
             Grid.Column="1"
             VerticalAlignment="Center"
-            FontSize="11"
             Foreground="#646464"
+            Style="{StaticResource MaterialDesignCaptionTextBlock}"
             Text="{Binding VMPC_IsSniffingPercent, StringFormat={}{0:0.00}%}" />
 
         <TextBlock
             Grid.Row="5"
             Grid.Column="0"
+            Margin="0,0,5,0"
             VerticalAlignment="Center"
-            FontSize="11"
             FontWeight="SemiBold"
-            Foreground="#3D6069"
+            Foreground="{StaticResource SecondaryHueDarkBrush}"
+            Style="{StaticResource MaterialDesignCaptionTextBlock}"
             Text="drinking time: " />
         <TextBlock
             Grid.Row="5"
             Grid.Column="1"
             VerticalAlignment="Center"
-            FontSize="11"
             Foreground="#646464"
+            Style="{StaticResource MaterialDesignCaptionTextBlock}"
             Text="{Binding VMPC_IsDrinkingPercent, StringFormat={}{0:0.00}%}" />
         <TextBlock
             Grid.Row="6"
             Grid.Column="0"
+            Margin="0,0,5,0"
             VerticalAlignment="Center"
-            FontSize="11"
             FontWeight="SemiBold"
-            Foreground="#3D6069"
+            Foreground="{StaticResource SecondaryHueDarkBrush}"
+            Style="{StaticResource MaterialDesignCaptionTextBlock}"
             Text="nose casting time: " />
         <TextBlock
             Grid.Row="6"
             Grid.Column="1"
             VerticalAlignment="Center"
-            FontSize="11"
             Foreground="#646464"
+            Style="{StaticResource MaterialDesignCaptionTextBlock}"
             Text="{Binding VMPC_IsNoseCastingPercent, StringFormat={}{0:0.00}%}" />
     </Grid>
 </UserControl>

@@ -76,6 +76,7 @@ namespace mouse_tracking_web_app.ViewModels
         private readonly Models.MainControllerModel model;
 
         private readonly SettingsManager settingManager;
+
         public NavigationTreeViewModel(Models.MainControllerModel mainController, SettingsManager sManager)
         {
             model = mainController;
