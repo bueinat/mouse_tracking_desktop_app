@@ -1,4 +1,5 @@
-﻿using System;
+﻿using mouse_tracking_web_app.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -49,7 +50,7 @@ namespace mouse_tracking_web_app.NavigationTree
 
         // Using convention and reflection to get RootItem iRootNr
         //If iRootNr>= ListNavTreeRootItemsByConvention().Count we use driveItem by default
-        public static NavTreeItem ReturnRootItem(int iRootNr, bool includeFileChildren = false, string rootPath = "")
+        public static NavTreeItem ReturnRootItem(SettingsManager sManager, int iRootNr, bool includeFileChildren = false, string rootPath = "")
         {
             // Set default System.Type
             Type selectedType = typeof(FolderItem);
@@ -78,7 +79,7 @@ namespace mouse_tracking_web_app.NavigationTree
             //if (string.IsNullOrEmpty(rootPath))
             //    NavTreeItem rootItem = (NavTreeItem)Activator.CreateInstance(selectedType);
             //else
-            NavTreeItem rootItem = (NavTreeItem)Activator.CreateInstance(selectedType, rootPath);
+            NavTreeItem rootItem = (NavTreeItem)Activator.CreateInstance(selectedType, rootPath, sManager);
             rootItem.FriendlyName = selectedName;
             rootItem.IncludeFileChildren = includeFileChildren;
 
@@ -124,12 +125,12 @@ namespace mouse_tracking_web_app.NavigationTree
         }
 
         // Procedure used in NavTreeVm. First take snapshot, reconstruct new tree, expand items in snapshot
-        public static List<string> TakeSnapshot(ObservableCollection<INavTreeItem> rootChildren)
+        public static List<string> TakeSnapshot(ObservableCollection<INavTreeItem> rootChildren, SettingsManager sManager)
         {
             List<string> snapShot = new List<string> { };
 
             // Use a dummy rootnode, is easier to work with
-            RootNode rootNode = new RootNode();
+            RootNode rootNode = new RootNode(sManager);
             foreach (INavTreeItem item in rootChildren) rootNode.Children.Add(item);
 
             // Take snapshot of all expanded nodes
@@ -213,6 +214,7 @@ namespace mouse_tracking_web_app.NavigationTree
     // Supporting class, some Tree Operations are easier on (Dummy) RootNode then on RootChildren
     public class RootNode : NavTreeItem
     {
+        public RootNode(SettingsManager sManager) : base(sManager) { }
         public override ObservableCollection<INavTreeItem> GetMyChildren()
         {
             return new ObservableCollection<INavTreeItem> { };

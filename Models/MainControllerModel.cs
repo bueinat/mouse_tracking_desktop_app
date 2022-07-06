@@ -1,20 +1,16 @@
 ﻿using mouse_tracking_web_app.DataBase;
-using mouse_tracking_web_app.Utils;
 using mouse_tracking_web_app.ViewModels;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace mouse_tracking_web_app.Models
 {
     public class MainControllerModel : INotifyPropertyChanged
     {
-        private readonly List<string> videoTypesList = new List<string>(ConfigurationManager.AppSettings["VideoTypesList"].Split(','));
-        public List<string>  VideoTypesList => videoTypesList;
+        public List<string>  VideoTypesList => SM.VideoTypesList;
         #region selectedVideo
 
         private DisplayableVideo selectedVideo;
@@ -91,11 +87,11 @@ namespace mouse_tracking_web_app.Models
 
         public MainControllerModel(SettingsManager sManager)
         {
-            DBHandler = new DataBaseHandler(this);
+            DBHandler = new DataBaseHandler(this, sManager);
             DBHandler.Connect();
-            CodeRunner = new OuterCodeRunner();
+            CodeRunner = new OuterCodeRunner(sManager);
             VC = new VideoControllerModel(this);
-            PC = new PlottingControllerModel(this);
+            PC = new PlottingControllerModel(this, sManager);
             SM = sManager;
         }
 

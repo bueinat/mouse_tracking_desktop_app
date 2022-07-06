@@ -38,7 +38,7 @@ namespace mouse_tracking_web_app.Models
         public float VC_Curviness => (VC_VideoAnalysis is null) ? 0 : VC_VideoAnalysis.Curviness[VC_StepCounter];
 
         public bool VC_DragEnabled => model.DragEnabled;
-        public List<string> VC_FeaturesList => new List<string>(ConfigurationManager.AppSettings["FeaturesList"].Split(','));
+        public List<string> VC_FeaturesList => model.SM.FeaturesList;
 
         public bool VC_FeaturesPanelFlag
         {
@@ -50,7 +50,7 @@ namespace mouse_tracking_web_app.Models
             }
         }
 
-        public Dictionary<string, List<Tuple<int, int>>> VC_FeaturesTimeRanges => VC_VideoAnalysis?.GetFeaturesTimes();
+        public Dictionary<string, List<Tuple<int, int>>> VC_FeaturesTimeRanges => VC_VideoAnalysis?.GetFeaturesTimes(model.SM.FeaturesList);
 
         public string VC_FramePath
         {
@@ -69,7 +69,7 @@ namespace mouse_tracking_web_app.Models
         public bool VC_IsSniffing => !(VC_VideoAnalysis is null) && VC_VideoAnalysis.IsSniffing[VC_StepCounter];
 
         //public bool VC_IsVideoLoaded => model.IsVideoLoaded;
-        public int VC_NFeatures => VC_FeaturesList.Count;
+        public int VC_NFeatures => model.SM.FeaturesList.Count;
 
         //public DisplayableVideo VC_SelectedVideo => model.SelectedVideo;
 

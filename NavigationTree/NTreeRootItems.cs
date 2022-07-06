@@ -7,7 +7,7 @@ namespace mouse_tracking_web_app.NavigationTree
 {
     public class DriveRootItem : NavTreeItem
     {
-        public DriveRootItem(string fullPathName)
+        public DriveRootItem(ViewModels.SettingsManager settingsManager, string fullPathName) : base(settingsManager)
         {
             //Constructor sets some properties
             FriendlyName = "DriveRoot";
@@ -25,7 +25,7 @@ namespace mouse_tracking_web_app.NavigationTree
             {
                 if (drive.IsReady)
                 {
-                    item1 = new DriveItem();
+                    item1 = new DriveItem(SM);
 
                     // Some processing for the FriendlyName
                     string fn = drive.Name.Replace(@"\", "");
@@ -56,7 +56,7 @@ namespace mouse_tracking_web_app.NavigationTree
 
     public class FolderRootItem : NavTreeItem
     {
-        public FolderRootItem(string fullPathName)
+        public FolderRootItem(string fullPathName, ViewModels.SettingsManager settingsManager) : base(settingsManager)
         {
             //Constructor sets some properties
             FriendlyName = "FolderRoot";
@@ -73,7 +73,7 @@ namespace mouse_tracking_web_app.NavigationTree
             {
                 DirectoryInfo di = new DirectoryInfo(FullPathName); // maybe access not allowed
                 if (!di.Exists) return childrenList;
-                item1 = new FolderItem
+                item1 = new FolderItem(SM)
                 {
                     FullPathName = FullPathName,
                     FriendlyName = di.Name,

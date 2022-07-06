@@ -8,7 +8,6 @@ namespace mouse_tracking_web_app
     public class SettingsInstance : INotifyPropertyChanged
     {
         #region CTORs
-
         public SettingsInstance()
         {
             PythonPath = "";
@@ -19,6 +18,8 @@ namespace mouse_tracking_web_app
             VideoTypesList = "";
             PlotMarkerSize = double.NaN;
         }
+
+        public string FullTypesList => $"{FileTypesList},{VideoTypesList}";
 
         public static SettingsInstance LoadSavedSettings(string fileName)
         {

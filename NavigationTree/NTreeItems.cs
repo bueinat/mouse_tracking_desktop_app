@@ -1,4 +1,5 @@
-﻿using System;
+﻿using mouse_tracking_web_app.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -41,8 +42,10 @@ namespace mouse_tracking_web_app.NavigationTree
 
     public class DriveItem : NavTreeItem
     {
+        public DriveItem(SettingsManager sManager) : base(sManager) { }
         public override ObservableCollection<INavTreeItem> GetMyChildren()
         {
+
             ObservableCollection<INavTreeItem> childrenList = new ObservableCollection<INavTreeItem>() { };
             INavTreeItem item1;
 
@@ -54,7 +57,7 @@ namespace mouse_tracking_web_app.NavigationTree
 
             foreach (DirectoryInfo dir in di.GetDirectories())
             {
-                item1 = new FolderItem
+                item1 = new FolderItem(SM)
                 {
                     FullPathName = FullPathName + "\\" + dir.Name,
                     FriendlyName = dir.Name,
@@ -67,7 +70,7 @@ namespace mouse_tracking_web_app.NavigationTree
             {
                 foreach (FileInfo file in di.GetFilesByExtensions(ExtensionsList))
                 {
-                    item1 = new FileItem
+                    item1 = new FileItem(SM)
                     {
                         FullPathName = FullPathName + "\\" + file.Name,
                         FriendlyName = file.Name
@@ -89,6 +92,7 @@ namespace mouse_tracking_web_app.NavigationTree
 
     public class FileItem : NavTreeItem
     {
+        public FileItem(SettingsManager sManager) : base(sManager) { }
         public override ObservableCollection<INavTreeItem> GetMyChildren()
         {
             ObservableCollection<INavTreeItem> childrenList = new ObservableCollection<INavTreeItem>() { };
@@ -104,6 +108,7 @@ namespace mouse_tracking_web_app.NavigationTree
 
     public class FolderItem : NavTreeItem
     {
+        public FolderItem(SettingsManager sManager) : base(sManager) { }
         public override ObservableCollection<INavTreeItem> GetMyChildren()
         {
             ObservableCollection<INavTreeItem> childrenList = new ObservableCollection<INavTreeItem>() { };
@@ -115,7 +120,7 @@ namespace mouse_tracking_web_app.NavigationTree
                 if (!di.Exists) return childrenList;
                 foreach (DirectoryInfo dir in di.GetDirectories())
                 {
-                    item1 = new FolderItem
+                    item1 = new FolderItem(SM)
                     {
                         FullPathName = FullPathName + "\\" + dir.Name,
                         FriendlyName = dir.Name,
@@ -129,7 +134,7 @@ namespace mouse_tracking_web_app.NavigationTree
                     // TODO: treat all getfiles by ext. together
                     foreach (FileInfo file in di.GetFilesByExtensions(ExtensionsList))
                     {
-                        item1 = new FileItem
+                        item1 = new FileItem(SM)
                         {
                             FullPathName = FullPathName + "\\" + file.Name,
                             FriendlyName = file.Name
@@ -157,9 +162,11 @@ namespace mouse_tracking_web_app.NavigationTree
         // Question/ to do. Note that to be sure we use ObservableCollection as property with a notification, remove notification??
         protected ObservableCollection<INavTreeItem> children;
 
+        //protected List<string> ExtentionsList;
+
         protected BitmapSource myIcon;
 
-        private static readonly List<string> extensionsList = new List<string>(ConfigurationManager.AppSettings["FileTypesList"].Split(',')).Select(ext => "." + ext).ToList();
+        //private static readonly List<string> extensionsList = new List<string>(ConfigurationManager.AppSettings["FileTypesList"].Split(',')).Select(ext => "." + ext).ToList();
         private bool isExpanded;
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -174,13 +181,13 @@ namespace mouse_tracking_web_app.NavigationTree
             }
         }
 
-        public List<string> ExtensionsList => extensionsList;
+        public NavTreeItem(SettingsManager sManager)
+        {
+            SM = sManager;
+        }
 
-        //public NavTreeItem()
-        //{
-        //private static readonly List<string> helpoutList = new List<string>(ConfigurationManager.AppSettings["FileTypesList"].Split(','));
-        //    extentionsList = helpoutList.Select(ext => "." + ext).ToList();
-        //}
+        protected SettingsManager SM;
+        protected List<string> ExtensionsList => SM.FileTypesList.Select(ext => "." + ext).ToList();
 
         // for display in tree
         public string FriendlyName { get; set; }

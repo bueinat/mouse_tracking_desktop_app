@@ -1,6 +1,8 @@
-﻿using RunProcessAsTask;
+﻿using mouse_tracking_web_app.ViewModels;
+using RunProcessAsTask;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Configuration;
 using System.Diagnostics;
 using System.IO;
@@ -25,6 +27,16 @@ namespace mouse_tracking_web_app.Models
 
     public class OuterCodeRunner
     {
+        public SettingsManager SM;
+        public OuterCodeRunner(SettingsManager sManager)
+        {
+            SM = sManager;
+            //sManager.PropertyChanged +=
+            //    delegate (object sender, PropertyChangedEventArgs e)
+            //    {
+            //        NotifyPropertyChanged("DBH_" + e.PropertyName);
+            //    };
+        }
         public static string WriteDictToCSV(Dictionary<string, string> data)
         {
             string csv = string.Join(
@@ -48,7 +60,7 @@ namespace mouse_tracking_web_app.Models
             string args = $"{pythonScript} \"{fileName}\"";
 
             // Create new process start info
-            ProcessStartInfo start = new ProcessStartInfo(ConfigurationManager.AppSettings.Get("PythonPath"))
+            ProcessStartInfo start = new ProcessStartInfo(SM.PythonPath)
             {
                 UseShellExecute = false,
                 RedirectStandardOutput = true,

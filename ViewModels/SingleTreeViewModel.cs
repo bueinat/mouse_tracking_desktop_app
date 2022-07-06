@@ -19,13 +19,15 @@ namespace mouse_tracking_web_app.ViewModels
         private string treeName = "";
 
         public event PropertyChangedEventHandler PropertyChanged;
+        public SettingsManager SM;
 
         // Constructors
-        public NavTreeVm(string nTreePath, int pRootNumber = 0, bool pIncludeFileChildren = false)
+        public NavTreeVm(SettingsManager sManager, string nTreePath, int pRootNumber = 0, bool pIncludeFileChildren = false)
         {
             // create a new RootItem given rootNumber using convention
+            SM = sManager;
             RootNr = pRootNumber;
-            NavTreeItem treeRootItem = NavTreeRootItemUtils.ReturnRootItem(pRootNumber, pIncludeFileChildren, nTreePath);
+            NavTreeItem treeRootItem = NavTreeRootItemUtils.ReturnRootItem(SM, pRootNumber, pIncludeFileChildren, nTreePath);
             TreeName = treeRootItem.FriendlyName;
 
             // Delete RootChildren and init RootChildren using treeRootItem.Children
@@ -36,9 +38,9 @@ namespace mouse_tracking_web_app.ViewModels
         }
 
         // Well I suppose with the implicit values these are just for the record / illustration
-        public NavTreeVm(string nTreePath, int rootNumber) : this(nTreePath, rootNumber, false) { }
+        public NavTreeVm(SettingsManager sManager, string nTreePath, int rootNumber) : this(sManager, nTreePath, rootNumber, false) { }
 
-        public NavTreeVm(string nTreePath) : this(nTreePath, 0)
+        public NavTreeVm(SettingsManager sManager, string nTreePath) : this(sManager, nTreePath, 0)
         {
         }
 
@@ -77,10 +79,10 @@ namespace mouse_tracking_web_app.ViewModels
             }
         }
 
-        public void RebuildTree(int pRootNr = -1, bool pIncludeFileChildren = false)
+        public void RebuildTree(SettingsManager sManager, int pRootNr = -1, bool pIncludeFileChildren = false)
         {
             // First take snapshot of current expanded items
-            List<string> SnapShot = NavTreeUtils.TakeSnapshot(rootChildren);
+            List<string> SnapShot = NavTreeUtils.TakeSnapshot(rootChildren, sManager);
 
             // As a matter of fact we delete and construct the tree//RoorChildren again.....
             // Delete all rootChildren
@@ -89,7 +91,7 @@ namespace mouse_tracking_web_app.ViewModels
 
             // Create treeRootItem
             if (pRootNr != -1) RootNr = pRootNr;
-            NavTreeItem treeRootItem = NavTreeRootItemUtils.ReturnRootItem(RootNr, pIncludeFileChildren);
+            NavTreeItem treeRootItem = NavTreeRootItemUtils.ReturnRootItem(SM, RootNr, pIncludeFileChildren);
             if (pRootNr != -1) TreeName = treeRootItem.FriendlyName;
 
             // Copy children treeRootItem to RootChildren, set up new tree

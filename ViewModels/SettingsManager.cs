@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace mouse_tracking_web_app.ViewModels
@@ -47,9 +48,7 @@ namespace mouse_tracking_web_app.ViewModels
         #region settingsInstances
 
         private SettingsInstance currentSettings;
-        private SettingsInstance defaultSettings;
         private SettingsInstance updatableSettings;
-        private SettingsInstance userSettings;
         public SettingsInstance CurrentSettings
         {
             get => currentSettings;
@@ -57,6 +56,13 @@ namespace mouse_tracking_web_app.ViewModels
             {
                 currentSettings = value;
                 NotifyPropertyChanged("CurrentSettings");
+                NotifyPropertyChanged("PythonPath");
+                NotifyPropertyChanged("ConnectionString");
+                NotifyPropertyChanged("DatabaseName");
+                NotifyPropertyChanged("FeaturesList");
+                NotifyPropertyChanged("FileTypesList");
+                NotifyPropertyChanged("VideoTypesList");
+                NotifyPropertyChanged("PlotMarkerSize");
             }
         }
 
@@ -83,5 +89,13 @@ namespace mouse_tracking_web_app.ViewModels
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        public string PythonPath => CurrentSettings.PythonPath;
+        public string ConnectionString => CurrentSettings.ConnectionString;
+        public string DatabaseName => CurrentSettings.DatabaseName;
+        public List<string> FeaturesList => new List<string>(CurrentSettings.FeaturesList.Split(','));
+        public List<string> FileTypesList => new List<string>(CurrentSettings.FullTypesList.Split(','));
+        public List<string> VideoTypesList => new List<string>(CurrentSettings.VideoTypesList.Split(','));
+        public double PlotMarkerSize => CurrentSettings.PlotMarkerSize;
     }
 }

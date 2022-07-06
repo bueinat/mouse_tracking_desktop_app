@@ -35,6 +35,17 @@ namespace mouse_tracking_web_app.ValidationRules
         }
     }
 
+    public class CommaSeparatedListValidationRule : ValidationRule
+    {
+        public override ValidationResult Validate(object value, CultureInfo cultureInfo)
+        {
+            if (string.IsNullOrWhiteSpace((string)value))
+                return ValidationResult.ValidResult;
+            Regex rgx = new Regex("[A-Za-z0-9,]+");
+            return rgx.Matches((string)value).Count == 1 ? ValidationResult.ValidResult : new ValidationResult(false, "not a comma seperated list");
+        }
+    }
+
     public class MarkerSizeValidationRule : ValidationRule
     {
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)

@@ -1,4 +1,5 @@
 ﻿using mouse_tracking_web_app.DataBase;
+using mouse_tracking_web_app.ViewModels;
 using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
@@ -14,7 +15,7 @@ namespace mouse_tracking_web_app.Models
     public class PlottingControllerModel : INotifyPropertyChanged
     {
         public List<double> PC_ColorList;
-        private readonly double defaultMarkerSize = double.Parse(ConfigurationManager.AppSettings.Get("PlotMarkerSize"));
+        public double DefaultMarkerSize;
         private readonly MainControllerModel model;
 
         private readonly Dictionary<string, MarkerType> scatterTypes = new Dictionary<string, MarkerType>
@@ -31,8 +32,9 @@ namespace mouse_tracking_web_app.Models
         private PlotModel plotModel;
         private string sizeParam;
         private Tuple<double, double> sizeRange = new Tuple<double, double>(double.NaN, double.NaN);
+        public SettingsManager SM;
 
-        public PlottingControllerModel(MainControllerModel model)
+        public PlottingControllerModel(MainControllerModel model, SettingsManager sManager)
         {
             this.model = model;
             model.PropertyChanged +=
@@ -40,6 +42,18 @@ namespace mouse_tracking_web_app.Models
             {
                 NotifyPropertyChanged("PC_" + e.PropertyName);
             };
+
+            SM = sManager;
+            DefaultMarkerSize = SM.PlotMarkerSize;
+            SM.PropertyChanged +=
+            delegate (object sender, PropertyChangedEventArgs e)
+            {
+                NotifyPropertyChanged("PC_" + e.PropertyName);
+                if (e.PropertyName == "PlotMarkerSize")
+                    DefaultMarkerSize = SM.PlotMarkerSize;
+            };
+
+
             PC_PlotController = new PlotController();
             PC_PlotController.UnbindMouseDown(OxyMouseButton.Left);
             PC_PlotController.BindMouseEnter(PlotCommands.HoverSnapTrack);
@@ -102,9 +116,9 @@ namespace mouse_tracking_web_app.Models
         // TODO:
         // * add an option of hiding inactive features
         // * generalizing features
-        public double PC_MaxSize => double.IsNaN(PC_SizeRange.Item2) ? defaultMarkerSize : PC_SizeRange.Item2;
+        public double PC_MaxSize => double.IsNaN(PC_SizeRange.Item2) ? DefaultMarkerSize : PC_SizeRange.Item2;
 
-        public double PC_MinSize => double.IsNaN(PC_SizeRange.Item1) ? defaultMarkerSize : PC_SizeRange.Item1;
+        public double PC_MinSize => double.IsNaN(PC_SizeRange.Item1) ? DefaultMarkerSize : PC_SizeRange.Item1;
 
         public int PC_NSteps => model.NSteps;
 
@@ -218,13 +232,13 @@ namespace mouse_tracking_web_app.Models
             {
                 PC_PlotModel.Axes.Clear();
                 SetUpModel();
-                foreach (var keyVal in pathPoints)
+                foreach (KeyValuePair<string, ScatterSeries> keyVal in pathPoints)
                     keyVal.Value.MarkerFill = OxyColors.IndianRed;
             }
 
             if (!IsNullOrEmpty(PC_SizeList) && (PC_MaxSize > PC_MinSize))
             {
-                foreach (var keyVal in pathPoints)
+                foreach (KeyValuePair<string, ScatterSeries> keyVal in pathPoints)
                 {
                     keyVal.Value.TrackerFormatString += "\nsize = {Size:0.##}";
                     //for (int i = 0; i < PC_AnalysisDataRows.X.Count; i++)
@@ -233,7 +247,7 @@ namespace mouse_tracking_web_app.Models
             }
             else
             {
-                foreach (var keyVal in pathPoints)
+                foreach (KeyValuePair<string, ScatterSeries> keyVal in pathPoints)
                 {
                     for (int i = 0; i < keyVal.Value.Points.Count; i++)
                         keyVal.Value.Points[i].Size = PC_MinSize;

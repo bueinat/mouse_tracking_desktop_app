@@ -153,8 +153,8 @@ namespace mouse_tracking_web_app.ViewModels
             string relativeVideoPath = MakeRelative(videoPath, VPM_VideosPath).Split('.')[0];
             DisplayableVideo currentVideo = videosDictionary[videoPath];
 
-            string connectionString = ConfigurationManager.AppSettings.Get("ConnectionString");
-            string dbName = ConfigurationManager.AppSettings.Get("DataBaseName");
+            string connectionString = model.SM.ConnectionString;
+            string dbName = model.SM.DatabaseName;
 
             Dictionary<string, string> argv = new Dictionary<string, string>
             {

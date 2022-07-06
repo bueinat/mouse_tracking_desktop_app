@@ -60,23 +60,7 @@ namespace mouse_tracking_web_app.DataBase
         [BsonElement("video")]
         public ObjectId Video { get; set; }
 
-        private readonly List<string> featuresNames = new List<string>(ConfigurationManager.AppSettings["FeaturesList"].Split(','));
-
-        //private readonly Dictionary<string, Type> analysisFields = new Dictionary<string, Type>
-        //{
-        //    ["TimeStep"] = typeof(int),
-        //    ["X"] = typeof(float),
-        //    ["Y"] = typeof(float),
-        //    ["VelocityX"] = typeof(float),
-        //    ["VelocityY"] = typeof(float),
-        //    ["AccelerationX"] = typeof(float),
-        //    ["AccelerationY"] = typeof(float),
-        //    ["Curviness"] = typeof(float),
-        //    ["Path"] = typeof(string),
-        //    ["IsSniffing"] = typeof(bool),
-        //    ["IsDrinking"] = typeof(bool),
-        //    ["IsNoseCasting"] = typeof(bool)
-        //};
+        //private readonly List<string> featuresNames = new List<string>(ConfigurationManager.AppSettings["FeaturesList"].Split(','));
 
         public DataTable AnalysisDataTable => AnalysisToDataTable();
 
@@ -143,22 +127,22 @@ namespace mouse_tracking_web_app.DataBase
             return dataTable;
         }
 
-        public List<List<string>> GetFeaturesSubsets()
-        {
-            List<List<string>> list = new List<List<string>>();
+        //public List<List<string>> GetFeaturesSubsets(List<string> featuresNames)
+        //{
+        //    List<List<string>> list = new List<List<string>>();
 
-            for (int index = 0; index < featuresNames.Count; index++)
-            {
-                for (int count = 1; count <= featuresNames.Count - index; count++)
-                {
-                    Console.WriteLine($"({index}, {count})");
-                    list.Add(featuresNames.GetRange(index, count));
-                }
-            }
-            return list;
-        }
+        //    for (int index = 0; index < featuresNames.Count; index++)
+        //    {
+        //        for (int count = 1; count <= featuresNames.Count - index; count++)
+        //        {
+        //            Console.WriteLine($"({index}, {count})");
+        //            list.Add(featuresNames.GetRange(index, count));
+        //        }
+        //    }
+        //    return list;
+        //}
 
-        public Dictionary<string, List<Tuple<int, int>>> GetFeaturesTimes()
+        public Dictionary<string, List<Tuple<int, int>>> GetFeaturesTimes(List<string> featuresNames)
         {
             Dictionary<string, List<Tuple<int, int>>> featuresTimes = new Dictionary<string, List<Tuple<int, int>>>();
             bool isOpen;

@@ -280,7 +280,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converters\ColorConverters.cs" />
-    <Compile Include="ObjectClasses.cs" />
+    <Compile Include="CustomTypes\SettingsInstance.cs" />
     <Compile Include="ValidationRules\SettingsValidationRules.cs" />
     <Compile Include="ValidationRules\RangeValidationRule.cs" />
     <Compile Include="Converters\ComputationalConverters.cs" />

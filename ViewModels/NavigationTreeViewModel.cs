@@ -50,7 +50,7 @@ namespace mouse_tracking_web_app.ViewModels
 
         public void RebuildSingleTree(object p)
         {
-            SingleTree.RebuildTree(RootNr, IncludeFiles);
+            SingleTree.RebuildTree(settingManager, RootNr, IncludeFiles);
         }
 
         #endregion JustForSingleTreeDemo
@@ -75,7 +75,8 @@ namespace mouse_tracking_web_app.ViewModels
 
         private readonly Models.MainControllerModel model;
 
-        public NavigationTreeViewModel(Models.MainControllerModel mainController)
+        private readonly SettingsManager settingManager;
+        public NavigationTreeViewModel(Models.MainControllerModel mainController, SettingsManager sManager)
         {
             model = mainController;
             model.PropertyChanged +=
@@ -83,8 +84,9 @@ namespace mouse_tracking_web_app.ViewModels
             {
                 NotifyPropertyChanged("NTVM_" + e.PropertyName);
                 if (e.PropertyName == "FileExplorerDirectory")
-                    SingleTree = new NavTreeVm(NTVM_FileExplorerDirectory, 0, true);
+                    SingleTree = new NavTreeVm(model.SM, NTVM_FileExplorerDirectory, 0, true);
             };
+            settingManager = sManager;
 
             // Construct Single tree
             //SingleTree = new NavTreeVm(nTreePath);
