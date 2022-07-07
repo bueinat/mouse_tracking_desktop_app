@@ -46,7 +46,16 @@ namespace mouse_tracking_web_app.ViewModels
         }
 
         // Single tree for Demo
-        public NavTreeVm SingleTree { get; set; }
+        private NavTreeVm singleTree;
+        public NavTreeVm SingleTree
+        {
+            get => singleTree;
+            set
+            {
+                singleTree = value;
+                NotifyPropertyChanged("SingleTree");
+            }
+        }
 
         public void RebuildSingleTree(object p)
         {
@@ -66,11 +75,11 @@ namespace mouse_tracking_web_app.ViewModels
         public string NTVM_FileExplorerDirectory
         {
             get => model.FileExplorerDirectory;
-            set
-            {
-                model.FileExplorerDirectory = value;
-                NotifyPropertyChanged("NTVM_FileExplorerDirectory");
-            }
+            //set
+            //{
+            //    model.FileExplorerDirectory = value;
+            //    NotifyPropertyChanged("NTVM_FileExplorerDirectory");
+            //}
         }
 
         private readonly Models.MainControllerModel model;
@@ -80,13 +89,21 @@ namespace mouse_tracking_web_app.ViewModels
         public NavigationTreeViewModel(Models.MainControllerModel mainController, SettingsManager sManager)
         {
             model = mainController;
-            model.PropertyChanged +=
+            SingleTree = new NavTreeVm(model.SM, NTVM_FileExplorerDirectory, 0, true);
+            model.SM.PropertyChanged +=
             delegate (object sender, PropertyChangedEventArgs e)
             {
                 NotifyPropertyChanged("NTVM_" + e.PropertyName);
-                if (e.PropertyName == "FileExplorerDirectory")
+                if (e.PropertyName == "WorkingPath")
                     SingleTree = new NavTreeVm(model.SM, NTVM_FileExplorerDirectory, 0, true);
             };
+            model.PropertyChanged +=
+                delegate (object sender, PropertyChangedEventArgs e)
+                {
+                    NotifyPropertyChanged("NTVM_" + e.PropertyName);
+                    if (e.PropertyName == "FileExplorerDirectory")
+                        SingleTree = new NavTreeVm(model.SM, NTVM_FileExplorerDirectory, 0, true);
+                };
             settingManager = sManager;
 
             // Construct Single tree

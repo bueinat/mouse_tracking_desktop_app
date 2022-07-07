@@ -74,12 +74,12 @@ namespace mouse_tracking_web_app.Models
 
         private Analysis analysis;
         private bool dragEnabled = false;
-        private string fileExplorerDirectory = "";
+        //private string fileExplorerDirectory = "";
         private bool isLoading = false;
         private bool overrideInDB;
         private bool pause = true;
-        private string videoID;
-        private string videoName = "";
+        //private string videoID;
+        //private string videoName = "";
         private bool videoProcessed = false;
 
         public MainControllerModel(SettingsManager sManager)
@@ -90,6 +90,7 @@ namespace mouse_tracking_web_app.Models
             VC = new VideoControllerModel(this);
             PC = new PlottingControllerModel(this, sManager);
             SM = sManager;
+
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -116,15 +117,15 @@ namespace mouse_tracking_web_app.Models
             }
         }
 
-        public string FileExplorerDirectory
-        {
-            get => fileExplorerDirectory;
-            set
-            {
-                fileExplorerDirectory = value;
-                NotifyPropertyChanged("FileExplorerDirectory");
-            }
-        }
+        public string FileExplorerDirectory => SM.WorkingPath;
+        //{
+        //    get => SM.WorkingPath;
+        //    set
+        //    {
+        //        SM.WorkingPath = value;
+        //        NotifyPropertyChanged("FileExplorerDirectory");
+        //    }
+        //}
 
         public double IsDrinkingPercent => VideoStats is null ? 0 : VideoStats.IsDrinkingPercent;
 

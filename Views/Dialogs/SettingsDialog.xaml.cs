@@ -17,7 +17,6 @@ namespace mouse_tracking_web_app.Views
 
         private void DialogOk_Click(object sender, RoutedEventArgs e)
         {
-            Console.WriteLine(pythonPath.Text);
             (DataContext as SettingsManager).UpdateSettings();
             DialogResult = true;
         }

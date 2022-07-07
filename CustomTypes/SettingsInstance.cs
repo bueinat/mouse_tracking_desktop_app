@@ -12,6 +12,7 @@ namespace mouse_tracking_web_app
         public SettingsInstance()
         {
             PythonPath = "";
+            WorkingPath = "";
             ConnectionString = "";
             DatabaseName = "";
             FeaturesList = "";
@@ -40,6 +41,7 @@ namespace mouse_tracking_web_app
             return new SettingsInstance()
             {
                 PythonPath = PythonPath,
+                WorkingPath = WorkingPath,
                 ConnectionString = ConnectionString,
                 DatabaseName = DatabaseName,
                 FeaturesList = FeaturesList,
@@ -62,6 +64,8 @@ namespace mouse_tracking_web_app
         {
             if (!string.IsNullOrEmpty(source.PythonPath))
                 PythonPath = source.PythonPath;
+            if (!string.IsNullOrEmpty(source.WorkingPath))
+                WorkingPath = source.WorkingPath;
             if (!string.IsNullOrEmpty(source.ConnectionString))
                 ConnectionString = source.ConnectionString;
             if (!string.IsNullOrEmpty(source.DatabaseName))
@@ -96,6 +100,23 @@ namespace mouse_tracking_web_app
         }
 
         #endregion pythonPath
+
+
+        #region workingPath
+
+        private string workingPath;
+
+        public string WorkingPath
+        {
+            get => workingPath;
+            set
+            {
+                workingPath = value;
+                OnPropertyChanged("WorkingPath");
+            }
+        }
+
+        #endregion workingPath
 
         #region connectionString
 

@@ -62,7 +62,7 @@
             <TextBlock
                 x:Name="dirName"
                 Height="0"
-                Text="{Binding VM_FileExplorerDirectory, Mode=TwoWay}" />
+                Text="{Binding VM_FileExplorerDirectory}" />
             <Button
                 x:Name="go_to_screen1"
                 Width="170"

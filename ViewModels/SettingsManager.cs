@@ -38,8 +38,31 @@ namespace mouse_tracking_web_app.ViewModels
 
         public void UpdateSettings()
         {
+            SettingsInstance oldSettings = CurrentSettings.Copy();
             CurrentSettings.UpdateBasedOnSource(UpdatableSettings);
+            NotifyUpdateChanges(oldSettings);
+            NotifyPropertyChanged("CurrentSettings");
             UpdatableSettings = new SettingsInstance();
+        }
+        private void NotifyUpdateChanges(SettingsInstance oldSettings)
+        {
+            if (CurrentSettings.PythonPath != oldSettings.PythonPath)
+                NotifyPropertyChanged("PythonPath");
+            if (CurrentSettings.WorkingPath != oldSettings.WorkingPath)
+                NotifyPropertyChanged("WorkingPath");
+            if (CurrentSettings.ConnectionString != oldSettings.ConnectionString)
+                NotifyPropertyChanged("ConnectionString");
+            if (CurrentSettings.DatabaseName != oldSettings.DatabaseName)
+                NotifyPropertyChanged("DatabaseName");
+            if (CurrentSettings.FeaturesList != oldSettings.FeaturesList)
+                NotifyPropertyChanged("FeaturesList");
+            if (CurrentSettings.FileTypesList != oldSettings.FileTypesList)
+                NotifyPropertyChanged("FileTypesList");
+            if (CurrentSettings.VideoTypesList != oldSettings.VideoTypesList)
+                NotifyPropertyChanged("VideoTypesList");
+            if (CurrentSettings.PlotMarkerSize != oldSettings.PlotMarkerSize)
+                NotifyPropertyChanged("PlotMarkerSize");
+
         }
 
         #endregion settingsMethods
@@ -59,6 +82,7 @@ namespace mouse_tracking_web_app.ViewModels
                 currentSettings = value;
                 NotifyPropertyChanged("CurrentSettings");
                 NotifyPropertyChanged("PythonPath");
+                NotifyPropertyChanged("WorkingPath");
                 NotifyPropertyChanged("ConnectionString");
                 NotifyPropertyChanged("DatabaseName");
                 NotifyPropertyChanged("FeaturesList");
@@ -93,6 +117,7 @@ namespace mouse_tracking_web_app.ViewModels
         }
 
         public string PythonPath => CurrentSettings.PythonPath;
+        public string WorkingPath => CurrentSettings.WorkingPath;
         public string ConnectionString => CurrentSettings.ConnectionString;
         public string DatabaseName => CurrentSettings.DatabaseName;
         public List<string> FeaturesList => new List<string>(CurrentSettings.FeaturesList.Split(','));

@@ -15,7 +15,7 @@
                 HorizontalScrollBarVisibility="Auto"
                 VerticalScrollBarVisibility="Auto">
                 <StackPanel>
-                    <uc:NavigationTree DataContext="{Binding SingleTree}" />
+                    <uc:NavigationTree DataContext="{Binding SingleTree, UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>
             </ScrollViewer>
         </GroupBox>
