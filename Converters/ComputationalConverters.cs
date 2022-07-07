@@ -1,7 +1,9 @@
-﻿using System;
+﻿using mouse_tracking_web_app.DataBase;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 
@@ -11,6 +13,7 @@ namespace mouse_tracking_web_app.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+
             ItemsControl ic = value as ItemsControl;
             return ic.ActualHeight / ic.Items.Count;
         }
@@ -20,6 +23,28 @@ namespace mouse_tracking_web_app.Converters
             throw new NotImplementedException();
         }
     }
+    public class PositionConverter : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+
+        {
+            //Tuple<float, float> pos = value as Tuple<float, float>;
+            float x = (float)values[0];
+            float y = (float)values[1];
+            Image baseImage = values[2] as Image;
+            //if gr
+            return new Thickness(0, (y / baseImage.Source.Height) * baseImage.ActualWidth, (1 - x / baseImage.Source.Width) * baseImage.ActualWidth, 0);
+            //return new Thickness(10*x / parentGrid.ActualWidth, 10*y / parentGrid.ActualHeight, 10*x / parentGrid.ActualWidth, 10*y / parentGrid.ActualHeight);
+            //return new Thickness(pos.Item1, pos.Item2, pos.Item1, pos.Item1);
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+
 
     [ValueConversion(typeof(string), typeof(bool))]
     public class DoesStringExist : IValueConverter

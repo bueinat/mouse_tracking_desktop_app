@@ -10,8 +10,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewmodels="clr-namespace:mouse_tracking_web_app.ViewModels"
     d:DataContext="{d:DesignInstance Type=viewmodels:VideoControllerViewModel}"
-    d:DesignHeight="300"
-    d:DesignWidth="300"
     Background="{DynamicResource MaterialDesignPaper}"
     FontFamily="{DynamicResource MaterialDesignFont}"
     mc:Ignorable="d">
@@ -23,6 +21,7 @@
             <converters:EnableDefaultImage x:Key="EnableDefaultImage" />
             <converters:SpeedToIndexConverter x:Key="SpeedToIndexConverter" />
             <converters:BooleanToIcon x:Key="BooleanToIcon" />
+            <converters:PositionConverter x:Key="PositionConverter" />
             <converters:BooleanToOpenCloseConverter x:Key="BooleanToOpenCloseConverter" />
             <BitmapImage x:Key="DefaultImage" UriSource="/Images/default_image.png" />
         </ResourceDictionary>
@@ -48,15 +47,31 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <Border Grid.Row="0" Grid.ColumnSpan="4">
-                    <Canvas>
-                        <Image Source="{Binding VMVC_FramePath, Converter={StaticResource EnableDefaultImage}}" Stretch="Uniform" />
+                    <Grid x:Name="parentGrid">
+                        <Image
+                            x:Name="baseImage"
+                            Source="{Binding VMVC_FramePath, Converter={StaticResource EnableDefaultImage}}"
+                            Stretch="Uniform" />
+                        <!--  Source="../../Images/default_image.png"  -->
+                        <!--  Source="{Binding VMVC_FramePath, Converter={StaticResource EnableDefaultImage}}"  -->
                         <Ellipse
                             Width="5"
                             Height="5"
-                            Margin="4,10"
-                            Fill="DarkBlue" />
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            Fill="{DynamicResource SecondaryHueLightBrush}">
+                            <Ellipse.Margin>
+                                <MultiBinding Converter="{StaticResource PositionConverter}">
+                                    <Binding Path="VMVC_X" />
+                                    <Binding Path="VMVC_Y" />
+                                    <Binding ElementName="baseImage" />
+                                </MultiBinding>
+                            </Ellipse.Margin>
+                        </Ellipse>
+
                         <!--  TODO: update margin according to desired position  -->
-                    </Canvas>
+
+                    </Grid>
                 </Border>
                 <ToggleButton
                     x:Name="PlayPauseButton"

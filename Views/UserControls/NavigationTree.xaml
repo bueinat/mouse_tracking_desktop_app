@@ -6,7 +6,7 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     x:Name="CurrentNavTreeViewName"
-    Background="{DynamicResource MaterialDesignPaper}"
+    Background="{StaticResource MaterialDesignPaper}"
     FontFamily="{materialDesign:MaterialDesignFont}"
     mc:Ignorable="d">
 
@@ -45,10 +45,10 @@
             BorderThickness="0"
             ItemTemplate="{StaticResource NavTreeTempl}"
             ItemsSource="{Binding Path=RootChildren}"
-            Style="{DynamicResource MaterialDesignTreeView}">
+            Style="{StaticResource MaterialDesignTreeView}">
 
             <TreeView.ItemContainerStyle>
-                <Style BasedOn="{DynamicResource MaterialDesignTreeViewItem}" TargetType="{x:Type TreeViewItem}">
+                <Style TargetType="{x:Type TreeViewItem}">
                     <Setter Property="IsExpanded" Value="{Binding Path=IsExpanded, Mode=TwoWay}" />
                 </Style>
             </TreeView.ItemContainerStyle>

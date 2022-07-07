@@ -24,6 +24,8 @@ namespace mouse_tracking_web_app.ViewModels
         public float VMVC_AccelerationY => Model.VC_AccelerationY;
         public float VMVC_Curviness => Model.VC_Curviness;
         public bool VMVC_DragEnabled => Model.VC_DragEnabled;
+        public Tuple<float, float> VMVC_Position => new Tuple<float, float>(VMVC_X, VMVC_Y);
+        public DataBase.Analysis VMVC_VideoAnalysis => Model.VC_VideoAnalysis;
         public List<string> VMVC_FeaturesList => Model.VC_FeaturesList;
 
         public bool VMVC_FeaturesPanelFlag
