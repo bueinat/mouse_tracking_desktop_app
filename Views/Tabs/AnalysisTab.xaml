@@ -103,8 +103,18 @@
                         Click="ApplyButtonClicked"
                         Content="apply"
                         FontSize="12"
-                        IsEnabled="{Binding VMPC_IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"
-                        Style="{DynamicResource MaterialDesignOutlinedDarkButton}" />
+                        IsEnabled="{Binding VMPC_IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <Button.Style>
+                            <Style BasedOn="{StaticResource MaterialDesignOutlinedSecondaryDarkButton}" TargetType="Button">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=sizeRangeTextBox, Path=(Validation.HasError)}" Value="True">
+                                        <Setter Property="IsEnabled" Value="False" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+
 
                     <StackPanel Grid.Row="0" Grid.Column="0">
                         <Label
@@ -142,23 +152,23 @@
                             FontSize="12"
                             FontWeight="Light"
                             Text="{Binding VMPC_SizeParameter, Mode=TwoWay}" />
-                        <Label
-                            Margin="0,8,0,0"
-                            Content="Size Range"
-                            FontSize="12"
-                            FontWeight="Bold" />
                         <TextBox
+                            x:Name="sizeRangeTextBox"
                             Width="100"
                             Margin="2"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"
+                            materialDesign:HintAssist.Foreground="{DynamicResource SecondaryHueDarkBrush}"
+                            materialDesign:HintAssist.Hint="SizeRange"
+                            materialDesign:HintAssist.IsFloating="True"
                             FontSize="12"
                             FontWeight="Light">
                             <TextBox.Text>
                                 <Binding
+                                    Delay="400"
                                     Mode="OneWayToSource"
                                     Path="VMPC_StringSizeRange"
-                                    UpdateSourceTrigger="LostFocus">
+                                    UpdateSourceTrigger="PropertyChanged">
                                     <Binding.ValidationRules>
                                         <valRules:RangeValidationRule />
                                     </Binding.ValidationRules>

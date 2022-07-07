@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace mouse_tracking_web_app.Models
@@ -14,7 +15,7 @@ namespace mouse_tracking_web_app.Models
     public class PlottingControllerModel : INotifyPropertyChanged
     {
         public List<double> PC_ColorList;
-        public double DefaultMarkerSize;
+        //public double DefaultMarkerSize;
         private readonly MainControllerModel model;
 
         private readonly Dictionary<string, MarkerType> scatterTypes = new Dictionary<string, MarkerType>
@@ -33,6 +34,7 @@ namespace mouse_tracking_web_app.Models
         private Tuple<double, double> sizeRange = new Tuple<double, double>(double.NaN, double.NaN);
         public SettingsManager SM;
 
+        public double DefaultMarkerSize => SM is null ? double.NaN : SM.PlotMarkerSize;
         public PlottingControllerModel(MainControllerModel model, SettingsManager sManager)
         {
             this.model = model;
@@ -43,20 +45,22 @@ namespace mouse_tracking_web_app.Models
             };
 
             SM = sManager;
-            DefaultMarkerSize = SM.PlotMarkerSize;
+            //DefaultMarkerSize = SM.PlotMarkerSize;
             SM.PropertyChanged +=
             delegate (object sender, PropertyChangedEventArgs e)
             {
                 NotifyPropertyChanged("PC_" + e.PropertyName);
-                if (e.PropertyName == "PlotMarkerSize")
-                    DefaultMarkerSize = SM.PlotMarkerSize;
+                if (e.PropertyName == "PlotMarkerSize" && double.IsNaN(PC_SizeRange.Item1))
+                {
+                    new Task(UpdateModel).Start();
+                    //NotifyPropertyChanged("DefaultMarkerSize");
+                    //DefaultMarkerSize = SM.PlotMarkerSize;
+                }
             };
 
             PC_PlotController = new PlotController();
 
             PC_PlotController.BindMouseDown(OxyMouseButton.Left, PlotCommands.ZoomRectangle);
-            //PC_PlotController.BindMouseDown(OxyMouseWh, PlotCommands.ZoomWheel);
-            //PC_PlotController.UnbindMouseDown(OxyMouseButton.Left);
             PC_PlotController.BindMouseEnter(PlotCommands.HoverSnapTrack);
 
             PC_PlotModel = new PlotModel
@@ -163,7 +167,25 @@ namespace mouse_tracking_web_app.Models
             }
         }
 
-        public string PC_StringSizeRange { get; set; }
+        private string stringSizeRange;
+        public string PC_StringSizeRange
+        {
+            get => stringSizeRange;
+            set
+            {
+                stringSizeRange = value;
+                if (string.IsNullOrEmpty(value))
+                    PC_SizeRange = new Tuple<double, double>(double.NaN, double.NaN);
+                else
+                {
+                    string[] vSplit = value.Split('-');
+                    if (vSplit.Length == 1)
+                        PC_SizeRange = new Tuple<double, double>(double.Parse(vSplit[0]), double.Parse(vSplit[0]));
+                    else if (vSplit.Length == 2)
+                        PC_SizeRange = new Tuple<double, double>(double.Parse(vSplit[0]), double.Parse(vSplit[1]));
+                }
+            }
+        }
 
         public double PC_TotalDistance => model.TotalDistance;
 
@@ -188,13 +210,13 @@ namespace mouse_tracking_web_app.Models
             for (int i = 0; i < PC_AnalysisDataRows.X.Count; i++)
             {
                 if (PC_VideoAnalysis.IsDrinking[i])
-                    pathPoints["drinking"].Points.Add(new ScatterPoint(PC_AnalysisDataRows.X[i], PC_AnalysisDataRows.Y[i]) { });
+                    pathPoints["drinking"].Points.Add(new ScatterPoint(PC_AnalysisDataRows.X[i], 480 - PC_AnalysisDataRows.Y[i]) { });
                 else if (PC_VideoAnalysis.IsSniffing[i])
-                    pathPoints["sniffing"].Points.Add(new ScatterPoint(PC_AnalysisDataRows.X[i], PC_AnalysisDataRows.Y[i]) { });
+                    pathPoints["sniffing"].Points.Add(new ScatterPoint(PC_AnalysisDataRows.X[i], 480 - PC_AnalysisDataRows.Y[i]) { });
                 else if (PC_VideoAnalysis.IsNoseCasting[i])
-                    pathPoints["noseCasting"].Points.Add(new ScatterPoint(PC_AnalysisDataRows.X[i], PC_AnalysisDataRows.Y[i]) { });
+                    pathPoints["noseCasting"].Points.Add(new ScatterPoint(PC_AnalysisDataRows.X[i], 480 - PC_AnalysisDataRows.Y[i]) { });
                 else
-                    pathPoints["none"].Points.Add(new ScatterPoint(PC_AnalysisDataRows.X[i], PC_AnalysisDataRows.Y[i]) { });
+                    pathPoints["none"].Points.Add(new ScatterPoint(PC_AnalysisDataRows.X[i], 480 - PC_AnalysisDataRows.Y[i]) { });
 
                 if (!IsNullOrEmpty(PC_ColorList))
                 {

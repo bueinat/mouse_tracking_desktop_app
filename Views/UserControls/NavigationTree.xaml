@@ -40,7 +40,7 @@
             </Button>
         </HierarchicalDataTemplate>
     </UserControl.Resources>
-    <StackPanel>
+    <Grid>
         <TreeView
             BorderThickness="0"
             ItemTemplate="{StaticResource NavTreeTempl}"
@@ -53,5 +53,5 @@
                 </Style>
             </TreeView.ItemContainerStyle>
         </TreeView>
-    </StackPanel>
+    </Grid>
 </UserControl>

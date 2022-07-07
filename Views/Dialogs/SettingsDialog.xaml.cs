@@ -1,5 +1,7 @@
-﻿using mouse_tracking_web_app.ViewModels;
+﻿using Microsoft.WindowsAPICodePack.Dialogs;
+using mouse_tracking_web_app.ViewModels;
 using System;
+using System.Linq;
 using System.Windows;
 
 namespace mouse_tracking_web_app.Views
@@ -24,6 +26,19 @@ namespace mouse_tracking_web_app.Views
         private void Reset_Click(object sender, RoutedEventArgs e)
         {
             (DataContext as SettingsManager).ResetToDefaultSettings();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var window = Application.Current.Windows.OfType<Window>().SingleOrDefault(w => w.IsActive);
+            CommonOpenFileDialog dialog = new CommonOpenFileDialog
+            {
+                IsFolderPicker = true
+            };
+            if (dialog.ShowDialog(window) == CommonFileDialogResult.Ok)
+                workingPath.Text = dialog.FileName;
+            //this.bri
+            //BringIntoView();
         }
     }
 }

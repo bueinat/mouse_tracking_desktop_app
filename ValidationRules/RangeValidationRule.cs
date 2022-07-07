@@ -17,18 +17,18 @@ namespace mouse_tracking_web_app.ValidationRules
             {
                 MatchCollection matches = Regex.Matches(vSplit[0], pattern);
                 if (matches.Count == 0)
-                    return new ValidationResult(false, $"{vSplit[0]} is not of correct\nfloat format.");
+                    return new ValidationResult(false, $"given value is not float");
             }
             else if (vSplit.Length == 2)
             {
                 MatchCollection match1 = Regex.Matches(vSplit[0], pattern);
                 if (match1.Count == 0)
-                    return new ValidationResult(false, $"{vSplit[0]} is not of correct\nfloat format.");
+                    return new ValidationResult(false, $"given value is not float");
                 MatchCollection match2 = Regex.Matches(vSplit[1], pattern);
                 if (match2.Count == 0)
-                    return new ValidationResult(false, $"{vSplit[1]} is not of correct\nfloat format.");
+                    return new ValidationResult(false, $"given value is not float");
                 if (double.Parse(vSplit[0]) >= double.Parse(vSplit[1]))
-                    return new ValidationResult(false, $"not a valid range,\nsince {vSplit[1]}  >= {vSplit[0]}");
+                    return new ValidationResult(false, $"{vSplit[1]}  >= {vSplit[0]}");
             }
             else
                 return new ValidationResult(false, "Illegal characters");

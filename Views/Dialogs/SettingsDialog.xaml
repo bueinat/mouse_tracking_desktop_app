@@ -9,8 +9,8 @@
     xmlns:valRules="clr-namespace:mouse_tracking_web_app.ValidationRules"
     xmlns:viewmodels="clr-namespace:mouse_tracking_web_app.ViewModels"
     Title="Settings"
-    Width="350"
-    Height="450"
+    Width="400"
+    Height="500"
     d:DataContext="{d:DesignInstance Type=viewmodels:SettingsManager}"
     Background="{DynamicResource MaterialDesignPaper}"
     FontFamily="{DynamicResource MaterialDesignFont}"
@@ -63,20 +63,30 @@
             VerticalAlignment="Center"
             Content="working path:"
             Style="{StaticResource MaterialDesignLabel}" />
-        <TextBox
-            x:Name="workingPath"
+        <StackPanel
             Grid.Row="1"
             Grid.Column="1"
-            VerticalAlignment="Center"
-            materialDesign:HintAssist.Hint="{Binding CurrentSettings.WorkingPath}">
-            <TextBox.Text>
-                <Binding
-                    Delay="400"
-                    Mode="TwoWay"
-                    Path="UpdatableSettings.WorkingPath"
-                    UpdateSourceTrigger="PropertyChanged" />
-            </TextBox.Text>
-        </TextBox>
+            Orientation="Horizontal">
+            <Button
+                materialDesign:RippleAssist.IsDisabled="True"
+                Click="Button_Click"
+                Style="{DynamicResource MaterialDesignIconForegroundButton}"
+                ToolTip="select folder">
+                <materialDesign:PackIcon Kind="Laptop" />
+            </Button>
+            <TextBox
+                x:Name="workingPath"
+                VerticalAlignment="Center"
+                materialDesign:HintAssist.Hint="{Binding CurrentSettings.WorkingPath}">
+                <TextBox.Text>
+                    <Binding
+                        Delay="400"
+                        Mode="TwoWay"
+                        Path="UpdatableSettings.WorkingPath"
+                        UpdateSourceTrigger="PropertyChanged" />
+                </TextBox.Text>
+            </TextBox>
+        </StackPanel>
         <Label
             Grid.Row="2"
             Grid.Column="0"

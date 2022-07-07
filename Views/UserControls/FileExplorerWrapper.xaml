@@ -9,14 +9,13 @@
     d:DataContext="{d:DesignInstance Type=viewModels:NavigationTreeViewModel}"
     mc:Ignorable="d">
     <Grid x:Name="layoutRoot">
-        <GroupBox Margin="2" Header="File Explorer">
-            <ScrollViewer
-                Width="{Binding ActualWidth, ElementName=layoutRoot}"
-                HorizontalScrollBarVisibility="Auto"
-                VerticalScrollBarVisibility="Auto">
-                <StackPanel>
-                    <uc:NavigationTree DataContext="{Binding SingleTree, UpdateSourceTrigger=PropertyChanged}" />
-                </StackPanel>
+        <GroupBox
+            Margin="2"
+            VerticalAlignment="Stretch"
+            Header="File Explorer">
+            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                <uc:NavigationTree DataContext="{Binding SingleTree, UpdateSourceTrigger=PropertyChanged}" />
+                <!--<uc:NavigationTree DataContext="{Binding SingleTree, UpdateSourceTrigger=PropertyChanged}" />-->
             </ScrollViewer>
         </GroupBox>
     </Grid>

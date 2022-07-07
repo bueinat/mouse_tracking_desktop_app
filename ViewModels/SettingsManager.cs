@@ -42,8 +42,10 @@ namespace mouse_tracking_web_app.ViewModels
             CurrentSettings.UpdateBasedOnSource(UpdatableSettings);
             NotifyUpdateChanges(oldSettings);
             NotifyPropertyChanged("CurrentSettings");
-            UpdatableSettings = new SettingsInstance();
-            UpdatableSettings.OverrideDB = CurrentSettings.OverrideDB;
+            UpdatableSettings = new SettingsInstance
+            {
+                OverrideDB = CurrentSettings.OverrideDB
+            };
         }
         private void NotifyUpdateChanges(SettingsInstance oldSettings)
         {

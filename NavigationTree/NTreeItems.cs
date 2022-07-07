@@ -125,6 +125,7 @@ namespace mouse_tracking_web_app.NavigationTree
             {
                 DirectoryInfo di = new DirectoryInfo(FullPathName); // maybe access not allowed
                 if (!di.Exists) return childrenList;
+                
                 foreach (DirectoryInfo dir in di.GetDirectories())
                 {
                     item1 = new FolderItem(SM)
@@ -151,6 +152,10 @@ namespace mouse_tracking_web_app.NavigationTree
                 }
             }
             catch (UnauthorizedAccessException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            catch (DirectoryNotFoundException e)
             {
                 Console.WriteLine(e.Message);
             }

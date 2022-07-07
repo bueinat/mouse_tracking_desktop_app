@@ -46,11 +46,7 @@
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <Border
-                    Grid.Row="0"
-                    Grid.ColumnSpan="4"
-                    BorderBrush="Black"
-                    BorderThickness="1">
+                <Border Grid.Row="0" Grid.ColumnSpan="4">
                     <Grid x:Name="parentGrid">
                         <Image
                             x:Name="baseImage"

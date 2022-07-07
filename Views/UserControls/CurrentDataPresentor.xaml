@@ -11,6 +11,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <converters:FillnaConverter x:Key="FillnaConverter" />
+            <converters:ObjectToVisibilityConverter x:Key="ObjectToVisibilityConverter" />
             <converters:BoolToColorConverter x:Key="BoolToColorConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
@@ -21,7 +22,7 @@
             Margin="5"
             Padding="5"
             Header="Info Panel">
-            <Grid>
+            <Grid Visibility="{Binding VMVC_VideoAnalysis, Converter={StaticResource ObjectToVisibilityConverter}}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto" />
                     <ColumnDefinition Width="30" />
