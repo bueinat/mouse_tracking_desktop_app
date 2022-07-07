@@ -1,5 +1,4 @@
-﻿using mouse_tracking_web_app.DataBase;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -28,17 +27,19 @@ namespace mouse_tracking_web_app.Converters
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
 
         {
-            //Tuple<float, float> pos = value as Tuple<float, float>;
             float x = (float)values[0];
             float y = (float)values[1];
             Image baseImage = values[2] as Image;
-            //if gr
-            return new Thickness(0, (y / baseImage.Source.Height) * baseImage.ActualWidth, (1 - x / baseImage.Source.Width) * baseImage.ActualWidth, 0);
-            //return new Thickness(10*x / parentGrid.ActualWidth, 10*y / parentGrid.ActualHeight, 10*x / parentGrid.ActualWidth, 10*y / parentGrid.ActualHeight);
-            //return new Thickness(pos.Item1, pos.Item2, pos.Item1, pos.Item1);
+
+            double nx = (1 - x / baseImage.Source.Width) * baseImage.ActualWidth;
+            double nx_fix = (baseImage.Parent as Grid).ActualWidth - baseImage.ActualWidth;
+            double ny = y / baseImage.Source.Height * baseImage.ActualHeight;
+            double ny_fix = (baseImage.Parent as Grid).ActualHeight - baseImage.ActualHeight;
+
+            return new Thickness(0, ny + ny_fix / 2, nx + nx_fix, 0);
         }
 
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture)
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }
@@ -132,7 +133,6 @@ namespace mouse_tracking_web_app.Converters
             {
                 ItemsControl ic = values[0] as ItemsControl;
                 double actualHeigth = System.Convert.ToDouble(values[1]);
-                Console.WriteLine(actualHeigth / ic.Items.Count);
                 return actualHeigth / ic.Items.Count;
             }
             catch (Exception)

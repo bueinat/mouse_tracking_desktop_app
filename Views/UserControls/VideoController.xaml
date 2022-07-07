@@ -46,10 +46,16 @@
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <Border Grid.Row="0" Grid.ColumnSpan="4">
+                <Border
+                    Grid.Row="0"
+                    Grid.ColumnSpan="4"
+                    BorderBrush="Black"
+                    BorderThickness="1">
                     <Grid x:Name="parentGrid">
                         <Image
                             x:Name="baseImage"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
                             Source="{Binding VMVC_FramePath, Converter={StaticResource EnableDefaultImage}}"
                             Stretch="Uniform" />
                         <Ellipse
@@ -57,7 +63,8 @@
                             Height="5"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Top"
-                            Fill="{DynamicResource SecondaryHueLightBrush}">
+                            Fill="{DynamicResource SecondaryHueLightBrush}"
+                            Opacity="0.8">
                             <Ellipse.Margin>
                                 <MultiBinding Converter="{StaticResource PositionConverter}">
                                     <Binding Path="VMVC_X" />
@@ -110,6 +117,7 @@
                     Grid.Column="1"
                     Margin="5"
                     VerticalAlignment="Center"
+                    materialDesign:SliderAssist.OnlyShowFocusVisualWhileDragging="False"
                     Foreground="{DynamicResource SecondaryHueDarkBrush}"
                     IsMoveToPointEnabled="True"
                     Maximum="{Binding VMVC_NFrames}"

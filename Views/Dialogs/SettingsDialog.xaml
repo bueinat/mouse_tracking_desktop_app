@@ -247,7 +247,7 @@
             Grid.ColumnSpan="2"
             Margin="15,5,0,0"
             Content="Override Data in Cache"
-            IsChecked="{Binding CurrentSettings.OverrideDB, Mode=TwoWay}" />
+            IsChecked="{Binding UpdatableSettings.OverrideDB, Mode=TwoWay}" />
 
         <WrapPanel
             Grid.Row="10"

@@ -32,7 +32,7 @@ namespace mouse_tracking_web_app.Views
                     Text = FeaturesList[i].Substring(2) + ": ",
                     VerticalAlignment = VerticalAlignment.Center,
                     FontWeight = FontWeights.Bold,
-                    FontSize = 11,
+                    FontSize = 12,
                     Foreground = new SolidColorBrush(textColor)
                 };
                 Grid.SetRow(tb, i);
