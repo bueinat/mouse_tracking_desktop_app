@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace mouse_tracking_web_app.ViewModels
@@ -9,11 +8,10 @@ namespace mouse_tracking_web_app.ViewModels
         #region settingsFiles
 
         // TODO: maybe save those somewhere else (like where I saved yolov5 and those stuff)
-        private readonly string defaultSettingsPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
-            "\\MouseApp\\Settings\\defaultSettings.xml";
 
-        private readonly string userSettingsPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
-            "\\MouseApp\\Settings\\userSettings.xml";
+        private readonly string defaultSettingsPath = @"C:\ProgramData\MouseApp\Settings\defaultSettings.xml";
+
+        private readonly string userSettingsPath = @"C:\ProgramData\MouseApp\Settings\userSettings.xml";
 
         #endregion settingsFiles
 
@@ -47,6 +45,7 @@ namespace mouse_tracking_web_app.ViewModels
                 OverrideDB = CurrentSettings.OverrideDB
             };
         }
+
         private void NotifyUpdateChanges(SettingsInstance oldSettings)
         {
             if (CurrentSettings.PythonPath != oldSettings.PythonPath)
@@ -67,7 +66,6 @@ namespace mouse_tracking_web_app.ViewModels
                 NotifyPropertyChanged("PlotMarkerSize");
             if (CurrentSettings.OverrideDB != oldSettings.OverrideDB)
                 NotifyPropertyChanged("OverrideDB");
-
         }
 
         #endregion settingsMethods
@@ -110,6 +108,24 @@ namespace mouse_tracking_web_app.ViewModels
 
         #endregion settingsInstances
 
+        public string ConnectionString => CurrentSettings.ConnectionString;
+
+        public string DatabaseName => CurrentSettings.DatabaseName;
+
+        public List<string> FeaturesList => new List<string>(CurrentSettings.FeaturesList.Split(','));
+
+        public List<string> FileTypesList => new List<string>(CurrentSettings.FullTypesList.Split(','));
+
+        public bool OverrideDB => CurrentSettings.OverrideDB;
+
+        public double PlotMarkerSize => CurrentSettings.PlotMarkerSize;
+
+        public string PythonPath => CurrentSettings.PythonPath;
+
+        public List<string> VideoTypesList => new List<string>(CurrentSettings.VideoTypesList.Split(','));
+
+        public string WorkingPath => CurrentSettings.WorkingPath;
+
         public string FirstCharToUpperCase(string str)
         {
             return !string.IsNullOrEmpty(str) && char.IsLower(str[0])
@@ -121,15 +137,5 @@ namespace mouse_tracking_web_app.ViewModels
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
-        public string PythonPath => CurrentSettings.PythonPath;
-        public string WorkingPath => CurrentSettings.WorkingPath;
-        public string ConnectionString => CurrentSettings.ConnectionString;
-        public string DatabaseName => CurrentSettings.DatabaseName;
-        public List<string> FeaturesList => new List<string>(CurrentSettings.FeaturesList.Split(','));
-        public List<string> FileTypesList => new List<string>(CurrentSettings.FullTypesList.Split(','));
-        public List<string> VideoTypesList => new List<string>(CurrentSettings.VideoTypesList.Split(','));
-        public double PlotMarkerSize => CurrentSettings.PlotMarkerSize;
-        public bool OverrideDB => CurrentSettings.OverrideDB;
     }
 }

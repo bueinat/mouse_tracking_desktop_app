@@ -15,9 +15,9 @@ try:
     args = pandas.read_csv(sys.argv[1], header=None, index_col=0)[1]
     args["override"] = eval(args["override"])
 
+    # create needed folders
     os.makedirs(args["data_path"], exist_ok=True)
     video_name = args["video_path"].split('\\')[-1].split('.')[0] 
-    # data_path = f"{args['cache_path']}\\{args['video_path']}"
     frames_path = u"{}\\frames".format(args['data_path'])
 
     # create a folder for cache
@@ -26,13 +26,8 @@ try:
         args["override"] = False
     except Exception as e:
         if args["override"]:
-            # print("success")
             print(f"message: note: overriding {video_name} which already existed in the archive.")
         else:
-            print("try getting data from database")
-            # video_name = args["video_path"].split('\\')[-1].split('.')[0]
-            # working_path = f"@WORKING_PATH\\{video_name}"
-            # f"{working_path}\\{video_name}"
             mnge.register_connection(alias='core', host=args["connection_string"])
             videoq = Video.objects(link_to_data=args["video_path"], analysis__exists=1).order_by('-registered_date')
             print(len(videoq))

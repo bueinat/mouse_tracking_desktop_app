@@ -18,12 +18,18 @@ try:
                               index_col=0).drop('background', axis=1).astype(bool)
     pred_df.columns = pred_df.columns.map(lambda s: "is_" + s.replace(' ', '_'))
 
+    
+    save_path = args["video_path"][:args["video_path"].rindex("\\")]
+    video_name = args["video_path"].split("\\")[-1].split(".")[0]
+    uploadable_data.to_csv(f"{save_path}\\{video_name}_processed_data.csv") # TODO: check if this is okay
+
     if len(uploadable_data) != len(pred_df):
         raise Exception("features and path files are not in the same length. Are you sure they were generated for the same video?")
 
 
     uploadable_data = pandas.concat([uploadable_data, pred_df], axis=1)
     uploadable_data.to_csv(f"{args['data_path']}\\uploadable_data.csv")
+    uploadable_data.to_csv(f"{save_path}\\{video_name}_processed_data.csv")
     print("success")
 
 except Exception as e:

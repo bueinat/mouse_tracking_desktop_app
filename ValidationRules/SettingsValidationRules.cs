@@ -76,7 +76,7 @@ namespace mouse_tracking_web_app.ValidationRules
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
                     CreateNoWindow = true,
-                    Arguments = @"C:\ProgramData\yolov5\test_python.py"
+                    Arguments = @"C:\ProgramData\MouseApp\test_python.py"
                 };
                 Process processResults = Process.Start(start);
                 return string.IsNullOrEmpty(processResults.StandardError.ReadToEnd()) && processResults.StandardOutput.ReadToEnd().StartsWith("python version")

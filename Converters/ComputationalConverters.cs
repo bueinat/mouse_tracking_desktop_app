@@ -12,7 +12,6 @@ namespace mouse_tracking_web_app.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-
             ItemsControl ic = value as ItemsControl;
             return ic.ActualHeight / ic.Items.Count;
         }
@@ -22,6 +21,7 @@ namespace mouse_tracking_web_app.Converters
             throw new NotImplementedException();
         }
     }
+
     public class PositionConverter : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
@@ -44,8 +44,6 @@ namespace mouse_tracking_web_app.Converters
             throw new NotImplementedException();
         }
     }
-
-
 
     [ValueConversion(typeof(string), typeof(bool))]
     public class DoesStringExist : IValueConverter
@@ -220,25 +218,59 @@ namespace mouse_tracking_web_app.Converters
             switch ((DataBase.DisplayableVideo.State)value)
             {
                 case DataBase.DisplayableVideo.State.ExtractVideo:
-                    return 0;
-
-                case DataBase.DisplayableVideo.State.FindRatPath:
                     return 1;
 
-                case DataBase.DisplayableVideo.State.FindRatFeatues:
+                case DataBase.DisplayableVideo.State.FindRatPath:
                     return 2;
 
-                case DataBase.DisplayableVideo.State.SaveToDataBase:
+                case DataBase.DisplayableVideo.State.FindRatFeatues:
                     return 3;
 
-                case DataBase.DisplayableVideo.State.Successful:
+                case DataBase.DisplayableVideo.State.SaveToDataBase:
                     return 4;
+
+                case DataBase.DisplayableVideo.State.Successful:
+                    return 5;
 
                 case DataBase.DisplayableVideo.State.Failed:
-                    return 4;
+                    return 5;
+                case DataBase.DisplayableVideo.State.Waiting:
 
-                default:
+                default:        // includes waiting
                     return 0;
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+
+    [ValueConversion(typeof(DataBase.DisplayableVideo.State), typeof(bool))]
+    public class StateToBoolConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            switch ((DataBase.DisplayableVideo.State)value)
+            {
+                case DataBase.DisplayableVideo.State.ExtractVideo:
+
+                case DataBase.DisplayableVideo.State.FindRatPath:
+
+                case DataBase.DisplayableVideo.State.FindRatFeatues:
+
+                case DataBase.DisplayableVideo.State.SaveToDataBase:
+                    return true;
+                case DataBase.DisplayableVideo.State.Waiting:
+
+                case DataBase.DisplayableVideo.State.Successful:
+
+                case DataBase.DisplayableVideo.State.Failed:
+
+                default:        // includes waiting
+                    return false;
             }
         }
 

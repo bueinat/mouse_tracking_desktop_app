@@ -115,7 +115,6 @@
                         </Button.Style>
                     </Button>
 
-
                     <StackPanel Grid.Row="0" Grid.Column="0">
                         <Label
                             Content="Size"
@@ -175,23 +174,6 @@
                                 </Binding>
                             </TextBox.Text>
                         </TextBox>
-                        <!--<TextBox
-                            Width="100"
-                            Margin="2"
-                            HorizontalAlignment="Left"
-                            Style="{StaticResource textBoxInError}"
-                            Validation.ErrorTemplate="{StaticResource validationTemplate}">
-                            <TextBox.Text>
-                                <Binding
-                                    Mode="OneWayToSource"
-                                    Path="VMPC_StringSizeRange"
-                                    UpdateSourceTrigger="LostFocus"
-                                    ValidatesOnDataErrors="True" />
-                            </TextBox.Text>
-                            <ToolTipService.ToolTip>
-                                <TextBlock FontSize="10" Text="first item in range is default size" />
-                            </ToolTipService.ToolTip>
-                        </TextBox>-->
                     </StackPanel>
 
                     <StackPanel

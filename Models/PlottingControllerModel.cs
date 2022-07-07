@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace mouse_tracking_web_app.Models
@@ -15,6 +14,9 @@ namespace mouse_tracking_web_app.Models
     public class PlottingControllerModel : INotifyPropertyChanged
     {
         public List<double> PC_ColorList;
+
+        public SettingsManager SM;
+
         //public double DefaultMarkerSize;
         private readonly MainControllerModel model;
 
@@ -32,9 +34,8 @@ namespace mouse_tracking_web_app.Models
         private PlotModel plotModel;
         private string sizeParam;
         private Tuple<double, double> sizeRange = new Tuple<double, double>(double.NaN, double.NaN);
-        public SettingsManager SM;
+        private string stringSizeRange;
 
-        public double DefaultMarkerSize => SM is null ? double.NaN : SM.PlotMarkerSize;
         public PlottingControllerModel(MainControllerModel model, SettingsManager sManager)
         {
             this.model = model;
@@ -89,6 +90,7 @@ namespace mouse_tracking_web_app.Models
                         Title = PC_ColorParameter
                     };
 
+        public double DefaultMarkerSize => SM is null ? double.NaN : SM.PlotMarkerSize;
         public DataRows PC_AnalysisDataRows => model.AnalysisDataRows;
 
         public double PC_AverageAcceleration => model.AverageAcceleration;
@@ -167,7 +169,6 @@ namespace mouse_tracking_web_app.Models
             }
         }
 
-        private string stringSizeRange;
         public string PC_StringSizeRange
         {
             get => stringSizeRange;

@@ -125,7 +125,7 @@ namespace mouse_tracking_web_app.NavigationTree
             {
                 DirectoryInfo di = new DirectoryInfo(FullPathName); // maybe access not allowed
                 if (!di.Exists) return childrenList;
-                
+
                 foreach (DirectoryInfo dir in di.GetDirectories())
                 {
                     item1 = new FolderItem(SM)
@@ -178,8 +178,15 @@ namespace mouse_tracking_web_app.NavigationTree
 
         protected BitmapSource myIcon;
 
+        protected SettingsManager SM;
+
         //private static readonly List<string> extensionsList = new List<string>(ConfigurationManager.AppSettings["FileTypesList"].Split(',')).Select(ext => "." + ext).ToList();
         private bool isExpanded;
+
+        public NavTreeItem(SettingsManager sManager)
+        {
+            SM = sManager;
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -192,14 +199,6 @@ namespace mouse_tracking_web_app.NavigationTree
                 NotifyPropertyChanged("Children");
             }
         }
-
-        public NavTreeItem(SettingsManager sManager)
-        {
-            SM = sManager;
-        }
-
-        protected SettingsManager SM;
-        protected List<string> ExtensionsList => SM.FileTypesList.Select(ext => "." + ext).ToList();
 
         // for display in tree
         public string FriendlyName { get; set; }
@@ -224,6 +223,8 @@ namespace mouse_tracking_web_app.NavigationTree
             get => myIcon ?? (myIcon = GetMyIcon());
             set => myIcon = value;
         }
+
+        protected List<string> ExtensionsList => SM.FileTypesList.Select(ext => "." + ext).ToList();
 
         // Question, not enough C#/Wpf knowledge:
         // - If we delete an NavTreeItem in the root are all its children and corresponding treeview elements garbage collected??

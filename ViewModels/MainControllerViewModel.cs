@@ -24,18 +24,13 @@ namespace mouse_tracking_web_app.ViewModels
 
         //public BindingList<DisplayableVideo> VM_DispVideosCollection => model.DispVideosCollection;
 
-        public string VM_VideosPath
-        {
-            get => model.VideosPath;
-            set
-            {
-                model.VideosPath = value;
-                NotifyPropertyChanged("VM_VideosPath");
-            }
-        }
-
         public string VM_CSVString => model.CSVString;
+
         public bool VM_DragEnabled => model.DragEnabled;
+
+        public string VM_FileExplorerDirectory => model.WorkingPath;
+
+        public bool VM_OverrideDB => model.OverrideDB;
 
         public DisplayableVideo VM_SelectedVideo
         {
@@ -47,38 +42,15 @@ namespace mouse_tracking_web_app.ViewModels
             }
         }
 
-        public bool VM_OverrideDB => model.OverrideDB;
-        //{
-        //    get => model.OverrideDB;
-        //    set => model.OverrideDB = value;
-        //}
-
-        //public string VM_ErrorMessage
-        //{
-        //    get => model.ErrorMessage;
-        //    set => model.ErrorMessage = value;
-        //}
-
-        public string VM_FileExplorerDirectory
+        public string VM_VideosPath
         {
-            get => model.WorkingPath;
-            //set => model.FileExplorerDirectory = value;
+            get => model.VideosPath;
+            set
+            {
+                model.VideosPath = value;
+                NotifyPropertyChanged("VM_VideosPath");
+            }
         }
-
-        //public bool VM_HasErrorMessage => model.HasErrorMessage;
-
-        //public bool VM_IsLoading
-        //{
-        //    get => model.IsLoading;
-        //    set => model.IsLoading = value;
-        //}
-
-        //public string VM_VideoName
-        //{
-        //    get => model.VideoName;
-        //    set => model.VideoName = value;
-        //}
-
         public void NotifyPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

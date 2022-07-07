@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:converters="clr-namespace:mouse_tracking_web_app.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewmodels="clr-namespace:mouse_tracking_web_app.ViewModels"
     d:DataContext="{d:DesignInstance Type=viewmodels:VideoProcessingManager}"
@@ -18,6 +17,7 @@
             <converters:StateToColorConverter x:Key="StateToColorConverter" />
             <converters:StateToProgColorConverter x:Key="StateToProgColorConverter" />
             <converters:StateToProgressConverter x:Key="StateToProgressConverter" />
+            <converters:StateToBoolConverter x:Key="StateToBoolConverter" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/mouse_tracking_web_app;component/CustomStyles/SimpleProgressBar.xaml" />
             </ResourceDictionary.MergedDictionaries>
@@ -100,7 +100,7 @@
                                 <StackPanel>
                                     <TextBlock
                                         FontWeight="SemiBold"
-                                        Foreground="#10275C"
+                                        Foreground="{DynamicResource PrimaryHueMidBrush}"
                                         Text="{Binding ProcessingState, StringFormat='  current step: {0}'}" />
                                     <TextBlock FontSize="11" Text="{Binding ToolTipMessage}" />
                                 </StackPanel>
@@ -108,6 +108,7 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="70" />
+                                <ColumnDefinition Width="auto" />
                             </Grid.ColumnDefinitions>
                             <TextBlock
                                 Margin="2"
@@ -120,9 +121,17 @@
                                 Margin="0,0,3,0"
                                 VerticalAlignment="Stretch"
                                 Background="{Binding ProcessingState, Converter={StaticResource StateToProgColorConverter}}"
-                                Maximum="4"
-                                Minimum="-1"
+                                Maximum="5"
+                                Minimum="0"
                                 Style="{StaticResource ResourceKey=SimpleProgressBar}"
+                                Value="{Binding Path=ProcessingState, Converter={StaticResource StateToProgressConverter}}" />
+                            <ProgressBar
+                                Grid.Column="2"
+                                Margin="5,0,7,0"
+                                Foreground="{DynamicResource SecondaryHueMidBrush}"
+                                IsIndeterminate="{Binding Path=ProcessingState, Converter={StaticResource StateToBoolConverter}}"
+                                Maximum="5"
+                                Style="{DynamicResource MaterialDesignCircularProgressBar}"
                                 Value="{Binding Path=ProcessingState, Converter={StaticResource StateToProgressConverter}}" />
                         </Grid>
                     </DataTemplate>

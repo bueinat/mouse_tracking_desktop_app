@@ -1,18 +1,14 @@
-﻿print("imports 0")
-import torch
+﻿import torch
 import pandas
 from utilityFunctions import *
-print("imports 1")
 import sys
 import os
-print("imports 2")
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 
 # suppress all warnings
 import warnings
 warnings.filterwarnings("ignore")
-print("imports done")
 
 # %%
 
@@ -38,8 +34,7 @@ try:
         raw_data = get_raw_data(nose_pos, max_vals, eframes)
 
     elif FUNCTION_NAME == 'yolov5_algorithm':
-        print("strarting algo")
-        PATH = f"C:/ProgramData/yolov5/models/best_trained_model.pt"
+        PATH = "C:/ProgramData/MouseApp/yolov5/models/best_trained_model.pt"
         model = torch.hub.load('ultralytics/yolov5', 'custom', path=PATH)  # local model
         dscript_detect = {int(filename.split(".")[0][5:]): model(f"{frames_path}/{filename}")
                                     for filename in os.listdir(frames_path)}
@@ -65,13 +60,7 @@ try:
 
     uploadable_data = raw_data[['x', 'y', 'vx', 'vy', 'ax', 'ay', 'curviness', 'path']]
 
-    # for i, r in uploadable_data.iterrows():
-    #     fig, ax = plt.subplots()
-    #     plt.imshow(mpimg.imread(r.path))
-    #     plt.plot([r.x], [r.y], ".", ms=10, alpha=0.8, c="cadetblue")
-    #     plt.axis('off')
-    #     plt.savefig(r.path, dpi=120, bbox_inches='tight',pad_inches = 0)
-    # print(f"path: {r.path}")
+    # save data to csv
     uploadable_data.to_csv(f"{args['data_path']}\\uploadable_data.csv")
     print("success")
 

@@ -3,7 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
+using System.Threading.Tasks.Dataflow;
 
 namespace mouse_tracking_web_app.ViewModels
 {
@@ -64,23 +66,6 @@ namespace mouse_tracking_web_app.ViewModels
 
         #endregion videosPath
 
-        #region errorMessage
-
-        private string errorMessage = "";
-
-        public string ErrorMessage
-        {
-            get => errorMessage;
-            set
-            {
-                errorMessage = value;
-                NotifyPropertyChanged("ErrorMessage");
-                NotifyPropertyChanged("HasErrorMessage");
-            }
-        }
-
-        #endregion errorMessage
-
         #region videosContainer
 
         private BindingList<DisplayableVideo> videosCollection = new BindingList<DisplayableVideo>();
@@ -102,26 +87,48 @@ namespace mouse_tracking_web_app.ViewModels
 
         public async Task ProcessFolder()
         {
-            ErrorMessage = string.Empty;
             videosDictionary = new Dictionary<string, DisplayableVideo>();
 
-            //List<Task> tasks = new List<Task>();
+            List<Task> tasks = new List<Task>();
             VideosCollection = new BindingList<DisplayableVideo>();
 
             foreach (string videoPath in VPM_VideosList)
             {
+                string relativePath = MakeRelative(videoPath, VPM_VideosPath);
+                relativePath = relativePath.Substring(relativePath.IndexOf('\\') + 1);
                 videosDictionary.Add(videoPath, new DisplayableVideo()
                 {
-                    ReducedName = MakeRelative(videoPath, VPM_VideosPath),
+                    ReducedName = relativePath,
                     ProcessingState = DisplayableVideo.State.Waiting
                 });
                 VideosCollection.Add(videosDictionary[videoPath]);
-                await ProcessSingleVideo(videoPath);
 
-                //tasks.Add(ProcessSingleVideo(videoPath));
+                //await ProcessSingleVideo(videoPath);
+
+                tasks.Add(ProcessSingleVideo(videoPath));
             }
-            //await Task.WhenAll(tasks);
+            //_ = Parallel.ForEach(VPM_VideosList, new ParallelOptions() { MaxDegreeOfParallelism = 1 }, async videoPath => await ProcessSingleVideo(videoPath));
+            //await LimitProcessedTasks(tasks, );
+            await Task.WhenAll(tasks);
         }
+
+        //private async Task LimitProcessedTasks<T>(IEnumerable<T> items, Func<T, Task> func)
+        //{
+        //    ExecutionDataflowBlockOptions edfbo = new ExecutionDataflowBlockOptions
+        //    {
+        //        MaxDegreeOfParallelism = 2
+        //    };
+
+        //    ActionBlock<T> ab = new ActionBlock<T>(func, edfbo);
+
+        //    foreach (T item in items)
+        //    {
+        //        _ = await ab.SendAsync(item);
+        //    }
+
+        //    ab.Complete();
+        //    await ab.Completion;
+        //}
 
         public Dictionary<string, string> ProcessResult(string[] rawResult)
         {
@@ -149,7 +156,6 @@ namespace mouse_tracking_web_app.ViewModels
         public async Task ProcessSingleVideo(string videoPath)
         {
             // initialization
-            string relativeVideoPath = MakeRelative(videoPath, VPM_VideosPath).Split('.')[0];
             DisplayableVideo currentVideo = videosDictionary[videoPath];
 
             string connectionString = model.SM.ConnectionString;
@@ -159,7 +165,7 @@ namespace mouse_tracking_web_app.ViewModels
             {
                 ["override"] = model.OverrideDB ? "True" : "False",
                 ["video_path"] = videoPath,
-                ["data_path"] = $"{VPM_CachePath}\\{relativeVideoPath}",
+                ["data_path"] = $"{VPM_CachePath}\\{currentVideo.ReducedName.Split('.')[0]}",
                 ["connection_string"] = $"{connectionString}/{dbName}"
             };
 
@@ -209,7 +215,7 @@ namespace mouse_tracking_web_app.ViewModels
             Dictionary<string, string> processedResult = ProcessResult(rawResult);
 
             // update tooltip message
-            string key = null; ;
+            string key = null;
             if (processedResult.ContainsKey("ErrorMessage"))
                 key = "ErrorMessage";
             else if (processedResult.ContainsKey("Message"))
@@ -222,9 +228,9 @@ namespace mouse_tracking_web_app.ViewModels
             }
             if (processedResult["Success"] == "False")
             {
-                videosDictionary[videoPath].ProcessingState = DisplayableVideo.State.Failed;
                 if (!processedResult.ContainsKey("ErrorMessage"))
                     videosDictionary[videoPath].ToolTipMessage += $"\r\nUnknown Error at {videosDictionary[videoPath].ProcessingState}";
+                videosDictionary[videoPath].ProcessingState = DisplayableVideo.State.Failed;
             }
 
             // return processed results
