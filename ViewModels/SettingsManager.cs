@@ -62,6 +62,8 @@ namespace mouse_tracking_web_app.ViewModels
                 NotifyPropertyChanged("VideoTypesList");
             if (CurrentSettings.PlotMarkerSize != oldSettings.PlotMarkerSize)
                 NotifyPropertyChanged("PlotMarkerSize");
+            if (CurrentSettings.OverrideDB != oldSettings.OverrideDB)
+                NotifyPropertyChanged("OverrideDB");
 
         }
 
@@ -89,6 +91,7 @@ namespace mouse_tracking_web_app.ViewModels
                 NotifyPropertyChanged("FileTypesList");
                 NotifyPropertyChanged("VideoTypesList");
                 NotifyPropertyChanged("PlotMarkerSize");
+                NotifyPropertyChanged("OverrideDB");
             }
         }
 
@@ -124,5 +127,6 @@ namespace mouse_tracking_web_app.ViewModels
         public List<string> FileTypesList => new List<string>(CurrentSettings.FullTypesList.Split(','));
         public List<string> VideoTypesList => new List<string>(CurrentSettings.VideoTypesList.Split(','));
         public double PlotMarkerSize => CurrentSettings.PlotMarkerSize;
+        public bool OverrideDB => CurrentSettings.OverrideDB;
     }
 }

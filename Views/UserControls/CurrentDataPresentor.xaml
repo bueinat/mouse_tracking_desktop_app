@@ -7,8 +7,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewmodels="clr-namespace:mouse_tracking_web_app.ViewModels"
     d:DataContext="{d:DesignInstance Type=viewmodels:VideoControllerViewModel}"
-    d:DesignHeight="300"
-    d:DesignWidth="300"
     mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -26,11 +24,13 @@
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto" />
-                    <ColumnDefinition Width="auto" />
-                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="30" />
                     <ColumnDefinition Width="auto" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
@@ -43,7 +43,7 @@
                 <TextBlock
                     Grid.Row="0"
                     Grid.Column="0"
-                    Margin="5,0,5,0"
+                    Margin="5,0,15,0"
                     VerticalAlignment="Center"
                     FontWeight="SemiBold"
                     Foreground="{StaticResource SecondaryHueDarkBrush}"
@@ -51,7 +51,7 @@
                     Text="timestep:" />
                 <TextBlock
                     Grid.Row="0"
-                    Grid.Column="1"
+                    Grid.Column="2"
                     VerticalAlignment="Center"
                     Foreground="#646464"
                     Style="{StaticResource MaterialDesignCaptionTextBlock}"
@@ -59,7 +59,7 @@
                 <TextBlock
                     Grid.Row="1"
                     Grid.Column="0"
-                    Margin="5,0,5,0"
+                    Margin="5,0,15,0"
                     VerticalAlignment="Center"
                     FontWeight="SemiBold"
                     Foreground="{StaticResource SecondaryHueDarkBrush}"
@@ -67,7 +67,7 @@
                     Text="x:" />
                 <TextBlock
                     Grid.Row="1"
-                    Grid.Column="1"
+                    Grid.Column="2"
                     VerticalAlignment="Center"
                     Foreground="#646464"
                     Style="{StaticResource MaterialDesignCaptionTextBlock}"
@@ -75,7 +75,7 @@
                 <TextBlock
                     Grid.Row="2"
                     Grid.Column="0"
-                    Margin="5,0,5,0"
+                    Margin="5,0,15,0"
                     VerticalAlignment="Center"
                     FontWeight="SemiBold"
                     Foreground="{StaticResource SecondaryHueDarkBrush}"
@@ -83,7 +83,7 @@
                     Text="y:" />
                 <TextBlock
                     Grid.Row="2"
-                    Grid.Column="1"
+                    Grid.Column="2"
                     VerticalAlignment="Center"
                     Foreground="#646464"
                     Style="{StaticResource MaterialDesignCaptionTextBlock}"
@@ -91,7 +91,7 @@
                 <TextBlock
                     Grid.Row="3"
                     Grid.Column="0"
-                    Margin="5,0,5,0"
+                    Margin="5,0,15,0"
                     VerticalAlignment="Center"
                     FontWeight="SemiBold"
                     Foreground="{StaticResource SecondaryHueDarkBrush}"
@@ -99,7 +99,7 @@
                     Text="vx:" />
                 <TextBlock
                     Grid.Row="3"
-                    Grid.Column="1"
+                    Grid.Column="2"
                     VerticalAlignment="Center"
                     Foreground="#646464"
                     Style="{StaticResource MaterialDesignCaptionTextBlock}"
@@ -107,7 +107,7 @@
                 <TextBlock
                     Grid.Row="4"
                     Grid.Column="0"
-                    Margin="5,0,5,0"
+                    Margin="5,0,15,0"
                     VerticalAlignment="Center"
                     FontWeight="SemiBold"
                     Foreground="{StaticResource SecondaryHueDarkBrush}"
@@ -115,7 +115,7 @@
                     Text="vy:" />
                 <TextBlock
                     Grid.Row="4"
-                    Grid.Column="1"
+                    Grid.Column="2"
                     VerticalAlignment="Center"
                     Foreground="#646464"
                     Style="{StaticResource MaterialDesignCaptionTextBlock}"
@@ -124,7 +124,7 @@
                 <TextBlock
                     Grid.Row="5"
                     Grid.Column="0"
-                    Margin="5,0,5,0"
+                    Margin="5,0,15,0"
                     VerticalAlignment="Center"
                     FontWeight="SemiBold"
                     Foreground="{StaticResource SecondaryHueDarkBrush}"
@@ -132,7 +132,7 @@
                     Text="ax:" />
                 <TextBlock
                     Grid.Row="5"
-                    Grid.Column="1"
+                    Grid.Column="2"
                     VerticalAlignment="Center"
                     Foreground="#646464"
                     Style="{StaticResource MaterialDesignCaptionTextBlock}"
@@ -140,7 +140,7 @@
                 <TextBlock
                     Grid.Row="6"
                     Grid.Column="0"
-                    Margin="5,0,5,0"
+                    Margin="5,0,15,0"
                     VerticalAlignment="Center"
                     FontWeight="SemiBold"
                     Foreground="{StaticResource SecondaryHueDarkBrush}"
@@ -148,7 +148,7 @@
                     Text="ay:" />
                 <TextBlock
                     Grid.Row="6"
-                    Grid.Column="1"
+                    Grid.Column="2"
                     VerticalAlignment="Center"
                     Foreground="#646464"
                     Style="{StaticResource MaterialDesignCaptionTextBlock}"
@@ -156,7 +156,7 @@
                 <TextBlock
                     Grid.Row="7"
                     Grid.Column="0"
-                    Margin="5,0,5,0"
+                    Margin="5,0,15,0"
                     VerticalAlignment="Center"
                     FontWeight="SemiBold"
                     Foreground="{StaticResource SecondaryHueDarkBrush}"
@@ -164,56 +164,56 @@
                     Text="curviness:" />
                 <TextBlock
                     Grid.Row="7"
-                    Grid.Column="1"
+                    Grid.Column="2"
                     Grid.ColumnSpan="2"
                     VerticalAlignment="Center"
                     Foreground="#646464"
                     Style="{StaticResource MaterialDesignCaptionTextBlock}"
                     Text="{Binding VMVC_Curviness, Converter={StaticResource FillnaConverter}}" />
                 <TextBlock
-                    Grid.Row="0"
-                    Grid.Column="2"
-                    Margin="20,0,5,0"
+                    Grid.Row="8"
+                    Grid.Column="0"
+                    Margin="5,0,15,0"
                     VerticalAlignment="Center"
                     FontWeight="SemiBold"
                     Foreground="{StaticResource SecondaryHueDarkBrush}"
                     Style="{StaticResource MaterialDesignCaptionTextBlock}"
                     Text="is sniffing:" />
                 <TextBlock
-                    Grid.Row="0"
-                    Grid.Column="3"
+                    Grid.Row="8"
+                    Grid.Column="2"
                     VerticalAlignment="Center"
                     Foreground="{Binding VMVC_IsSniffing, Converter={StaticResource BoolToColorConverter}}"
                     Style="{StaticResource MaterialDesignCaptionTextBlock}"
                     Text="{Binding VMVC_IsSniffing}" />
                 <TextBlock
-                    Grid.Row="1"
-                    Grid.Column="2"
-                    Margin="20,0,5,0"
+                    Grid.Row="9"
+                    Grid.Column="0"
+                    Margin="5,0,15,0"
                     VerticalAlignment="Center"
                     FontWeight="SemiBold"
                     Foreground="{StaticResource SecondaryHueDarkBrush}"
                     Style="{StaticResource MaterialDesignCaptionTextBlock}"
                     Text="is drinking:" />
                 <TextBlock
-                    Grid.Row="1"
-                    Grid.Column="3"
+                    Grid.Row="9"
+                    Grid.Column="2"
                     VerticalAlignment="Center"
                     Foreground="{Binding VMVC_IsDrinking, Converter={StaticResource BoolToColorConverter}}"
                     Style="{StaticResource MaterialDesignCaptionTextBlock}"
                     Text="{Binding VMVC_IsDrinking}" />
                 <TextBlock
-                    Grid.Row="2"
-                    Grid.Column="2"
-                    Margin="20,0,5,0"
+                    Grid.Row="10"
+                    Grid.Column="0"
+                    Margin="5,0,15,0"
                     VerticalAlignment="Center"
                     FontWeight="SemiBold"
                     Foreground="{StaticResource SecondaryHueDarkBrush}"
                     Style="{StaticResource MaterialDesignCaptionTextBlock}"
                     Text="is nose casting:" />
                 <TextBlock
-                    Grid.Row="2"
-                    Grid.Column="3"
+                    Grid.Row="10"
+                    Grid.Column="2"
                     VerticalAlignment="Center"
                     Foreground="{Binding VMVC_IsNoseCasting, Converter={StaticResource BoolToColorConverter}}"
                     Style="{StaticResource MaterialDesignCaptionTextBlock}"

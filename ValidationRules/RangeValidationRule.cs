@@ -2,7 +2,7 @@
 using System.Text.RegularExpressions;
 using System.Windows.Controls;
 
-namespace mouse_tracking_web_app.Converters
+namespace mouse_tracking_web_app.ValidationRules
 {
     public class RangeValidationRule : ValidationRule
     {

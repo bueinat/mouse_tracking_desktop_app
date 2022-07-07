@@ -1,10 +1,10 @@
 ﻿<UserControl
     x:Class="mouse_tracking_web_app.Views.VideosDisplayer"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:converters="clr-namespace:mouse_tracking_web_app.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewmodels="clr-namespace:mouse_tracking_web_app.ViewModels"
     d:DataContext="{d:DesignInstance Type=viewmodels:VideoProcessingManager}"
     d:DesignHeight="300"
@@ -23,8 +23,88 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid Margin="2">
-        <GroupBox Header="Videos Processor">
+    <Grid>
+        <GroupBox Margin="2" Header="Videos Processor">
+            <!--<ListBox
+                Name="VideosListBox"
+                HorizontalContentAlignment="Stretch"
+                ItemsSource="{Binding VideosCollection}"
+                SelectedItem="{Binding VPM_SelectedVideo}"
+                Style="{StaticResource MaterialDesignChoiceChipAccentListBox}">
+                <ListBox.ItemContainerStyle>
+                    <Style BasedOn="{StaticResource MaterialDesignChoiceChipAccentListBoxItem}" TargetType="{x:Type ListBoxItem}">
+                        <Setter Property="FontSize" Value="12" />
+                        <Setter Property="HorizontalAlignment" Value="Stretch" />
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                    <RadioButton
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Stretch"
+                                        Content="{TemplateBinding Content}"
+                                        ContentStringFormat="{TemplateBinding ContentTemplateSelector}"
+                                        ContentTemplate="{TemplateBinding ContentTemplate}"
+                                        ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}"
+                                        FontFamily="{TemplateBinding FontFamily}"
+                                        FontSize="{TemplateBinding FontSize}"
+                                        FontStretch="{TemplateBinding FontStretch}"
+                                        FontStyle="{TemplateBinding FontStyle}"
+                                        FontWeight="{TemplateBinding FontWeight}"
+                                        Foreground="Black"
+                                        GroupName="{Binding Name, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"
+                                        IsChecked="{Binding IsSelected, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay}"
+                                        Style="{StaticResource MaterialDesignChoiceChipAccentRadioButton}" />
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="FontWeight" Value="SemiBold" />
+                                <Setter Property="Foreground" Value="Black" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+
+            -->
+            <!--  Background="{Binding Path=ProcessingState, Converter={StaticResource StateToColorConverter}}"  -->
+            <!--
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Height="30" MouseDown="ListBoxItem_MouseDown">
+                            <ToolTipService.ToolTip>
+                                <StackPanel>
+                                    <TextBlock
+                                        FontWeight="SemiBold"
+                                        Foreground="{DynamicResource PrimaryHueMidBrush}"
+                                        Text="{Binding ProcessingState, StringFormat='  current step: {0}'}" />
+                                    <TextBlock FontSize="11" Text="{Binding ToolTipMessage}" />
+                                </StackPanel>
+                            </ToolTipService.ToolTip>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="70" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Margin="2"
+                                VerticalAlignment="Center"
+                                Text="{Binding Path=ReducedName}" />
+                            <ProgressBar
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Height="15"
+                                Margin="0,0,3,0"
+                                VerticalAlignment="Stretch"
+                                Background="{Binding ProcessingState, Converter={StaticResource StateToProgColorConverter}}"
+                                Maximum="4"
+                                Minimum="-1"
+                                Style="{StaticResource ResourceKey=SimpleProgressBar}"
+                                Value="{Binding Path=ProcessingState, Converter={StaticResource StateToProgressConverter}}" />
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>-->
             <ListBox
                 Name="VideosListBox"
                 HorizontalContentAlignment="Stretch"
@@ -90,13 +170,14 @@
                     <DataTemplate>
                         <Grid
                             Height="30"
+                            Margin="2"
                             Background="{Binding Path=ProcessingState, Converter={StaticResource StateToColorConverter}}"
                             MouseDown="ListBoxItem_MouseDown">
                             <ToolTipService.ToolTip>
                                 <StackPanel>
                                     <TextBlock
                                         FontWeight="SemiBold"
-                                        Foreground="#10275C"
+                                        Foreground="{DynamicResource PrimaryHueLightBrush}"
                                         Text="{Binding ProcessingState, StringFormat='  current step: {0}'}" />
                                     <TextBlock FontSize="11" Text="{Binding ToolTipMessage}" />
                                 </StackPanel>

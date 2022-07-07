@@ -1,4 +1,5 @@
-﻿using mouse_tracking_web_app.ViewModels;
+﻿using MaterialDesignThemes.Wpf;
+using mouse_tracking_web_app.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Windows;
@@ -13,9 +14,11 @@ namespace mouse_tracking_web_app.Views
     /// </summary>
     public partial class FeaturesPanel : UserControl
     {
+        private Color textColor;
         public FeaturesPanel()
         {
             InitializeComponent();
+            textColor = new PaletteHelper().GetTheme().SecondaryDark.Color;
         }
 
         private void OnLoad(object sender, RoutedEventArgs e)
@@ -29,11 +32,12 @@ namespace mouse_tracking_web_app.Views
                     Text = FeaturesList[i].Substring(2) + ": ",
                     VerticalAlignment = VerticalAlignment.Center,
                     FontWeight = FontWeights.Bold,
-                    Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#476D76"))
+                    FontSize = 11,
+                    Foreground = new SolidColorBrush(textColor)
                 };
                 Grid.SetRow(tb, i);
                 Grid.SetColumn(tb, 0);
-                layoutRoot.Children.Add(tb);
+                _ = layoutRoot.Children.Add(tb);
 
                 ColoredTimeBar ctb = new ColoredTimeBar()
                 {
@@ -48,10 +52,10 @@ namespace mouse_tracking_web_app.Views
                     Mode = BindingMode.OneWayToSource,
                     UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
                 };
-                ctb.SetBinding(ColoredTimeBar.TimeProperty, binding);
+                _ = ctb.SetBinding(ColoredTimeBar.TimeProperty, binding);
                 Grid.SetRow(ctb, i);
                 Grid.SetColumn(ctb, 1);
-                layoutRoot.Children.Add(ctb);
+                _ = layoutRoot.Children.Add(ctb);
             }
         }
 

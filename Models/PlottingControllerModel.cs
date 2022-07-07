@@ -53,10 +53,16 @@ namespace mouse_tracking_web_app.Models
             };
 
             PC_PlotController = new PlotController();
-            PC_PlotController.UnbindMouseDown(OxyMouseButton.Left);
+
+            PC_PlotController.BindMouseDown(OxyMouseButton.Left, PlotCommands.ZoomRectangle);
+            //PC_PlotController.BindMouseDown(OxyMouseWh, PlotCommands.ZoomWheel);
+            //PC_PlotController.UnbindMouseDown(OxyMouseButton.Left);
             PC_PlotController.BindMouseEnter(PlotCommands.HoverSnapTrack);
 
-            PC_PlotModel = new PlotModel();
+            PC_PlotModel = new PlotModel
+            {
+                PlotType = PlotType.Cartesian
+            };
             SetUpModel();
             PropertyChanged += delegate (object sender, PropertyChangedEventArgs e)
             {
@@ -71,7 +77,7 @@ namespace mouse_tracking_web_app.Models
                     ? null
                     : new LinearColorAxis
                     {
-                        Position = AxisPosition.Right,
+                        Position = AxisPosition.Top,
                         Minimum = PC_ColorList.Min(),
                         Maximum = PC_ColorList.Max(),
                         Palette = OxyPalettes.Viridis(),
@@ -219,7 +225,7 @@ namespace mouse_tracking_web_app.Models
             {
                 PC_PlotModel.Axes.Clear();
                 SetUpModel();
-                foreach (var keyVal in pathPoints)
+                foreach (KeyValuePair<string, ScatterSeries> keyVal in pathPoints)
                 {
                     keyVal.Value.TrackerFormatString += "\n" + PC_ColorParameter + " = {Value:0.##}";
                     //for (int i = 0; i < PC_AnalysisDataRows.X.Count; i++)
@@ -231,7 +237,7 @@ namespace mouse_tracking_web_app.Models
                 PC_PlotModel.Axes.Clear();
                 SetUpModel();
                 foreach (KeyValuePair<string, ScatterSeries> keyVal in pathPoints)
-                    keyVal.Value.MarkerFill = OxyColors.IndianRed;
+                    keyVal.Value.MarkerFill = OxyColors.MediumSeaGreen;
             }
 
             if (!IsNullOrEmpty(PC_SizeList) && (PC_MaxSize > PC_MinSize))
@@ -304,14 +310,16 @@ namespace mouse_tracking_web_app.Models
             PC_PlotModel.Axes.Add(new LinearAxis
             {
                 Position = AxisPosition.Bottom,
-                IsZoomEnabled = false,
+                Minimum = 0,
+                Maximum = 752,
                 Title = "X"
             });
 
             PC_PlotModel.Axes.Add(new LinearAxis
             {
                 Position = AxisPosition.Left,
-                IsZoomEnabled = false,
+                Minimum = 0,
+                Maximum = 480,
                 Title = "Y"
             });
 

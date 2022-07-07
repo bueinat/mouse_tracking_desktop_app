@@ -18,6 +18,7 @@ namespace mouse_tracking_web_app
             FeaturesList = "";
             FileTypesList = "";
             VideoTypesList = "";
+            OverrideDB = false;
             PlotMarkerSize = double.NaN;
         }
 
@@ -47,7 +48,8 @@ namespace mouse_tracking_web_app
                 FeaturesList = FeaturesList,
                 FileTypesList = FileTypesList,
                 VideoTypesList = VideoTypesList,
-                PlotMarkerSize = PlotMarkerSize
+                PlotMarkerSize = PlotMarkerSize,
+                OverrideDB = OverrideDB
             };
         }
 
@@ -62,6 +64,7 @@ namespace mouse_tracking_web_app
 
         public void UpdateBasedOnSource(SettingsInstance source)
         {
+            OverrideDB = source.OverrideDB;
             if (!string.IsNullOrEmpty(source.PythonPath))
                 PythonPath = source.PythonPath;
             if (!string.IsNullOrEmpty(source.WorkingPath))
@@ -84,6 +87,22 @@ namespace mouse_tracking_web_app
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
+
+        #region overrideDB
+
+        private bool overrideDB;
+
+        public bool OverrideDB
+        {
+            get => overrideDB;
+            set
+            {
+                overrideDB = value;
+                OnPropertyChanged("OverrideDB");
+            }
+        }
+
+        #endregion overrideDB
 
         #region pythonPath
 

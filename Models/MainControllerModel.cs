@@ -74,12 +74,8 @@ namespace mouse_tracking_web_app.Models
 
         private Analysis analysis;
         private bool dragEnabled = false;
-        //private string fileExplorerDirectory = "";
         private bool isLoading = false;
-        private bool overrideInDB;
         private bool pause = true;
-        //private string videoID;
-        //private string videoName = "";
         private bool videoProcessed = false;
 
         public MainControllerModel(SettingsManager sManager)
@@ -90,6 +86,11 @@ namespace mouse_tracking_web_app.Models
             VC = new VideoControllerModel(this);
             PC = new PlottingControllerModel(this, sManager);
             SM = sManager;
+            SM.PropertyChanged +=
+            delegate (object sender, PropertyChangedEventArgs e)
+            {
+                NotifyPropertyChanged(e.PropertyName);
+            };
 
         }
 
@@ -117,7 +118,7 @@ namespace mouse_tracking_web_app.Models
             }
         }
 
-        public string FileExplorerDirectory => SM.WorkingPath;
+        public string WorkingPath => SM.WorkingPath;
         //{
         //    get => SM.WorkingPath;
         //    set
@@ -145,15 +146,15 @@ namespace mouse_tracking_web_app.Models
 
         public int NSteps => VideoStats is null ? 0 : VideoStats.NSteps;
 
-        public bool OverrideInDB
-        {
-            get => overrideInDB;
-            set
-            {
-                overrideInDB = value;
-                NotifyPropertyChanged("OverrideInDB");
-            }
-        }
+        public bool OverrideDB => SM.OverrideDB;
+        //{
+        //    get => overrideInDB;
+        //    set
+        //    {
+        //        overrideInDB = value;
+        //        NotifyPropertyChanged("OverrideInDB");
+        //    }
+        //}
 
         public bool Pause
         {

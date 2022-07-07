@@ -157,7 +157,7 @@ namespace mouse_tracking_web_app.ViewModels
 
             Dictionary<string, string> argv = new Dictionary<string, string>
             {
-                ["override"] = model.OverrideInDB ? "True" : "False",
+                ["override"] = model.OverrideDB ? "True" : "False",
                 ["video_path"] = videoPath,
                 ["data_path"] = $"{VPM_CachePath}\\{relativeVideoPath}",
                 ["connection_string"] = $"{connectionString}/{dbName}"

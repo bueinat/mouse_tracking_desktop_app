@@ -52,8 +52,6 @@
                             x:Name="baseImage"
                             Source="{Binding VMVC_FramePath, Converter={StaticResource EnableDefaultImage}}"
                             Stretch="Uniform" />
-                        <!--  Source="../../Images/default_image.png"  -->
-                        <!--  Source="{Binding VMVC_FramePath, Converter={StaticResource EnableDefaultImage}}"  -->
                         <Ellipse
                             Width="5"
                             Height="5"
@@ -81,6 +79,7 @@
                     Height="20"
                     Margin="5"
                     materialDesign:ToggleButtonAssist.OnContent="{materialDesign:PackIcon Kind=play}"
+                    Click="PlayPauseButtonClicked"
                     Content="{materialDesign:PackIcon Kind=pause}"
                     Foreground="White"
                     IsChecked="{Binding VMVC_Pause, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
@@ -146,6 +145,7 @@
                     Grid.Row="2"
                     Grid.ColumnSpan="4"
                     HorizontalAlignment="Center"
+                    materialDesign:RippleAssist.IsDisabled="True"
                     Click="FPanelButtonClicked"
                     Content="{Binding VMVC_FeaturesPanelFlag, Converter={StaticResource BooleanToOpenCloseConverter}, Mode=TwoWay}"
                     Foreground="{DynamicResource PrimaryHueDarkBrush}"

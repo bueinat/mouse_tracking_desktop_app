@@ -5,14 +5,19 @@
     xmlns:converters="clr-namespace:mouse_tracking_web_app.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fa="http://schemas.fontawesome.io/icons/"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:oxy="http://oxyplot.org/wpf"
     xmlns:usercontrols="clr-namespace:mouse_tracking_web_app.Views"
+    xmlns:valRules="clr-namespace:mouse_tracking_web_app.ValidationRules"
     xmlns:viewmodels="clr-namespace:mouse_tracking_web_app.ViewModels"
     d:DataContext="{d:DesignInstance Type=viewmodels:PlottingControllerViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
     Background="{DynamicResource MaterialDesignPaper}"
+    FontFamily="{DynamicResource MaterialDesignFont}"
+    FontSize="12"
+    FontWeight="Light"
     TextElement.Foreground="{DynamicResource MaterialDesignBody}"
     mc:Ignorable="d">
     <UserControl.Resources>
@@ -36,7 +41,11 @@
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <GroupBox Grid.Row="0" Header="Path Parameters">
+            <GroupBox
+                Grid.Row="0"
+                FontSize="13"
+                FontWeight="Normal"
+                Header="Path Parameters">
 
                 <Grid Margin="10">
                     <Grid.ColumnDefinitions>
@@ -48,27 +57,40 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0" Grid.Column="1">
-                        <Label Content="Color" FontWeight="Bold" />
+                        <Label
+                            Content="Color"
+                            FontSize="12"
+                            FontWeight="Bold" />
                         <RadioButton
                             Checked="HandleCheck"
                             Content="none"
+                            FontSize="12"
+                            FontWeight="Light"
                             GroupName="color"
                             IsChecked="True" />
                         <RadioButton
                             Checked="HandleCheck"
                             Content="timestep"
+                            FontSize="12"
+                            FontWeight="Light"
                             GroupName="color" />
                         <RadioButton
                             Checked="HandleCheck"
                             Content="velocity"
+                            FontSize="12"
+                            FontWeight="Light"
                             GroupName="color" />
                         <RadioButton
                             Checked="HandleCheck"
                             Content="acceleration"
+                            FontSize="12"
+                            FontWeight="Light"
                             GroupName="color" />
                         <TextBlock
                             x:Name="ColorParameterName"
                             Height="0"
+                            FontSize="12"
+                            FontWeight="Light"
                             Text="{Binding VMPC_ColorParameter, Mode=TwoWay}" />
                     </StackPanel>
                     <Button
@@ -76,41 +98,74 @@
                         Grid.Row="0"
                         Grid.Column="1"
                         Height="25"
+                        HorizontalAlignment="Right"
                         VerticalAlignment="Bottom"
                         Click="ApplyButtonClicked"
-                        Content="apply changes"
+                        Content="apply"
                         FontSize="12"
                         IsEnabled="{Binding VMPC_IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"
-                        Style="{DynamicResource MaterialDesignFlatDarkBgButton}" />
+                        Style="{DynamicResource MaterialDesignOutlinedDarkButton}" />
 
                     <StackPanel Grid.Row="0" Grid.Column="0">
-                        <Label Content="Size" FontWeight="Bold" />
+                        <Label
+                            Content="Size"
+                            FontSize="12"
+                            FontWeight="Bold" />
                         <RadioButton
                             Checked="HandleCheck"
                             Content="none"
+                            FontSize="12"
+                            FontWeight="Light"
                             GroupName="size"
                             IsChecked="True" />
                         <RadioButton
                             Checked="HandleCheck"
                             Content="timestep"
+                            FontSize="12"
+                            FontWeight="Light"
                             GroupName="size" />
                         <RadioButton
                             Checked="HandleCheck"
                             Content="velocity"
+                            FontSize="12"
+                            FontWeight="Light"
                             GroupName="size" />
                         <RadioButton
                             Checked="HandleCheck"
                             Content="acceleration"
+                            FontSize="12"
+                            FontWeight="Light"
                             GroupName="size" />
                         <TextBlock
                             x:Name="SizeParameterName"
                             Height="0"
+                            FontSize="12"
+                            FontWeight="Light"
                             Text="{Binding VMPC_SizeParameter, Mode=TwoWay}" />
                         <Label
                             Margin="0,8,0,0"
                             Content="Size Range"
+                            FontSize="12"
                             FontWeight="Bold" />
                         <TextBox
+                            Width="100"
+                            Margin="2"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            FontSize="12"
+                            FontWeight="Light">
+                            <TextBox.Text>
+                                <Binding
+                                    Mode="OneWayToSource"
+                                    Path="VMPC_StringSizeRange"
+                                    UpdateSourceTrigger="LostFocus">
+                                    <Binding.ValidationRules>
+                                        <valRules:RangeValidationRule />
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
+                        <!--<TextBox
                             Width="100"
                             Margin="2"
                             HorizontalAlignment="Left"
@@ -126,7 +181,7 @@
                             <ToolTipService.ToolTip>
                                 <TextBlock FontSize="10" Text="first item in range is default size" />
                             </ToolTipService.ToolTip>
-                        </TextBox>
+                        </TextBox>-->
                     </StackPanel>
 
                     <StackPanel
@@ -152,7 +207,8 @@
             <GroupBox
                 Grid.Row="1"
                 Margin="0,5,0,0"
-                Padding="5"
+                FontSize="13"
+                FontWeight="Normal"
                 Header="Path Statistics">
                 <usercontrols:PathStatisticsPresentor Grid.Row="1" Visibility="{Binding VMPC_VideoAnalysis, Converter={StaticResource ObjectToVisibilityConverter}}" />
             </GroupBox>
@@ -160,7 +216,7 @@
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
-                <RowDefinition Height="2.5*" />
+                <RowDefinition Height="5*" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
@@ -171,10 +227,10 @@
                 <oxy:PlotView.DefaultTrackerTemplate>
                     <ControlTemplate>
                         <oxy:TrackerControl
-                            Background="Teal"
-                            BorderBrush="DarkSlateBlue"
+                            Background="LightGoldenrodYellow"
+                            BorderBrush="gold"
                             BorderThickness="0.5"
-                            Foreground="LightCyan"
+                            Foreground="Goldenrod"
                             LineStroke="Transparent"
                             Opacity="0.9"
                             Position="{Binding Position}">

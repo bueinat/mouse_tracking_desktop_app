@@ -47,11 +47,11 @@ namespace mouse_tracking_web_app.ViewModels
             }
         }
 
-        public bool VM_OverrideInDB
-        {
-            get => model.OverrideInDB;
-            set => model.OverrideInDB = value;
-        }
+        public bool VM_OverrideDB => model.OverrideDB;
+        //{
+        //    get => model.OverrideDB;
+        //    set => model.OverrideDB = value;
+        //}
 
         //public string VM_ErrorMessage
         //{
@@ -61,7 +61,7 @@ namespace mouse_tracking_web_app.ViewModels
 
         public string VM_FileExplorerDirectory
         {
-            get => model.FileExplorerDirectory;
+            get => model.WorkingPath;
             //set => model.FileExplorerDirectory = value;
         }
 

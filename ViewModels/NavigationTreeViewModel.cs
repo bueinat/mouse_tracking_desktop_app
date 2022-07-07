@@ -74,7 +74,7 @@ namespace mouse_tracking_web_app.ViewModels
 
         public string NTVM_FileExplorerDirectory
         {
-            get => model.FileExplorerDirectory;
+            get => model.WorkingPath;
             //set
             //{
             //    model.FileExplorerDirectory = value;

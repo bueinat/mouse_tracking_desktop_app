@@ -13,6 +13,7 @@
     d:DesignWidth="400"
     Background="{DynamicResource MaterialDesignPaper}"
     FontFamily="{DynamicResource MaterialDesignFont}"
+    TextElement.Foreground="{DynamicResource MaterialDesignBody}"
     mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -22,109 +23,23 @@
     </UserControl.Resources>
 
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="2*" />
-        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="1.5*" />
         </Grid.ColumnDefinitions>
 
-        <!--<GroupBox
-            Grid.Row="0"
-            Grid.ColumnSpan="2"
-            Margin="5"
-            Padding="5"
-            Header="Upload and Process Video">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="auto" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-
-                <Button
-                    x:Name="BtnUploadsVideo"
-                    Grid.Row="0"
-                    Grid.Column="0"
-                    Width="80"
-                    Height="22"
-                    Margin="5,10,5,5"
-                    Background="#FFD6EBF2"
-                    Click="UploadVideoButtonClicked"
-                    Content="Upload" />
-                <TextBox
-                    x:Name="videoName"
-                    Grid.Row="0"
-                    Grid.Column="1"
-                    Width="0"
-                    Height="22"
-                    IsReadOnly="True"
-                    Text="{Binding VM_VideoName, UpdateSourceTrigger=PropertyChanged}" />
-                <TextBox
-                    x:Name="videoNameNoPath"
-                    Grid.Row="0"
-                    Grid.Column="1"
-                    Height="22"
-                    Margin="5,10,5,5"
-                    IsReadOnly="True" />
-                <Button
-                    x:Name="BtnProcessVideo"
-                    Grid.Row="1"
-                    Grid.ColumnSpan="2"
-                    Width="80"
-                    Height="22"
-                    Margin="5,5"
-                    Background="#FFCBEAD7"
-                    Click="ProcessVideoButtonClicked"
-                    Content="Process" />
-
-                <fa:ImageAwesome
-                    Grid.Row="2"
-                    Grid.RowSpan="2"
-                    Grid.ColumnSpan="2"
-                    Height="15"
-                    Icon="CircleOutlineNotch"
-                    Spin="True"
-                    Visibility="{Binding VM_IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}" />
-                <TextBlock
-                    Grid.Row="3"
-                    Grid.ColumnSpan="2"
-                    Foreground="DarkRed"
-                    Text="{Binding VM_ErrorMessage}"
-                    TextWrapping="Wrap"
-                    Visibility="{Binding VM_HasErrorMessage, Converter={StaticResource BooleanToVisibilityConverter}}" />
-            </Grid>
-        </GroupBox>-->
-        <CheckBox
-            Grid.Row="0"
-            Grid.ColumnSpan="2"
-            Margin="10,30,10,10"
-            Content="Override Data in Cache"
-            IsChecked="{Binding VM_OverrideInDB, Mode=TwoWay}" />
         <usercontrols:DragArea
-            Grid.Row="1"
             Grid.ColumnSpan="2"
             Panel.ZIndex="100"
             Opacity="0.4"
             Visibility="{Binding VM_DragEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" />
         <usercontrols:VideoController
-            Grid.Row="1"
-            Grid.Column="0"
-            d:DataContext="{d:DesignInstance Type=viewmodels:VideoControllerViewModel}"
-            Opacity="{Binding VMVC_DragEnabled, Converter={StaticResource BoolToOpacityConverter}}"
-            Visibility="{Binding VMVC_IsVideoLoaded, Converter={StaticResource BooleanToVisibilityConverter}}" />
-        <usercontrols:CurrentDataPresentor
-            Grid.Row="1"
             Grid.Column="1"
             d:DataContext="{d:DesignInstance Type=viewmodels:VideoControllerViewModel}"
-            Opacity="{Binding VMVC_DragEnabled, Converter={StaticResource BoolToOpacityConverter}}"
-            Visibility="{Binding VMVC_IsVideoLoaded, Converter={StaticResource BooleanToVisibilityConverter}}" />
+            Opacity="{Binding VMVC_DragEnabled, Converter={StaticResource BoolToOpacityConverter}}" />
+        <usercontrols:CurrentDataPresentor
+            Grid.Column="0"
+            d:DataContext="{d:DesignInstance Type=viewmodels:VideoControllerViewModel}"
+            Opacity="{Binding VMVC_DragEnabled, Converter={StaticResource BoolToOpacityConverter}}" />
     </Grid>
 </UserControl>
