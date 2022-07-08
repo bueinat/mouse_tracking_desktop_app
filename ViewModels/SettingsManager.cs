@@ -64,8 +64,8 @@ namespace mouse_tracking_web_app.ViewModels
                 NotifyPropertyChanged("VideoTypesList");
             if (CurrentSettings.PlotMarkerSize != oldSettings.PlotMarkerSize)
                 NotifyPropertyChanged("PlotMarkerSize");
-            if (CurrentSettings.OverrideDB != oldSettings.OverrideDB)
-                NotifyPropertyChanged("OverrideDB");
+            //if (CurrentSettings.OverrideDB != oldSettings.OverrideDB)
+            NotifyPropertyChanged("OverrideDB");
         }
 
         #endregion settingsMethods
@@ -102,7 +102,9 @@ namespace mouse_tracking_web_app.ViewModels
             set
             {
                 updatableSettings = value;
+                updatableSettings.OverrideDB = CurrentSettings.OverrideDB;
                 NotifyPropertyChanged("UpdatableSettings");
+
             }
         }
 
