@@ -7,7 +7,7 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewmodels="clr-namespace:mouse_tracking_web_app.ViewModels"
-    Title="IntroWindow"
+    Title="Mouse Tracking"
     Width="500"
     Height="450"
     d:DataContext="{d:DesignInstance Type=viewmodels:MainControllerViewModel}"

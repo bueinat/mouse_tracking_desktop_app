@@ -27,14 +27,15 @@ def video_to_frames(video_path, frames_path, video_name=None, include_video_name
     if video_name == None:
         video_name = video_path.split('/')[-1].split('.')[0]
     vidcap = cv2.VideoCapture(video_path)
-    if os.path.exists(frames_path):
+    if os.path.exists(frames_path) and len(os.listdir(frames_path)) != 0:
+        print("frames directory already exists")
         if override:
             shutil.rmtree(frames_path)
             os.makedirs(frames_path)
         else:
-             raise FileExistsError(f"{frames_path} already exists and override is false")
+             raise FileExistsError(f"cache contains extracted frames already and override is false")
     else:
-        os.makedirs(frames_path)
+        os.makedirs(frames_path, exist_ok=True)
 
     # try:
     #     os.makedirs(frames_path)

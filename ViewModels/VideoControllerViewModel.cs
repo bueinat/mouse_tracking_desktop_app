@@ -43,7 +43,7 @@ namespace mouse_tracking_web_app.ViewModels
         //public bool VMVC_IsVideoLoaded => Model.VC_IsVideoLoaded;
         public int VMVC_NFeatures => Model.VC_NFeatures;
 
-        public int VMVC_NFrames => Model.VC_NFrames - 1;
+        public int VMVC_NFrames => Model.VC_NFrames;
 
         public bool VMVC_Pause
         {

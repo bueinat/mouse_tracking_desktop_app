@@ -8,7 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:uc="clr-namespace:mouse_tracking_web_app.Views"
     xmlns:viewmodels="clr-namespace:mouse_tracking_web_app.ViewModels"
-    Title="TabsWindow"
+    Title="Mouse Tracking"
     Width="900"
     Height="600"
     d:DataContext="{d:DesignInstance Type=viewmodels:MainControllerViewModel}"

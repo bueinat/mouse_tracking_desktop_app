@@ -96,6 +96,8 @@ namespace mouse_tracking_web_app.ViewModels
             {
                 string relativePath = MakeRelative(videoPath, VPM_VideosPath);
                 relativePath = relativePath.Substring(relativePath.IndexOf('\\') + 1);
+                if (string.IsNullOrEmpty(relativePath))
+                    relativePath = videoPath.Split('\\')[videoPath.Split('\\').Length - 1];
                 videosDictionary.Add(videoPath, new DisplayableVideo()
                 {
                     ReducedName = relativePath,

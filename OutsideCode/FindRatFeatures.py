@@ -1,6 +1,7 @@
 ﻿from utilityFunctions import *
 import pandas
 import sys
+import numpy
 
 # suppress all warnings
 import warnings
@@ -29,7 +30,9 @@ try:
     uploadable_data.to_csv(f"{save_path}\\{video_name}_processed_data.csv") # TODO: check if this is okay
 
     if len(uploadable_data) != len(pred_df):
-        raise Exception("features and path files are not in the same length. Are you sure they were generated for the same video?")
+        pred_df = pandas.DataFrame(numpy.zeros((len(pred_df.columns)), len(uploadable_data)), columns=pred_df.columns).astype(bool)
+        raise Exception("message: features and path files are not in the same length. No support of features exists in such case.")
+        # raise Exception("features and path files are not in the same length. Are you sure they were generated for the same video?")
 
 
     uploadable_data = pandas.concat([uploadable_data, pred_df], axis=1)

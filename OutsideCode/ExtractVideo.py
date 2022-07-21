@@ -16,7 +16,7 @@ try:
     args["override"] = eval(args["override"])
 
     # create needed folders
-    os.makedirs(args["data_path"], exist_ok=True)
+    # os.makedirs(args["data_path"], exist_ok=True)
     video_name = args["video_path"].split('\\')[-1].split('.')[0] 
     frames_path = u"{}\\frames".format(args['data_path'])
 
@@ -40,17 +40,21 @@ try:
                 raise FileExistsError(f"message: loading existing data of {video_name} which already exists in the cache.")
             else:
                 os.makedirs(args["data_path"], exist_ok=True)
-
+    
     # copy video to cache and extract frames
-    if not os.path.exists(os.path.join(args["video_path"], args["data_path"])) or args["override"]:
+    if not os.path.exists(os.path.join(args["data_path"], video_name)) or args["override"]:
+        print(1)
         shutil.copy2(args["video_path"], args["data_path"])
     if not os.path.exists(frames_path) or len(os.listdir(frames_path)) == 0 or args["override"]:
+        print(2)
         nframes = video_to_frames(args["video_path"], frames_path, override=args['override'])
     else:
+        print(3)
         nframes = len(os.listdir(frames_path))
     print(f"nframes: {nframes}")
     print(f"override: {args['override']}")
-    print("success")
+    if nframes != 0:
+        print("success")
 
 except Exception as e:
     if str(e).startswith("message"):
