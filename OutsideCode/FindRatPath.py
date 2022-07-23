@@ -34,6 +34,7 @@ try:
         raw_data = get_raw_data(nose_pos, max_vals, eframes)
 
     elif FUNCTION_NAME == 'yolov5_algorithm':
+        # TODO
         PATH = "C:/ProgramData/MouseApp/yolov5/models/best_trained_model.pt"
         model = torch.hub.load('ultralytics/yolov5', 'custom', path=PATH)  # local model
         dscript_detect = {int(filename.split(".")[0][5:]): model(f"{frames_path}/{filename}")

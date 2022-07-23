@@ -49,7 +49,7 @@ namespace mouse_tracking_web_app.Models
             return fileName;
         }
 
-        public async Task<string[]> RunCmd(string scriptName, Dictionary<string, string> argv)
+        public List<string> RunCmd(string scriptName, Dictionary<string, string> argv)
         {
             string startupPath = VisualStudioProvider.TryGetSolutionDirectoryInfo().FullName;
 
@@ -60,18 +60,38 @@ namespace mouse_tracking_web_app.Models
             string args = $"{pythonScript} \"{fileName}\"";
 
             // Create new process start info
-            ProcessStartInfo start = new ProcessStartInfo(SM.PythonPath)
+            Process process = new Process
+            {
+            StartInfo = new ProcessStartInfo(SM.PythonPath)
             {
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 CreateNoWindow = true,
                 Arguments = args
+            }
             };
 
-            ProcessResults processResults = await ProcessEx.RunAsync(start);
+            process.Start();
 
-            return processResults.StandardOutput;
+            // Synchronously read the standard output of the spawned process.
+            StreamReader reader = process.StandardOutput;
+            string line = reader.ReadLine();
+            List<string> output = new List<string>();
+            while (!string.IsNullOrEmpty(line))
+            {
+                output.Add(line);
+                line = reader.ReadLine();
+            }
+            //string output = reader.ReadToEnd();
+
+            // Write the redirected output to this application's window.
+            //Console.WriteLine(output);
+
+            process.WaitForExit();
+
+            return output;
+            //return processResults.StandardOutput;
         }
 
         // the following method was taken from here: https://www.daveoncsharp.com/2009/09/how-to-use-temporary-files-in-csharp/

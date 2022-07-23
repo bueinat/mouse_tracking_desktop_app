@@ -17,6 +17,7 @@
             <converters:StateToColorConverter x:Key="StateToColorConverter" />
             <converters:StateToProgColorConverter x:Key="StateToProgColorConverter" />
             <converters:StateToProgressConverter x:Key="StateToProgressConverter" />
+            <converters:StateToVisibilityConverter x:Key="StateToVisibilityConverter" />
             <converters:StateToBoolConverter x:Key="StateToBoolConverter" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/mouse_tracking_web_app;component/CustomStyles/SimpleProgressBar.xaml" />
@@ -96,6 +97,21 @@
                             Margin="2"
                             Background="{Binding Path=ProcessingState, Converter={StaticResource StateToColorConverter}}"
                             MouseDown="ListBoxItem_MouseDown">
+                            <Grid.ContextMenu>
+                                <ContextMenu
+                                    Margin="0,0,0,0"
+                                    Padding="0,0,0,0"
+                                    FontSize="14"
+                                    Style="{DynamicResource MaterialDesignContextMenu}"
+                                    Visibility="{Binding Path=ProcessingState, Converter={StaticResource StateToVisibilityConverter}}">
+                                    <MenuItem
+                                        Click="MenuItem_Click"
+                                        CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}"
+                                        Header="Stop" />
+
+                                </ContextMenu>
+                            </Grid.ContextMenu>
+
                             <ToolTipService.ToolTip>
                                 <StackPanel>
                                     <TextBlock

@@ -38,11 +38,13 @@ namespace mouse_tracking_web_app.ViewModels
         public string VMVC_FramePath => Model.VC_FramePath;
         public bool VMVC_IsDrinking => Model.VC_IsDrinking;
         public bool VMVC_IsNoseCasting => Model.VC_IsNoseCasting;
+        public bool VMVC_Stop => Model.VC_Stop;
         public bool VMVC_IsSniffing => Model.VC_IsSniffing;
 
         //public bool VMVC_IsVideoLoaded => Model.VC_IsVideoLoaded;
         public int VMVC_NFeatures => Model.VC_NFeatures;
 
+//
         public int VMVC_NFrames => Model.VC_NFrames;
 
         public bool VMVC_Pause

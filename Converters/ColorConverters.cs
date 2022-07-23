@@ -28,6 +28,10 @@ namespace mouse_tracking_web_app.Converters
             string colorCode;
             switch ((DataBase.DisplayableVideo.State)value)
             {
+                case DataBase.DisplayableVideo.State.Waiting:
+                    colorCode = "#BEE5F7";
+                    break;
+
                 case DataBase.DisplayableVideo.State.ExtractVideo:
                     colorCode = "#F9D2A8";
                     break;

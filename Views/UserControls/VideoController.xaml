@@ -59,7 +59,8 @@
                             HorizontalAlignment="Right"
                             VerticalAlignment="Top"
                             Fill="{DynamicResource SecondaryHueLightBrush}"
-                            Opacity="0.8">
+                            Opacity="0.8"
+                            Visibility="{Binding VMVC_Stop, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <Ellipse.Margin>
                                 <MultiBinding Converter="{StaticResource PositionConverter}">
                                     <Binding Path="VMVC_X" />

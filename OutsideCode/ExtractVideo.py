@@ -23,6 +23,7 @@ try:
     # create a folder for cache
     try:
         os.makedirs(args["data_path"])
+        print("created new directory")
         args["override"] = False
     except Exception as e:
         if args["override"]:

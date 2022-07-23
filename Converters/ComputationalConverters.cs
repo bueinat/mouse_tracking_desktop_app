@@ -279,4 +279,37 @@ namespace mouse_tracking_web_app.Converters
             throw new NotImplementedException();
         }
     }
+    [ValueConversion(typeof(DataBase.DisplayableVideo.State), typeof(Visibility))]
+    public class StateToVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            switch ((DataBase.DisplayableVideo.State)value)
+            {
+                case DataBase.DisplayableVideo.State.ExtractVideo:
+
+                case DataBase.DisplayableVideo.State.FindRatPath:
+
+                case DataBase.DisplayableVideo.State.FindRatFeatues:
+
+                case DataBase.DisplayableVideo.State.SaveToDataBase:
+
+                case DataBase.DisplayableVideo.State.Waiting:
+
+                    return Visibility.Visible;
+
+                case DataBase.DisplayableVideo.State.Successful:
+
+                case DataBase.DisplayableVideo.State.Failed:
+
+                default:        
+                    return Visibility.Collapsed;
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

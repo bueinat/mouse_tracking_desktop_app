@@ -1,10 +1,29 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace mouse_tracking_web_app.DataBase
 {
     public class DisplayableVideo : INotifyPropertyChanged
     {
+        #region startStop
+        private CancellationTokenSource cancellationToken;
+
+        public async void Start(Action<object> action, string videoName)
+        {
+            cancellationToken = new CancellationTokenSource();
+            _ = Task.Factory.StartNew(action, videoName, cancellationToken.Token);
+        }
+
+        public void Stop()
+        {
+            if (cancellationToken != null)
+                cancellationToken.Cancel();
+        }
+
+        #endregion startStop
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected void OnPropertyChanged([CallerMemberName] string name = null)
