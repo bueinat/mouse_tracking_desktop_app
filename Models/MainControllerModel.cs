@@ -169,7 +169,16 @@ namespace mouse_tracking_web_app.Models
         public PlottingControllerModel PC { get; }
         public SettingsManager SM { get; }
 
-        public bool Stop { get; set; }
+        private bool stop = false;
+        public bool Stop
+        {
+            get => stop;
+            set
+            {
+                stop = value;
+                NotifyPropertyChanged("Stop");
+            }
+        }
 
         public double TotalDistance => VideoStats is null ? 0 : VideoStats.TotalDistance;
 

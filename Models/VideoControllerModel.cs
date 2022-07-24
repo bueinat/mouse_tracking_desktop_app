@@ -11,7 +11,7 @@ namespace mouse_tracking_web_app.Models
         private readonly float baseSpeed = 1000 / 45;
         private readonly MainControllerModel model;
         private bool fPanel = false;
-        private string framePath = "/Images/default_image.png";
+        private string framePath;
         private int nframes = 1;
         private double speed;
         private int stepCounter;

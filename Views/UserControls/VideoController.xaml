@@ -18,6 +18,7 @@
             <converters:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" />
             <converters:PercentToTimeConverter x:Key="PercentToTimeConverter" />
             <converters:EnableDefaultImage x:Key="EnableDefaultImage" />
+            <converters:PathToVisibilityConverter x:Key="PathToVisibilityConverter" />
             <converters:SpeedToIndexConverter x:Key="SpeedToIndexConverter" />
             <converters:BooleanToIcon x:Key="BooleanToIcon" />
             <converters:PositionConverter x:Key="PositionConverter" />
@@ -51,7 +52,7 @@
                             x:Name="baseImage"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
-                            Source="{Binding VMVC_FramePath, Converter={StaticResource EnableDefaultImage}}"
+                            Source="{Binding VMVC_FramePath, Converter={StaticResource EnableDefaultImage}, Mode=OneWay}"
                             Stretch="Uniform" />
                         <Ellipse
                             Width="5"
@@ -60,7 +61,7 @@
                             VerticalAlignment="Top"
                             Fill="{DynamicResource SecondaryHueLightBrush}"
                             Opacity="0.8"
-                            Visibility="{Binding VMVC_Stop, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            Visibility="{Binding VMVC_FramePath, Converter={StaticResource PathToVisibilityConverter}}">
                             <Ellipse.Margin>
                                 <MultiBinding Converter="{StaticResource PositionConverter}">
                                     <Binding Path="VMVC_X" />
@@ -87,25 +88,6 @@
                     IsChecked="{Binding VMVC_Pause, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                     Style="{StaticResource MaterialDesignActionToggleButton}" />
 
-                <!--<fa:FontAwesome
-                    x:Name="FAIcon"
-                    Grid.Row="1"
-                    Grid.Column="0"
-                    VerticalAlignment="Center"
-                    FontSize="20"
-                    Foreground="{DynamicResource PrimaryHueMidBrush}"
-                    Icon="{Binding ElementName=PlayPauseButton, Path=Content, Converter={StaticResource BooleanToIcon}}" />
-                <Button
-                    x:Name="PlayPauseButton"
-                    Grid.Row="1"
-                    Grid.Column="0"
-                    Width="20"
-                    Background="White"
-                    BorderBrush="{x:Null}"
-                    Click="PlayPauseButtonClicked"
-                    Content="{Binding VMVC_Pause, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                    Foreground="{x:Null}"
-                    Style="{StaticResource HiddenButtonStyle}" />-->
                 <Slider
                     x:Name="VideoTimeSlider"
                     Grid.Row="1"

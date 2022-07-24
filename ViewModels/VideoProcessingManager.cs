@@ -10,6 +10,16 @@ using System.Threading.Tasks.Dataflow;
 
 namespace mouse_tracking_web_app.ViewModels
 {
+    // Sunday:
+    // * meeting with Osnat
+    // * test the fix of features and point
+    // * apply stop button
+    // * add advanced settings
+    // * order the list
+    // * user controls take time
+    // * features list fix
+    
+    
     
     public class VideoProcessingManager : INotifyPropertyChanged
     {
