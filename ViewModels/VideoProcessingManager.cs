@@ -3,29 +3,29 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
+using System.Windows.Data;
 
 namespace mouse_tracking_web_app.ViewModels
 {
     // Sunday:
-    // * meeting with Osnat
-    // * test the fix of features and point
+    // V meeting with Osnat
+    // V test the fix of features and point
     // * apply stop button
     // * add advanced settings
     // * order the list
     // * user controls take time
     // * features list fix
-    
-    
-    
+    // * create a working project, zip and email it
+    // * start writing an installation manual
+
     public class VideoProcessingManager : INotifyPropertyChanged
     {
         #region notification_and_construction
 
         private readonly Models.MainControllerModel model;
+        private object _lock;
 
         public VideoProcessingManager(Models.MainControllerModel mainController)
         {
@@ -35,6 +35,9 @@ namespace mouse_tracking_web_app.ViewModels
             {
                 NotifyPropertyChanged("VPM_" + e.PropertyName);
             };
+            videosCollection = new BindingList<DisplayableVideo>();
+            _lock = new object();
+            BindingOperations.EnableCollectionSynchronization(videosCollection, _lock);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -43,7 +46,11 @@ namespace mouse_tracking_web_app.ViewModels
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             if (propertyName == "VPM_VideosPath")
-                Task.Run(ProcessFolder);
+            {
+                VideosCollection.Clear();
+                _ = Task.Run(ProcessFolder);  // ProcessFolder();
+            }
+            //_ = Task.Run(ProcessFolder);
         }
 
         #endregion notification_and_construction
@@ -80,7 +87,7 @@ namespace mouse_tracking_web_app.ViewModels
 
         #region videosContainer
 
-        private BindingList<DisplayableVideo> videosCollection = new BindingList<DisplayableVideo>();
+        private BindingList<DisplayableVideo> videosCollection;
         private Dictionary<string, DisplayableVideo> videosDictionary;
 
         public BindingList<DisplayableVideo> VideosCollection
@@ -93,6 +100,7 @@ namespace mouse_tracking_web_app.ViewModels
             }
         }
 
+
         #endregion videosContainer
 
         #region processingMethods
@@ -100,70 +108,104 @@ namespace mouse_tracking_web_app.ViewModels
         public void ProcessFolder()
         {
             videosDictionary = new Dictionary<string, DisplayableVideo>();
+            List<string> paths = new List<string>();
 
-            //List<Task> tasks = new List<Task>();
-            VideosCollection = new BindingList<DisplayableVideo>();
+            //VideosCollection = new BindingList<DisplayableVideo>();
 
             //LimitedConcurrencyLevelTaskScheduler lcts = new LimitedConcurrencyLevelTaskScheduler(2); // TODO: enable changing
-            //List<Task> tasks = new List<Task>();
+            List<Task> tasks = new List<Task>();
+            int maxConcurrency = 2;
 
             // Create a TaskFactory and pass it our custom scheduler.
             //TaskFactory factory = new TaskFactory(lcts);
             //CancellationTokenSource cts = new CancellationTokenSource();
 
-            foreach (string videoPath in VPM_VideosList)
+            using (SemaphoreSlim concurrencySemaphore = new SemaphoreSlim(maxConcurrency))
             {
 
-                // create video and add it to the list
-                string relativePath = MakeRelative(videoPath, VPM_VideosPath);
-                relativePath = relativePath.Substring(relativePath.IndexOf('\\') + 1);
-                if (string.IsNullOrEmpty(relativePath))
-                    relativePath = videoPath.Split('\\')[videoPath.Split('\\').Length - 1];
-                videosDictionary.Add(videoPath, new DisplayableVideo()
+                foreach (string videoPath in VPM_VideosList)
                 {
-                    ReducedName = relativePath,
-                    ProcessingState = DisplayableVideo.State.Waiting
-                });
-                VideosCollection.Add(videosDictionary[videoPath]);
+                    // create video and add it to the list
+                    string relativePath = MakeRelative(videoPath, VPM_VideosPath);
+                    relativePath = relativePath.Substring(relativePath.IndexOf('\\') + 1);
+                    if (string.IsNullOrEmpty(relativePath))
+                        relativePath = videoPath.Split('\\')[videoPath.Split('\\').Length - 1];
+                    videosDictionary.Add(videoPath, new DisplayableVideo()
+                    {
+                        ReducedName = relativePath,
+                        ProcessingState = DisplayableVideo.State.Waiting
+                    });
+                    lock (_lock)
+                    {
+                        VideosCollection.Add(videosDictionary[videoPath]);
+                    }
+                    //paths.Add(videoPath);
+                    tasks.Add(videosDictionary[videoPath].Start(ProcessSingleVideo, videoPath, concurrencySemaphore));
+                }
+                Task.WaitAll(tasks.ToArray());
 
-                // run video
-
-
-                // Use our factory to run a set of tasks.
-                //Task t = factory.StartNew(ProcessSingleVideo, videoPath, cts.Token);
-                //tasks.Add(t);
-
-                //
-                //videosDictionary[videoPath].Start(ProcessSingleVideo, videoPath);
-                //
-
-                //await ProcessSingleVideo(videoPath);
-
-                //tasks.Add(ProcessSingleVideo(videoPath));
+                //RunInParallel(2, paths, ProcessSingleVideo);
             }
-
-            // TODO: change degree of parallelism
-            Parallel.ForEach(VPM_VideosList, new ParallelOptions { MaxDegreeOfParallelism = 2 },
-            videoPath =>
-            {
-                // logic
-                ProcessSingleVideo(videoPath);
-            });
-
-            //// run all tasks
-            //while (tasks.Count > 0)
-            //{
-            //    Task firstFinishedTask = await Task.WhenAny(tasks);
-            //    _ = tasks.Remove(firstFinishedTask);
-            //}
-
-
-            //Task.WaitAll(tasks.ToArray());
-            //cts.Dispose();
-            //_ = Parallel.ForEach(VPM_VideosList, new ParallelOptions() { MaxDegreeOfParallelism = 1 }, async videoPath => await ProcessSingleVideo(videoPath));
-            //await LimitProcessedTasks(tasks, );
-            //await Task.WhenAll(tasks);
         }
+
+        // run video
+
+        // Use our factory to run a set of tasks.
+        //Task t = factory.StartNew(ProcessSingleVideo, videoPath, cts.Token);
+        //tasks.Add(t);
+
+        //videosDictionary[videoPath].Start(ProcessSingleVideo, videoPath);
+        //await ProcessSingleVideo(videoPath);
+        //tasks.Add(ProcessSingleVideo(videoPath));
+
+
+        // TODO: change degree of parallelism
+        //_ = Task.Run(() =>
+        //  _ = Parallel.ForEach(videosDictionary, new ParallelOptions { MaxDegreeOfParallelism = 2 },
+        //                                              pair => { pair.Value.Start(ProcessSingleVideo, pair.Key); })
+        //);
+        //    Task.Run(() =>
+        //   _ = Parallel.ForEach(VPM_VideosList, new ParallelOptions { MaxDegreeOfParallelism = 2 },
+        //                                               videoPath => { ProcessSingleVideo(videoPath); })
+        //);
+
+        //Task.WaitAll(tasks.ToArray());
+        //cts.Dispose();
+        //_ = Parallel.ForEach(VPM_VideosList, new ParallelOptions() { MaxDegreeOfParallelism = 1 }, async videoPath => await ProcessSingleVideo(videoPath));
+        //await LimitProcessedTasks(tasks, );
+        //await Task.WhenAll(tasks);
+        //}
+
+
+        // source: https://stackoverflow.com/questions/36564596/how-to-limit-the-maximum-number-of-parallel-tasks-in-c-sharp
+        //private void RunInParallel(int maxConcurrency, List<string> messages, Func<object, object> Process)
+        //{
+        //    using (SemaphoreSlim concurrencySemaphore = new SemaphoreSlim(maxConcurrency))
+        //    {
+        //        List<Task> tasks = new List<Task>();
+        //        foreach (string msg in messages)
+        //        {
+        //            concurrencySemaphore.Wait();
+
+        //            Task t = Task.Factory.StartNew(() =>
+        //            {
+        //                try
+        //                {
+        //                    _ = Process(msg);
+        //                }
+        //                finally
+        //                {
+        //                    _ = concurrencySemaphore.Release();
+        //                }
+        //            });
+
+        //            tasks.Add(t);
+        //        }
+
+        //        Task.WaitAll(tasks.ToArray());
+        //    }
+        //}
+
 
         //private async Task LimitProcessedTasks<T>(IEnumerable<T> items, Func<T, Task> func)
         //{
@@ -206,7 +248,7 @@ namespace mouse_tracking_web_app.ViewModels
             return result;
         }
 
-        public void ProcessSingleVideo(string videoPath)
+        public void ProcessSingleVideo(object videoPath)
         {
             // initialization
             string vidPath = (string)videoPath;
@@ -259,6 +301,7 @@ namespace mouse_tracking_web_app.ViewModels
                 return;
             currentVideo.ProcessingState = DisplayableVideo.State.Successful;
             currentVideo.VideoID = processedResult["VideoID"];
+            return;
             //currentVideo.VideoItem = model.DBHandler.GetVideoByID(currentVideo.VideoID);
         }
 
@@ -327,7 +370,7 @@ namespace mouse_tracking_web_app.ViewModels
         }
 
         // Queues a task to the scheduler.
-        protected sealed override void QueueTask(Task task)
+        protected override sealed void QueueTask(Task task)
         {
             // Add the task to the list of tasks to be processed.  If there aren't enough
             // delegates currently queued or running to process tasks, schedule another.
@@ -381,7 +424,7 @@ namespace mouse_tracking_web_app.ViewModels
         }
 
         // Attempts to execute the specified task on the current thread.
-        protected sealed override bool TryExecuteTaskInline(Task task, bool taskWasPreviouslyQueued)
+        protected override sealed bool TryExecuteTaskInline(Task task, bool taskWasPreviouslyQueued)
         {
             // If this thread isn't already processing a task, we don't support inlining
             if (!_currentThreadIsProcessingItems) return false;
@@ -398,16 +441,17 @@ namespace mouse_tracking_web_app.ViewModels
         }
 
         // Attempt to remove a previously scheduled task from the scheduler.
-        protected sealed override bool TryDequeue(Task task)
+        protected override sealed bool TryDequeue(Task task)
         {
             lock (_tasks) return _tasks.Remove(task);
         }
 
         // Gets the maximum concurrency level supported by this scheduler.
-        public sealed override int MaximumConcurrencyLevel { get { return _maxDegreeOfParallelism; } }
+        public override sealed int MaximumConcurrencyLevel
+        { get { return _maxDegreeOfParallelism; } }
 
         // Gets an enumerable of the tasks currently scheduled on this scheduler.
-        protected sealed override IEnumerable<Task> GetScheduledTasks()
+        protected override sealed IEnumerable<Task> GetScheduledTasks()
         {
             bool lockTaken = false;
             try

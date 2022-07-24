@@ -10,17 +10,45 @@ namespace mouse_tracking_web_app.DataBase
     {
         #region startStop
         private CancellationTokenSource cancellationToken;
+        bool isProcessing;
+        public bool IsProcessing
+        {
+            get => isProcessing;
+            set
+            {
+                isProcessing = value;
+                OnPropertyChanged();
+            }
+        }
 
-        public async void Start(Action<object> action, string videoName)
+        public Task Start(Action<object> action, string videoName, SemaphoreSlim semaphore)
         {
             cancellationToken = new CancellationTokenSource();
-            _ = Task.Factory.StartNew(action, videoName, cancellationToken.Token);
+            IsProcessing = true;
+            //action(videoName);
+            return Task.Factory.StartNew(() =>
+            {
+                semaphore.Wait();
+
+                try
+                {
+                    action(videoName);
+                }
+                finally
+                {
+                    _ = semaphore.Release();
+                }
+            }, cancellationToken.Token);
+
+            //Task.Factory.StartNew(action, videoName, cancellationToken.Token);
         }
 
         public void Stop()
         {
             if (cancellationToken != null)
                 cancellationToken.Cancel();
+            if (IsProcessing)
+                IsProcessing = false;
         }
 
         #endregion startStop
