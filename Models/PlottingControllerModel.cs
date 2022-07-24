@@ -123,9 +123,6 @@ namespace mouse_tracking_web_app.Models
 
         public double PC_IsSniffingPercent => model.IsSniffingPercent;
 
-        // TODO:
-        // * add an option of hiding inactive features
-        // * generalizing features
         public double PC_MaxSize => double.IsNaN(PC_SizeRange.Item2) ? DefaultMarkerSize : PC_SizeRange.Item2;
 
         public double PC_MinSize => double.IsNaN(PC_SizeRange.Item1) ? DefaultMarkerSize : PC_SizeRange.Item1;
