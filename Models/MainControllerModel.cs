@@ -22,8 +22,11 @@ namespace mouse_tracking_web_app.Models
             {
                 selectedVideo = value;
                 NotifyPropertyChanged("SelectedVideo");
+                NotifyPropertyChanged("VideoName");
             }
         }
+
+        public string VideoName => SelectedVideo.ReducedName;
 
         #endregion selectedVideo
 

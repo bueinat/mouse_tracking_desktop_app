@@ -67,8 +67,7 @@ try:
         try:
             video.analysis.delete()
         except Exception as e:
-            print(f"error: {e.__class__.__name__}: {e}")
-            pass
+            print(f"{e.__class__.__name__}: {e}")
 
     ana.video = video_id
     video.analysis = ana

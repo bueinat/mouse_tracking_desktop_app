@@ -2,6 +2,7 @@
 using mouse_tracking_web_app.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -14,6 +15,7 @@ namespace mouse_tracking_web_app.Views
     /// </summary>
     public partial class FeaturesPanel : UserControl
     {
+        private VideoControllerViewModel vm;
         private Color textColor;
         public FeaturesPanel()
         {
@@ -21,7 +23,8 @@ namespace mouse_tracking_web_app.Views
             textColor = new PaletteHelper().GetTheme().SecondaryDark.Color;
         }
 
-        private void OnLoad(object sender, RoutedEventArgs e)
+
+        private void Reload()
         {
             layoutRoot.Children.RemoveRange(1, layoutRoot.Children.Count - 1);
 
@@ -48,7 +51,7 @@ namespace mouse_tracking_web_app.Views
                 };
                 Binding binding = new Binding("VMVC_StepCounter")
                 {
-                    Source = DataContext as VideoControllerViewModel,
+                    Source = vm,
                     Mode = BindingMode.OneWayToSource,
                     UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
                 };
@@ -57,6 +60,22 @@ namespace mouse_tracking_web_app.Views
                 Grid.SetColumn(ctb, 1);
                 _ = layoutRoot.Children.Add(ctb);
             }
+        }
+
+        private void OnLoad(object sender, RoutedEventArgs e)
+        {
+            if (vm is null)
+            {
+                vm = DataContext as VideoControllerViewModel;
+                vm.PropertyChanged +=
+                    delegate (object _sender, PropertyChangedEventArgs _e)
+                    {
+                        if (_e.PropertyName == "VMVC_FeaturesTimeRanges") // VMVC_VideoName
+                            Reload();
+                    };
+                Reload();
+            }
+
         }
 
         #region TimesDictionary DP

@@ -20,6 +20,7 @@ namespace mouse_tracking_web_app.ViewModels
         public event PropertyChangedEventHandler PropertyChanged;
 
         public VideoControllerModel Model { get; }
+        public string VMVC_VideoName => Model.VC_VideoName;
         public float VMVC_AccelerationX => Model.VC_AccelerationX;
         public float VMVC_AccelerationY => Model.VC_AccelerationY;
         public float VMVC_Curviness => Model.VC_Curviness;
@@ -53,7 +54,7 @@ namespace mouse_tracking_web_app.ViewModels
         public int VMVC_NFeatures => Model.VC_NFeatures;
 
 //
-        public int VMVC_NFrames => Model.VC_NFrames;
+        public int VMVC_NFrames => Model.VC_NFrames - 1;
 
         public bool VMVC_Pause
         {
