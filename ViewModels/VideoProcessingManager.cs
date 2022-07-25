@@ -169,8 +169,10 @@ namespace mouse_tracking_web_app.ViewModels
                 ["override"] = model.OverrideDB ? "True" : "False",
                 ["video_path"] = vidPath,
                 ["data_path"] = $"{VPM_CachePath}\\{currentVideo.ReducedName.Split('.')[0]}",
+                ["de_project_path"] = @"C:\Users\Public\MouseTracking\NewProject_deepethogram",
                 ["connection_string"] = $"{connectionString}/{dbName}"
             };
+            // TODO: add project path to settings
 
             // run first
             currentVideo.ProcessingState = DisplayableVideo.State.ExtractVideo;
@@ -226,14 +228,18 @@ namespace mouse_tracking_web_app.ViewModels
                 key = "Message";
             if (!string.IsNullOrEmpty(key))
             {
-                if (videosDictionary[videoPath].ProcessingState == DisplayableVideo.State.ExtractVideo)
+                if (videosDictionary[videoPath].ProcessingState != DisplayableVideo.State.ExtractVideo)
                     videosDictionary[videoPath].ToolTipMessage += "\r\n";
                 videosDictionary[videoPath].ToolTipMessage += $"{videosDictionary[videoPath].ProcessingState}: {processedResult[key]}";
             }
             if (processedResult["Success"] == "False")
             {
                 if (!processedResult.ContainsKey("ErrorMessage"))
+                {
+                    if (videosDictionary[videoPath].ProcessingState != DisplayableVideo.State.ExtractVideo)
+                        videosDictionary[videoPath].ToolTipMessage += "\r\n";
                     videosDictionary[videoPath].ToolTipMessage += $"\r\nUnknown Error at {videosDictionary[videoPath].ProcessingState}";
+                }
                 videosDictionary[videoPath].ProcessingState = DisplayableVideo.State.Failed;
             }
 

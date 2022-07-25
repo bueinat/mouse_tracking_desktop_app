@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
+using System.Configuration;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Xml.Serialization;
@@ -21,15 +23,38 @@ namespace mouse_tracking_web_app
             OverrideDB = false;
             PlotMarkerSize = double.NaN;
         }
+        private SettingsInstance(bool useDef)
+        {
+            PythonPath = ConfigurationManager.AppSettings.Get("PythonPath");
+            WorkingPath = ConfigurationManager.AppSettings.Get("WorkingPath");
+            ConnectionString = ConfigurationManager.AppSettings.Get("ConnectionString");
+            DatabaseName = ConfigurationManager.AppSettings.Get("DatabaseName");
+            FeaturesList = ConfigurationManager.AppSettings.Get("FeaturesList");
+            FileTypesList = ConfigurationManager.AppSettings.Get("FileTypesList");
+            VideoTypesList = ConfigurationManager.AppSettings.Get("VideoTypesList");
+            OverrideDB = bool.Parse(ConfigurationManager.AppSettings.Get("OverrideDB"));
+            PlotMarkerSize = double.Parse(ConfigurationManager.AppSettings.Get("PlotMarkerSize"));
+        }
 
         public string FullTypesList => $"{FileTypesList},{VideoTypesList}";
 
         public static SettingsInstance LoadSavedSettings(string fileName)
         {
-            using (StreamReader sw = new StreamReader(fileName))
+            try
             {
-                XmlSerializer xmls = new XmlSerializer(typeof(SettingsInstance));
-                return xmls.Deserialize(sw) as SettingsInstance;
+                using (StreamReader sw = new StreamReader(fileName))
+                {
+                    XmlSerializer xmls = new XmlSerializer(typeof(SettingsInstance));
+                    return xmls.Deserialize(sw) as SettingsInstance;
+                }
+            } catch (Exception e)
+            {
+                using (StreamWriter sw = new StreamWriter(fileName))
+                {
+                    XmlSerializer xmls = new XmlSerializer(typeof(SettingsInstance));
+                    xmls.Serialize(sw, new SettingsInstance(true));
+                    return new SettingsInstance(true);
+                }
             }
         }
 

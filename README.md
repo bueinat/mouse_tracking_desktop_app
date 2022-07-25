@@ -81,8 +81,8 @@ You simply install by typing:
 pip install deepethogram
 ```
 
-<!-- comment: I should add the moving files to a script which follows the installment (find it in the lab's computer)
-                plus, download the pretrained models and add them to new ...-->
+<!-- comment: I should add the moving files to a script which follows the installment (https://stackoverflow.com/questions/41994485/how-to-fix-could-not-find-or-load-the-qt-platform-plugin-windows-while-using-m)
+                plus, download the pretrained models and add them to new ... change the number of workers to 4, another fixes: change to specific cornia and lightning versions -->
 
 ## Train DeepEthogram Model
 

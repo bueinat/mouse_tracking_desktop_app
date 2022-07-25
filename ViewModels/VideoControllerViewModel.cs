@@ -54,7 +54,7 @@ namespace mouse_tracking_web_app.ViewModels
         public int VMVC_NFeatures => Model.VC_NFeatures;
 
 //
-        public int VMVC_NFrames => Model.VC_NFrames - 1;
+        public int VMVC_NFrames => Model.VC_NFrames;
 
         public bool VMVC_Pause
         {

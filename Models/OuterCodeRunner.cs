@@ -30,11 +30,6 @@ namespace mouse_tracking_web_app.Models
         public OuterCodeRunner(SettingsManager sManager)
         {
             SM = sManager;
-            //sManager.PropertyChanged +=
-            //    delegate (object sender, PropertyChangedEventArgs e)
-            //    {
-            //        NotifyPropertyChanged("DBH_" + e.PropertyName);
-            //    };
         }
 
         public static string WriteDictToCSV(Dictionary<string, string> data)
@@ -44,7 +39,6 @@ namespace mouse_tracking_web_app.Models
                 data.Select(d => $"{d.Key},{d.Value}")
             );
             string fileName = CreateTmpFile();
-            //string fileName = @"C:\Users\buein\OneDrive - Bar-Ilan University\Networks\tempfile.csv";
             File.WriteAllText(fileName, csv);
             return fileName;
         }
@@ -82,6 +76,15 @@ namespace mouse_tracking_web_app.Models
             {
                 output.Add(line);
                 line = reader.ReadLine();
+            }
+
+            StreamReader errReader = process.StandardError;
+            line = errReader.ReadLine();
+            List<string> error = new List<string>();
+            while (!string.IsNullOrEmpty(line))
+            {
+                error.Add(line);
+                line = errReader.ReadLine();
             }
             //string output = reader.ReadToEnd();
 

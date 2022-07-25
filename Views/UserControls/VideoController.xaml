@@ -78,13 +78,13 @@
                     x:Name="PlayPauseButton"
                     Grid.Row="1"
                     Grid.Column="0"
-                    Width="20"
-                    Height="20"
+                    Width="25"
+                    Height="25"
                     Margin="5"
-                    materialDesign:ToggleButtonAssist.OnContent="{materialDesign:PackIcon Kind=play}"
+                    materialDesign:ToggleButtonAssist.OnContent="{materialDesign:PackIcon Kind=PlayCircleOutline, Size=25}"
                     Click="PlayPauseButtonClicked"
-                    Content="{materialDesign:PackIcon Kind=pause}"
-                    Foreground="White"
+                    Content="{materialDesign:PackIcon Kind=PauseCircleOutline,Size=25}" Background="Transparent"
+                    Foreground="{DynamicResource PrimaryHueDarkBrush}"
                     IsChecked="{Binding VMVC_Pause, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                     Style="{StaticResource MaterialDesignActionToggleButton}" />
 
