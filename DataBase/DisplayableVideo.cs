@@ -1,6 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -8,6 +10,71 @@ namespace mouse_tracking_web_app.DataBase
 {
     public class DisplayableVideo : INotifyPropertyChanged
     {
+        public void OutputHandler(object sender, DataReceivedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(e.Data))
+            {
+                // change state if needed (running states)
+                if (e.Data == "FindRatPath")
+                    ProcessingState = State.FindRatPath;
+                else if (e.Data == "FindRatFeatures")
+                    ProcessingState = State.FindRatFeatues;
+                else if (e.Data == "SaveToDataBase")
+                    ProcessingState = State.SaveToDataBase;
+
+                // get video ID if given
+                else if (e.Data.StartsWith("video id"))
+                {
+                    VideoID = e.Data.Substring(10);
+                    ProcessingState = State.Successful;
+                }
+
+                // update progress if given
+                else if (e.Data.StartsWith("progress"))
+                {
+                    string progress = e.Data.Substring(10);
+                    if (!ToolTipMessage.Contains("progress:"))
+                        ToolTipMessage += $"nose detection progress: {progress}";
+                    else
+                    {
+                        string pattern = "\\d+/\\d+";
+                        ToolTipMessage = Regex.Replace(ToolTipMessage, pattern, progress);
+                    }
+                }
+
+                // determine success
+                else if (e.Data.StartsWith("success"))
+                    ProcessingState = State.Successful;
+
+                // get errors and messages
+                else
+                {
+                    string errorMessage = null;
+                    if (e.Data.StartsWith("error"))
+                        errorMessage = e.Data.Substring(7);
+                    if (e.Data.StartsWith("message"))
+                        errorMessage = e.Data.Substring(9);
+                    if (!string.IsNullOrEmpty(errorMessage))
+                    {
+                        if (ProcessingState != State.ExtractVideo)
+                            ToolTipMessage += "\r\n";
+                        ToolTipMessage += $"{ProcessingState}: {errorMessage}";
+                    }
+                }
+
+                Console.WriteLine($"o: {e.Data}");
+            }
+
+        }
+
+        public void ErrorHandler(object sender, DataReceivedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(e.Data))
+            {
+                Console.WriteLine($"e: {e.Data}");
+            }
+
+        }
         #region startStop
         private CancellationTokenSource cancellationToken;
 

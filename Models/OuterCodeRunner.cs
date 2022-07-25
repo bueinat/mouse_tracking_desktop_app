@@ -30,11 +30,6 @@ namespace mouse_tracking_web_app.Models
         public OuterCodeRunner(SettingsManager sManager)
         {
             SM = sManager;
-            //sManager.PropertyChanged +=
-            //    delegate (object sender, PropertyChangedEventArgs e)
-            //    {
-            //        NotifyPropertyChanged("DBH_" + e.PropertyName);
-            //    };
         }
 
         public static string WriteDictToCSV(Dictionary<string, string> data)
@@ -44,12 +39,44 @@ namespace mouse_tracking_web_app.Models
                 data.Select(d => $"{d.Key},{d.Value}")
             );
             string fileName = CreateTmpFile();
-            //string fileName = @"C:\Users\buein\OneDrive - Bar-Ilan University\Networks\tempfile.csv";
             File.WriteAllText(fileName, csv);
             return fileName;
         }
 
-        public List<string> RunCmd(string scriptName, Dictionary<string, string> argv)
+        public void RunCmd(string scriptName, Dictionary<string, string> argv,
+                    DataReceivedEventHandler outputHandler, DataReceivedEventHandler errorHandler)
+        {
+            string startupPath = VisualStudioProvider.TryGetSolutionDirectoryInfo().FullName;
+
+            // python app to call
+            string pythonScript = $"{startupPath}\\{scriptName}";
+
+            string fileName = WriteDictToCSV(argv);
+            string args = $"-u {pythonScript} \"{fileName}\"";
+
+            Process process = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = SM.PythonPath,
+                    Arguments = args,
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    CreateNoWindow = true
+                },
+                EnableRaisingEvents = true
+            };
+            process.ErrorDataReceived += errorHandler;
+            process.OutputDataReceived += outputHandler;
+
+            _ = process.Start();
+            process.BeginErrorReadLine();
+            process.BeginOutputReadLine();
+            process.WaitForExit();
+        }
+
+        public List<string> RunCmd_(string scriptName, Dictionary<string, string> argv)
         {
             string startupPath = VisualStudioProvider.TryGetSolutionDirectoryInfo().FullName;
 
@@ -62,17 +89,17 @@ namespace mouse_tracking_web_app.Models
             // Create new process start info
             Process process = new Process
             {
-            StartInfo = new ProcessStartInfo(SM.PythonPath)
-            {
-                UseShellExecute = false,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                CreateNoWindow = true,
-                Arguments = args
-            }
+                StartInfo = new ProcessStartInfo(SM.PythonPath)
+                {
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    CreateNoWindow = true,
+                    Arguments = args
+                }
             };
 
-            process.Start();
+            _ = process.Start();
 
             // Synchronously read the standard output of the spawned process.
             StreamReader reader = process.StandardOutput;

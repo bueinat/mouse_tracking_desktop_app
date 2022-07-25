@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -132,29 +133,6 @@ namespace mouse_tracking_web_app.ViewModels
             }
         }
 
-        public Dictionary<string, string> ProcessResult(List<string> rawResult)
-        {
-            Dictionary<string, string> result = new Dictionary<string, string>();
-            foreach (string line in rawResult)
-            {
-                if (line.StartsWith("e"))
-                    result["ErrorMessage"] = line.Substring(7);
-                if (line.StartsWith("message"))
-                    result["Message"] = line.Substring(9);
-                if (line.StartsWith("video id"))
-                    result["VideoID"] = line.Substring(10);
-                if (line.StartsWith("override"))
-                    result["Override"] = line.Substring(10);
-                if (line.StartsWith("nframes"))
-                    result["NFrames"] = line.Substring(9);
-                if (line.StartsWith("success"))
-                    result["Success"] = "True";
-            }
-            if (!result.ContainsKey("Success"))
-                result["Success"] = "False";
-            return result;
-        }
-
         public void ProcessSingleVideo(object videoPath)
         {
             // initialization
@@ -174,71 +152,9 @@ namespace mouse_tracking_web_app.ViewModels
 
             // run first
             currentVideo.ProcessingState = DisplayableVideo.State.ExtractVideo;
-            Dictionary<string, string> processedResult = RunPhaseUpdateError(@"OutsideCode\ExtractVideo.py", argv, vidPath);
-            if (currentVideo.HasFailed())
-                return;
-
-            // if finished, update videoID and return
-            if (processedResult.ContainsKey("VideoID"))
-            {
-                currentVideo.VideoID = processedResult["VideoID"];
-                currentVideo.ProcessingState = DisplayableVideo.State.Successful;
-                return;
-            }
-            // update arguments
-            argv["nframes"] = processedResult["NFrames"];
-            argv["override"] = processedResult["Override"];
-
-            // run second section
-            currentVideo.ProcessingState = DisplayableVideo.State.FindRatPath;
-            RunPhaseUpdateError(@"OutsideCode\FindRatPath.py", argv, vidPath);
-            if (currentVideo.HasFailed())
-                return;
-
-            // run third section
-            currentVideo.ProcessingState = DisplayableVideo.State.FindRatFeatues;
-            RunPhaseUpdateError(@"OutsideCode\FindRatFeatures.py", argv, vidPath);
-            if (currentVideo.HasFailed())
-                return;
-
-            // run fourth section
-            currentVideo.ProcessingState = DisplayableVideo.State.SaveToDataBase;
-            processedResult = RunPhaseUpdateError(@"OutsideCode\SaveToDataBase.py", argv, vidPath);
-            if (currentVideo.HasFailed())
-                return;
-            currentVideo.ProcessingState = DisplayableVideo.State.Successful;
-            currentVideo.VideoID = processedResult["VideoID"];
-            return;
-            //currentVideo.VideoItem = model.DBHandler.GetVideoByID(currentVideo.VideoID);
-        }
-
-        public Dictionary<string, string> RunPhaseUpdateError(string scriptPath, Dictionary<string, string> argv, string videoPath)
-        {
-            // run and process
-            List<string> rawResult = model.CodeRunner.RunCmd(scriptPath, argv);
-            Dictionary<string, string> processedResult = ProcessResult(rawResult);
-
-            // update tooltip message
-            string key = null;
-            if (processedResult.ContainsKey("ErrorMessage"))
-                key = "ErrorMessage";
-            else if (processedResult.ContainsKey("Message"))
-                key = "Message";
-            if (!string.IsNullOrEmpty(key))
-            {
-                if (videosDictionary[videoPath].ProcessingState == DisplayableVideo.State.ExtractVideo)
-                    videosDictionary[videoPath].ToolTipMessage += "\r\n";
-                videosDictionary[videoPath].ToolTipMessage += $"{videosDictionary[videoPath].ProcessingState}: {processedResult[key]}";
-            }
-            if (processedResult["Success"] == "False")
-            {
-                if (!processedResult.ContainsKey("ErrorMessage"))
-                    videosDictionary[videoPath].ToolTipMessage += $"\r\nUnknown Error at {videosDictionary[videoPath].ProcessingState}";
-                videosDictionary[videoPath].ProcessingState = DisplayableVideo.State.Failed;
-            }
-
-            // return processed results
-            return processedResult;
+            model.CodeRunner.RunCmd(@"OutsideCode\FullCode.py", argv, currentVideo.OutputHandler, currentVideo.ErrorHandler);
+            if (currentVideo.ProcessingState != DisplayableVideo.State.Successful)
+                currentVideo.ProcessingState = DisplayableVideo.State.Failed;
         }
 
         #endregion processingMethods

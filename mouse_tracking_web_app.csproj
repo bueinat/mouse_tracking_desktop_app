@@ -477,6 +477,7 @@
     <Content Include="OutsideCode\ExtractVideo.py" />
     <Content Include="OutsideCode\FindRatFeatures.py" />
     <Content Include="OutsideCode\FindRatPath.py" />
+    <Content Include="OutsideCode\FullCode.py" />
     <Content Include="OutsideCode\SaveToDataBase.py" />
     <Content Include="OutsideCode\utilityFunctions.py" />
   </ItemGroup>

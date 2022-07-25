@@ -11,6 +11,7 @@ Developed by Einat Buznach for Prof. Rafi Haddad's Lab.
     - [Preceding Installments](#preceding-installments)
       - [Git](#git)
       - [Anaconda](#anaconda)
+      - [Compass](#compass)
       - [CUDA Tooklit](#cuda-tooklit)
       - [Pytorch](#pytorch)
       - [yolov5](#yolov5)
@@ -42,6 +43,11 @@ Make sure to add anaconda's directory to the path. You can do this in one of the
   ```bash
   setx /M path "%path%;path_to_anaconda"
   ```
+
+#### [Compass](https://www.mongodb.com/try/download/compass)
+
+This is the database which we're going to use.
+Note for the testers: this is temporary, and after I finish everything up, I'm going to make the installation as easy as possible.
 
 #### [CUDA Tooklit](https://developer.nvidia.com/cuda-downloads)
 
