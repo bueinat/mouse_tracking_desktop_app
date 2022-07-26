@@ -21,7 +21,7 @@ namespace mouse_tracking_web_app.Views
 
         private void PlayPauseButtonClicked(object sender, RoutedEventArgs e)
         {
-            if (VideoTimeSlider.Value == VideoTimeSlider.Maximum)
+            if (VideoTimeSlider.Value == VideoTimeSlider.Maximum - 1)
             {
                 VideoTimeSlider.Value = 0;
                 PlayPauseButton.IsChecked = false;

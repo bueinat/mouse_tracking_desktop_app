@@ -20,13 +20,10 @@ namespace mouse_tracking_web_app.ViewModels
         public event PropertyChangedEventHandler PropertyChanged;
 
         public VideoControllerModel Model { get; }
-        public string VMVC_VideoName => Model.VC_VideoName;
         public float VMVC_AccelerationX => Model.VC_AccelerationX;
         public float VMVC_AccelerationY => Model.VC_AccelerationY;
         public float VMVC_Curviness => Model.VC_Curviness;
         public bool VMVC_DragEnabled => Model.VC_DragEnabled;
-        public Tuple<float, float> VMVC_Position => new Tuple<float, float>(VMVC_X, VMVC_Y);
-        public DataBase.Analysis VMVC_VideoAnalysis => Model.VC_VideoAnalysis;
         public List<string> VMVC_FeaturesList => Model.VC_FeaturesList;
 
         public bool VMVC_FeaturesPanelFlag
@@ -39,28 +36,21 @@ namespace mouse_tracking_web_app.ViewModels
         public string VMVC_FramePath => Model.VC_FramePath;
         public bool VMVC_IsDrinking => Model.VC_IsDrinking;
         public bool VMVC_IsNoseCasting => Model.VC_IsNoseCasting;
-        public bool VMVC_Stop
-        {
-            get => Model.VC_Stop;
-            set
-            {
-                Model.VC_Stop = value;
-                NotifyPropertyChanged("VMVC_Stop");
-            }
-        }
         public bool VMVC_IsSniffing => Model.VC_IsSniffing;
 
         //public bool VMVC_IsVideoLoaded => Model.VC_IsVideoLoaded;
         public int VMVC_NFeatures => Model.VC_NFeatures;
 
-//
-        public int VMVC_NFrames => Model.VC_NFrames - 1;
+        //
+        public int VMVC_NFrames => Model.VC_NFrames;
 
         public bool VMVC_Pause
         {
             get => Model.VC_Pause;
             set => Model.VC_Pause = value;
         }
+
+        public Tuple<float, float> VMVC_Position => new Tuple<float, float>(VMVC_X, VMVC_Y);
 
         public double VMVC_Speed
         {
@@ -74,9 +64,21 @@ namespace mouse_tracking_web_app.ViewModels
             set => Model.VC_StepCounter = value;
         }
 
+        public bool VMVC_Stop
+        {
+            get => Model.VC_Stop;
+            set
+            {
+                Model.VC_Stop = value;
+                NotifyPropertyChanged("VMVC_Stop");
+            }
+        }
+
         public int VMVC_TimeStep => Model.VC_TimeStep;
         public float VMVC_VelocityX => Model.VC_VelocityX;
         public float VMVC_VelocityY => Model.VC_VelocityY;
+        public DataBase.Analysis VMVC_VideoAnalysis => Model.VC_VideoAnalysis;
+        public string VMVC_VideoName => Model.VC_VideoName;
         public float VMVC_X => Model.VC_X;
         public float VMVC_Y => Model.VC_Y;
 

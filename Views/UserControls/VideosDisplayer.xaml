@@ -140,7 +140,7 @@
                                 Maximum="5"
                                 Minimum="0"
                                 Style="{StaticResource ResourceKey=SimpleProgressBar}"
-                                Value="{Binding Path=ProcessingState, Converter={StaticResource StateToProgressConverter}}" />
+                                Value="{Binding Path=Progress, Mode=OneWay}" />
                             <ProgressBar
                                 Grid.Column="2"
                                 Margin="5,0,7,0"
@@ -148,7 +148,7 @@
                                 IsIndeterminate="{Binding Path=ProcessingState, Converter={StaticResource StateToBoolConverter}}"
                                 Maximum="5"
                                 Style="{DynamicResource MaterialDesignCircularProgressBar}"
-                                Value="{Binding Path=ProcessingState, Converter={StaticResource StateToProgressConverter}}" />
+                                Value="{Binding Path=Progress, Mode=OneWay}" />
                         </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>

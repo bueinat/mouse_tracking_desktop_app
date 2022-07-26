@@ -10,6 +10,16 @@ namespace mouse_tracking_web_app.DataBase
 {
     public class DisplayableVideo : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public void ErrorHandler(object sender, DataReceivedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(e.Data))
+            {
+                Console.WriteLine($"e: {e.Data}");
+            }
+        }
+
         public void OutputHandler(object sender, DataReceivedEventArgs e)
         {
             if (!string.IsNullOrEmpty(e.Data))
@@ -32,13 +42,17 @@ namespace mouse_tracking_web_app.DataBase
                 // update progress if given
                 else if (e.Data.StartsWith("progress"))
                 {
-                    string progress = e.Data.Substring(10);
+                    ProgressString = e.Data.Substring(10);
                     if (!ToolTipMessage.Contains("progress:"))
-                        ToolTipMessage += $"nose detection progress: {progress}";
+                    {
+                        if (!string.IsNullOrEmpty(ToolTipMessage))
+                            ToolTipMessage += "\r\n";
+                        ToolTipMessage += $"nose detection progress: {ProgressString}";
+                    }
                     else
                     {
                         string pattern = "\\d+/\\d+";
-                        ToolTipMessage = Regex.Replace(ToolTipMessage, pattern, progress);
+                        ToolTipMessage = Regex.Replace(ToolTipMessage, pattern, ProgressString);
                     }
                 }
 
@@ -64,18 +78,10 @@ namespace mouse_tracking_web_app.DataBase
 
                 Console.WriteLine($"o: {e.Data}");
             }
-
         }
 
-        public void ErrorHandler(object sender, DataReceivedEventArgs e)
-        {
-            if (!string.IsNullOrEmpty(e.Data))
-            {
-                Console.WriteLine($"e: {e.Data}");
-            }
-
-        }
         #region startStop
+
         private CancellationTokenSource cancellationToken;
 
         public Task Start(Action<object> action, string videoName, SemaphoreSlim semaphore)
@@ -94,7 +100,6 @@ namespace mouse_tracking_web_app.DataBase
                     _ = semaphore.Release();
                 }
             }, cancellationToken.Token);
-
         }
 
         public void Stop()
@@ -104,12 +109,61 @@ namespace mouse_tracking_web_app.DataBase
         }
 
         #endregion startStop
-        public event PropertyChangedEventHandler PropertyChanged;
 
         protected void OnPropertyChanged([CallerMemberName] string name = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            //if (name == "ProcessingState" || name == "ProgressString")
+            //    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Progress"));
         }
+
+        #region progress
+
+        private string progress = null;
+
+        public double Progress
+        {
+            get
+            {
+                switch (ProcessingState)
+                {
+                    case State.ExtractVideo:
+                        return 1;
+
+                    case State.FindRatPath:
+                        if (string.IsNullOrEmpty(ProgressString))
+                            return 1;
+                        return 1 + 2 * double.Parse(ProgressString.Split('/')[0]) / double.Parse(ProgressString.Split('/')[1]);
+
+                    case State.FindRatFeatues:
+                        return 3;
+
+                    case State.SaveToDataBase:
+                        return 4;
+
+                    case State.Successful:
+                    case State.Failed:
+                        return 5;
+
+                    case State.Waiting:
+                    default:
+                        return 0;
+                }
+            }
+        }
+
+        private string ProgressString
+        {
+            get => progress;
+            set
+            {
+                progress = value;
+                OnPropertyChanged();
+                OnPropertyChanged("Progress");
+            }
+        }
+
+        #endregion progress
 
         #region processingState
 
@@ -125,6 +179,7 @@ namespace mouse_tracking_web_app.DataBase
             {
                 processingState = value;
                 OnPropertyChanged();
+                OnPropertyChanged("Progress");
             }
         }
 

@@ -94,7 +94,7 @@ namespace mouse_tracking_web_app.ViewModels
             delegate (object sender, PropertyChangedEventArgs e)
             {
                 NotifyPropertyChanged("NTVM_" + e.PropertyName);
-                if (e.PropertyName == "WorkingPath")
+                if (e.PropertyName == "WorkingPath" || e.PropertyName == "FileTypesList")
                     SingleTree = new NavTreeVm(model.SM, NTVM_FileExplorerDirectory, 0, true);
             };
             model.PropertyChanged +=

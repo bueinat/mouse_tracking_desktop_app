@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Configuration;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Xml.Serialization;
@@ -9,17 +10,36 @@ namespace mouse_tracking_web_app
     {
         #region CTORs
 
-        public SettingsInstance()
+        public SettingsInstance() : this(false)
         {
-            PythonPath = "";
-            WorkingPath = "";
-            ConnectionString = "";
-            DatabaseName = "";
-            FeaturesList = "";
-            FileTypesList = "";
-            VideoTypesList = "";
-            OverrideDB = false;
-            PlotMarkerSize = double.NaN;
+        }
+
+        private SettingsInstance(bool useDef)
+        {
+            if (useDef)
+            {
+                PythonPath = ConfigurationManager.AppSettings.Get("PythonPath");
+                WorkingPath = ConfigurationManager.AppSettings.Get("WorkingPath");
+                ConnectionString = ConfigurationManager.AppSettings.Get("ConnectionString");
+                DatabaseName = ConfigurationManager.AppSettings.Get("DatabaseName");
+                FeaturesList = ConfigurationManager.AppSettings.Get("FeaturesList");
+                FileTypesList = ConfigurationManager.AppSettings.Get("FileTypesList");
+                VideoTypesList = ConfigurationManager.AppSettings.Get("VideoTypesList");
+                OverrideDB = bool.Parse(ConfigurationManager.AppSettings.Get("OverrideDB"));
+                PlotMarkerSize = double.Parse(ConfigurationManager.AppSettings.Get("PlotMarkerSize"));
+            }
+            else
+            {
+                PythonPath = "";
+                WorkingPath = "";
+                ConnectionString = "";
+                DatabaseName = "";
+                FeaturesList = "";
+                FileTypesList = "";
+                VideoTypesList = "";
+                OverrideDB = false;
+                PlotMarkerSize = double.NaN;
+            }
         }
 
         public string FullTypesList => $"{FileTypesList},{VideoTypesList}";
@@ -29,7 +49,19 @@ namespace mouse_tracking_web_app
             using (StreamReader sw = new StreamReader(fileName))
             {
                 XmlSerializer xmls = new XmlSerializer(typeof(SettingsInstance));
-                return xmls.Deserialize(sw) as SettingsInstance;
+                try
+                {
+                    return xmls.Deserialize(sw) as SettingsInstance;
+                }
+                catch (System.InvalidOperationException)
+                {
+                    if (fileName.Contains("userSettings"))
+                        return LoadSavedSettings(fileName.Replace("user", "default"));
+                    else if (fileName.Contains("defaultSettings"))
+                        return new SettingsInstance(true);
+                    else
+                        throw new InvalidDataException("The settings file doesn't have a valid name.");
+                }
             }
         }
 
@@ -119,7 +151,6 @@ namespace mouse_tracking_web_app
         }
 
         #endregion pythonPath
-
 
         #region workingPath
 

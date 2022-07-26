@@ -22,8 +22,6 @@ namespace mouse_tracking_web_app.ViewModels
 
         public NavigationTreeViewModel NTVM { get; internal set; }
 
-        //public BindingList<DisplayableVideo> VM_DispVideosCollection => model.DispVideosCollection;
-
         public string VM_CSVString => model.CSVString;
 
         public bool VM_DragEnabled => model.DragEnabled;
@@ -51,6 +49,7 @@ namespace mouse_tracking_web_app.ViewModels
                 NotifyPropertyChanged("VM_VideosPath");
             }
         }
+
         public void NotifyPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

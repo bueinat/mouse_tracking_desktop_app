@@ -19,16 +19,10 @@
     <Window.Resources>
         <converters:DoesStringExist x:Key="DoesStringExist" />
     </Window.Resources>
-    <!--<Style x:Key="MaterialDesignRaisedLightButton" TargetType="{x:Type ButtonBase}" BasedOn="{StaticResource MaterialDesignRaisedButton}">
-        <Setter Property="Background" Value="{DynamicResource PrimaryHueLightBrush}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource PrimaryHueLightBrush}" />
-        <Setter Property="Foreground" Value="{DynamicResource PrimaryHueLightForegroundBrush}" />
-    </Style>-->
     <Grid>
         <StackPanel VerticalAlignment="Center">
             <Label
                 x:Name="welcome_label"
-                Height="61"
                 Margin="10,10"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Top"
