@@ -15,15 +15,12 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-            <converters:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" />
             <converters:PercentToTimeConverter x:Key="PercentToTimeConverter" />
             <converters:EnableDefaultImage x:Key="EnableDefaultImage" />
             <converters:PathToVisibilityConverter x:Key="PathToVisibilityConverter" />
             <converters:SpeedToIndexConverter x:Key="SpeedToIndexConverter" />
-            <converters:BooleanToIcon x:Key="BooleanToIcon" />
             <converters:PositionConverter x:Key="PositionConverter" />
             <converters:BooleanToOpenCloseConverter x:Key="BooleanToOpenCloseConverter" />
-            <BitmapImage x:Key="DefaultImage" UriSource="/Images/default_image.png" />
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>

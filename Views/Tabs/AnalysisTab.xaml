@@ -24,8 +24,6 @@
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
             <converters:ObjectToVisibilityConverter x:Key="ObjectToVisibilityConverter" />
-            <converters:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" />
-            <converters:DoubleToStringConverter x:Key="RangeToStringConverter" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/mouse_tracking_web_app;component/CustomStyles/ErrorsStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>

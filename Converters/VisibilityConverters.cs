@@ -7,22 +7,6 @@ using System.Windows.Data;
 namespace mouse_tracking_web_app.Converters
 {
     [ValueConversion(typeof(bool), typeof(string))]
-    public class BooleanToIcon : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (value is null)
-                value = false;
-            return (bool)value ? "PlayCircleOutline" : "PauseCircleOutline";
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return (string)value == "PlayCircleOutline";
-        }
-    }
-
-    [ValueConversion(typeof(bool), typeof(string))]
     public class BooleanToOpenCloseConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -70,20 +54,6 @@ namespace mouse_tracking_web_app.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return string.IsNullOrEmpty((string)value) ? Visibility.Collapsed : Visibility.Visible;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    [ValueConversion(typeof(bool), typeof(Visibility))]
-    public class InverseBooleanToVisibilityConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return (bool)value ? Visibility.Hidden : Visibility.Visible;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

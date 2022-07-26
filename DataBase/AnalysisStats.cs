@@ -17,7 +17,6 @@ namespace mouse_tracking_web_app.DataBase
 
         public double AverageSpeed => DataRows.V.Average();
 
-        //public readonly DataRows dataRows;
         public DataRows DataRows { get; }
 
         public double IsDrinkingPercent => analysis.IsDrinking.Sum(x => Convert.ToInt32(x)) / (double)NSteps * 100;

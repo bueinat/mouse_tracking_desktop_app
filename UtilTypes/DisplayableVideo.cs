@@ -1,4 +1,5 @@
-﻿using System;
+﻿using mouse_tracking_web_app.DataBase;
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -6,7 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace mouse_tracking_web_app.DataBase
+namespace mouse_tracking_web_app.UtilTypes
 {
     public class DisplayableVideo : INotifyPropertyChanged
     {

@@ -59,24 +59,6 @@ namespace mouse_tracking_web_app.Converters
         }
     }
 
-    [ValueConversion(typeof(Tuple<double, double>), typeof(string))]
-    public class DoubleToStringConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            string v = (string)value;
-            if (string.IsNullOrEmpty(v))
-                return new Tuple<double, double>(double.NaN, double.NaN);
-            string[] vSplit = v.Split(',');
-            return new Tuple<double, double>(double.Parse(vSplit[0]), double.Parse((vSplit.Length > 1) ? vSplit[1] : vSplit[0]));
-        }
-    }
-
     [ValueConversion(typeof(float), typeof(string))]
     public class FillnaConverter : IValueConverter
     {
@@ -118,28 +100,6 @@ namespace mouse_tracking_web_app.Converters
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    public class MultiConverter : IMultiValueConverter
-    {
-        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
-        {
-            try
-            {
-                ItemsControl ic = values[0] as ItemsControl;
-                double actualHeigth = System.Convert.ToDouble(values[1]);
-                return actualHeigth / ic.Items.Count;
-            }
-            catch (Exception)
-            {
-                return 0.0;
-            }
-        }
-
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }
@@ -209,44 +169,6 @@ namespace mouse_tracking_web_app.Converters
             return double.Parse(speeds[(int)value]);
         }
     }
-
-    [ValueConversion(typeof(DataBase.DisplayableVideo.State), typeof(int))]
-    public class StateToProgressConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            switch ((DataBase.DisplayableVideo.State)value)
-            {
-                case DataBase.DisplayableVideo.State.ExtractVideo:
-                    return 1;
-
-                case DataBase.DisplayableVideo.State.FindRatPath:
-                    return 2;
-
-                case DataBase.DisplayableVideo.State.FindRatFeatues:
-                    return 3;
-
-                case DataBase.DisplayableVideo.State.SaveToDataBase:
-                    return 4;
-
-                case DataBase.DisplayableVideo.State.Successful:
-                    return 5;
-
-                case DataBase.DisplayableVideo.State.Failed:
-                    return 5;
-                case DataBase.DisplayableVideo.State.Waiting:
-
-                default:        // includes waiting
-                    return 0;
-            }
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
 
     [ValueConversion(typeof(DataBase.DisplayableVideo.State), typeof(bool))]
     public class StateToBoolConverter : IValueConverter

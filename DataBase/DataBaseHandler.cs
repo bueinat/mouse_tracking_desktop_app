@@ -8,7 +8,6 @@ namespace mouse_tracking_web_app.DataBase
     {
         public ViewModels.SettingsManager SM;
 
-        //private readonly Models.MainControllerModel model;
         private IMongoCollection<Analysis> analysisCollection;
 
         private MongoClient client;
@@ -17,21 +16,8 @@ namespace mouse_tracking_web_app.DataBase
         private bool isConnected = false;
         private IMongoCollection<Video> videoCollection;
 
-        //private readonly List<string> featuresNames = new List<string>
-        //    {
-        //        "IsDrinking",
-        //        "IsNoseCasting",
-        //        "IsSniffing"
-        //    };
         public DataBaseHandler(Models.MainControllerModel model, ViewModels.SettingsManager sManager)
         {
-            //this.model = model;
-            //model.PropertyChanged +=
-            //    delegate (object sender, PropertyChangedEventArgs e)
-            //    {
-            //        NotifyPropertyChanged("DBH_" + e.PropertyName);
-            //    };
-
             SM = sManager;
             sManager.PropertyChanged +=
                 delegate (object sender, PropertyChangedEventArgs e)

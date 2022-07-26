@@ -59,8 +59,6 @@ namespace mouse_tracking_web_app.DataBase
         [BsonElement("video")]
         public ObjectId Video { get; set; }
 
-        //private readonly List<string> featuresNames = new List<string>(ConfigurationManager.AppSettings["FeaturesList"].Split(','));
-
         public DataTable AnalysisDataTable => AnalysisToDataTable();
 
         public string GetCSVString(string filePath)
@@ -96,13 +94,7 @@ namespace mouse_tracking_web_app.DataBase
             _ = dataTable.Columns.Add("IsDrinking", typeof(bool));
             _ = dataTable.Columns.Add("IsNoseCasting", typeof(bool));
 
-            //foreach (KeyValuePair<string, Type> item in analysisFields)
-            //{
-            //    _ = dataTable.Columns.Add(item.Key, item.Value);
-            //    var v = GetType().GetProperty(item.Key).GetValue(this);
-            //    var v1 = (List<dynamic>)v;
-            //    analysisLists.Add(item.Key, v1);
-            //}
+
             // TODO: try to make it more general
             for (int i = 0; i < TimeStep.Count; i++)
             {
@@ -125,21 +117,6 @@ namespace mouse_tracking_web_app.DataBase
 
             return dataTable;
         }
-
-        //public List<List<string>> GetFeaturesSubsets(List<string> featuresNames)
-        //{
-        //    List<List<string>> list = new List<List<string>>();
-
-        //    for (int index = 0; index < featuresNames.Count; index++)
-        //    {
-        //        for (int count = 1; count <= featuresNames.Count - index; count++)
-        //        {
-        //            Console.WriteLine($"({index}, {count})");
-        //            list.Add(featuresNames.GetRange(index, count));
-        //        }
-        //    }
-        //    return list;
-        //}
 
         public Dictionary<string, List<Tuple<int, int>>> GetFeaturesTimes(List<string> featuresNames)
         {

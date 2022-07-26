@@ -4,7 +4,7 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Xml.Serialization;
 
-namespace mouse_tracking_web_app
+namespace mouse_tracking_web_app.UtilTypes
 {
     public class SettingsInstance : INotifyPropertyChanged
     {
@@ -42,7 +42,9 @@ namespace mouse_tracking_web_app
             }
         }
 
-        public string FullTypesList => $"{FileTypesList},{VideoTypesList}";
+        #endregion CTORs
+
+        #region Builders
 
         public static SettingsInstance LoadSavedSettings(string fileName)
         {
@@ -65,10 +67,6 @@ namespace mouse_tracking_web_app
             }
         }
 
-        #endregion CTORs
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
         public SettingsInstance Copy()
         {
             return new SettingsInstance()
@@ -84,6 +82,8 @@ namespace mouse_tracking_web_app
                 OverrideDB = OverrideDB
             };
         }
+
+        #endregion Builders
 
         public void Save(string fileName)
         {
@@ -115,10 +115,16 @@ namespace mouse_tracking_web_app
                 PlotMarkerSize = source.PlotMarkerSize;
         }
 
+        #region propertyChanged
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
         protected void OnPropertyChanged([CallerMemberName] string name = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
+
+        #endregion propertyChanged
 
         #region overrideDB
 
@@ -229,6 +235,8 @@ namespace mouse_tracking_web_app
                 OnPropertyChanged("FileTypesList");
             }
         }
+
+        public string FullTypesList => $"{FileTypesList},{VideoTypesList}";
 
         #endregion fileTypesList
 

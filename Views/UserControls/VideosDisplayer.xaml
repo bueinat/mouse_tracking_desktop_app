@@ -16,7 +16,6 @@
         <ResourceDictionary>
             <converters:StateToColorConverter x:Key="StateToColorConverter" />
             <converters:StateToProgColorConverter x:Key="StateToProgColorConverter" />
-            <converters:StateToProgressConverter x:Key="StateToProgressConverter" />
             <converters:StateToVisibilityConverter x:Key="StateToVisibilityConverter" />
             <converters:StateToBoolConverter x:Key="StateToBoolConverter" />
             <ResourceDictionary.MergedDictionaries>
