@@ -283,6 +283,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converters\ColorConverters.cs" />
+    <Compile Include="Utils\UtilMethods.cs" />
     <Compile Include="UtilTypes\SettingsInstance.cs" />
     <Compile Include="ValidationRules\SettingsValidationRules.cs" />
     <Compile Include="ValidationRules\RangeValidationRule.cs" />

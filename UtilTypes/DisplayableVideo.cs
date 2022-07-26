@@ -1,5 +1,4 @@
-﻿using mouse_tracking_web_app.DataBase;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -9,10 +8,30 @@ using System.Threading.Tasks;
 
 namespace mouse_tracking_web_app.UtilTypes
 {
+    /// <summary>
+    /// Class <c>DisplayableVideo</c> represents a video object which can be processed and diplayed
+    /// </summary>
     public class DisplayableVideo : INotifyPropertyChanged
     {
+        #region propertyChanged
+
         public event PropertyChangedEventHandler PropertyChanged;
 
+        protected void OnPropertyChanged([CallerMemberName] string name = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
+        #endregion propertyChanged
+
+        #region handlers
+
+        /// <summary>
+        /// Handler <c>ErrorHandler</c> is a <cref name="DataReceivedEventHandler"/>
+        /// which is fired when data is written to <c>stderr</c>.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void ErrorHandler(object sender, DataReceivedEventArgs e)
         {
             if (!string.IsNullOrEmpty(e.Data))
@@ -21,6 +40,12 @@ namespace mouse_tracking_web_app.UtilTypes
             }
         }
 
+        /// <summary>
+        /// Handler <c>OutputHandler</c> is a <cref name="DataReceivedEventHandler"/>
+        /// which is fired when data is written to <c>stdout</c>.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void OutputHandler(object sender, DataReceivedEventArgs e)
         {
             if (!string.IsNullOrEmpty(e.Data))
@@ -73,24 +98,25 @@ namespace mouse_tracking_web_app.UtilTypes
             }
         }
 
+        #endregion handlers
+
         #region startStop
 
-        private CancellationTokenSource cancellationToken;
-        private Process process;
+        /// <summary>
+        /// Cancellation Token which is used to stop a processing if needed
+        /// </summary>
+        private CancellationTokenSource _cancellationToken;
 
-        public Process Process
-        {
-            get => process;
-            set
-            {
-                process = value;
-                OnPropertyChanged();
-            }
-        }
-
+        /// <summary>
+        /// Method <c>Start</c> runs <paramref name="action"/> on <paramref name="videoName"/>.
+        /// </summary>
+        /// <param name="action">function which is ran</param>
+        /// <param name="videoName">the video on which <paramref name="action"/> runs.</param>
+        /// <param name="semaphore">allows to limit parallelism.</param>
+        /// <returns>A task to be ran.</returns>
         public Task Start(Action<object, object> action, string videoName, SemaphoreSlim semaphore)
         {
-            cancellationToken = new CancellationTokenSource();
+            _cancellationToken = new CancellationTokenSource();
             return Task.Factory.StartNew(() =>
             {
                 semaphore.Wait();
@@ -98,46 +124,40 @@ namespace mouse_tracking_web_app.UtilTypes
                 try
                 {
                     ProcessingState = State.ExtractVideo;
-                    action(videoName, cancellationToken.Token);
-                    if (ProcessingState != State.Successful)
+                    action(videoName, _cancellationToken.Token);
+                    if ((ProcessingState != State.Successful) || (ProcessingState != State.Canceled))
                         ProcessingState = State.Failed;
                 }
                 finally
                 {
                     _ = semaphore.Release();
                 }
-            }, cancellationToken.Token);
+            }, _cancellationToken.Token);
         }
 
+        /// <summary>
+        /// Method <c>Stop</c> is used to stop a running process.
+        /// </summary>
         public void Stop()
         {
-            if (cancellationToken != null)
+            if (_cancellationToken != null)
             {
-                cancellationToken.Cancel();
+                _cancellationToken.Cancel();
                 ProcessingState = State.Canceled;
                 AppendToToolTipMessage("process was canceled.");
             }
         }
 
-        private void AppendToToolTipMessage(string message)
-        {
-            if (!string.IsNullOrEmpty(ToolTipMessage))
-                ToolTipMessage += "\r\n";
-            ToolTipMessage += message;
-        }
-
         #endregion startStop
-
-        protected void OnPropertyChanged([CallerMemberName] string name = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        }
 
         #region progress
 
-        private double progress;
-        private string progressString = null;
+        private double _progress;
+        private string _progressString = null;
 
+        /// <summary>
+        /// Property <c>Progress</c> indiates to processing stage numerically.
+        /// </summary>
         public double Progress
         {
             get
@@ -145,43 +165,53 @@ namespace mouse_tracking_web_app.UtilTypes
                 switch (ProcessingState)
                 {
                     case State.ExtractVideo:
-                        progress = 1;
+                        _progress = 1;
                         break;
 
                     case State.FindRatPath:
                         if (string.IsNullOrEmpty(ProgressString))
-                            progress = 1;
+                        {
+                            _progress = 1;
+                        }
                         else
-                            progress = 1 + 2 * double.Parse(ProgressString.Split('/')[0]) / double.Parse(ProgressString.Split('/')[1]);
+                        {
+                            double numerator = double.Parse(ProgressString.Split('/')[0]);
+                            double denominator = double.Parse(ProgressString.Split('/')[1]);
+                            _progress = 1 + (2 * numerator / denominator);
+                        }
                         break;
 
                     case State.FindRatFeatues:
-                        progress = 3;
+                        _progress = 3;
                         break;
 
                     case State.SaveToDataBase:
-                        progress = 4;
+                        _progress = 4;
                         break;
 
                     case State.Successful:
                     case State.Failed:
-                        progress = 5;
+                        _progress = 5;
                         break;
 
                     case State.Waiting:
-                        progress = 0;
+                        _progress = 0;
+                        break;
+
+                    case State.Canceled:
+                    default:
                         break;
                 }
-                return progress;
+                return _progress;
             }
         }
 
         private string ProgressString
         {
-            get => progressString;
+            get => _progressString;
             set
             {
-                progressString = value;
+                _progressString = value;
                 OnPropertyChanged();
                 OnPropertyChanged("Progress");
             }
@@ -191,17 +221,23 @@ namespace mouse_tracking_web_app.UtilTypes
 
         #region processingState
 
-        private State processingState;
+        private State _processingState;
 
+        /// <summary>
+        /// Enum <c>State</c> states different stages of processing
+        /// </summary>
         public enum State
         { Waiting, ExtractVideo, FindRatPath, FindRatFeatues, SaveToDataBase, Successful, Failed, Canceled };
 
+        /// <summary>
+        /// Property <c>ProcessingState</c> states the processing state of the <see cref="DisplayableVideo"/>.
+        /// </summary>
         public State ProcessingState
         {
-            get => processingState;
+            get => _processingState;
             set
             {
-                processingState = value;
+                _processingState = value;
                 OnPropertyChanged();
                 OnPropertyChanged("Progress");
             }
@@ -211,14 +247,17 @@ namespace mouse_tracking_web_app.UtilTypes
 
         #region reducedName
 
-        private string reducedName;
+        private string _reducedName;
 
+        /// <summary>
+        /// Property <c>ReducedName</c> is the relative name of the <see cref="DisplayableVideo"/>.
+        /// </summary>
         public string ReducedName
         {
-            get => reducedName;
+            get => _reducedName;
             set
             {
-                reducedName = value;
+                _reducedName = value;
                 OnPropertyChanged();
             }
         }
@@ -227,48 +266,49 @@ namespace mouse_tracking_web_app.UtilTypes
 
         #region videoID
 
-        private string videoID;
+        private string _videoID;
 
+        /// <summary>
+        /// Property <c>VideoID</c> is the ID of the <see cref="DisplayableVideo"/> as written in the DataBase.
+        /// </summary>
         public string VideoID
         {
-            get => videoID;
+            get => _videoID;
             set
             {
-                videoID = value;
+                _videoID = value;
                 OnPropertyChanged();
             }
         }
 
         #endregion videoID
 
-        #region videoItem
+        #region toolTipMessage
 
-        private Video videoItem;
+        private string _toolTipMessage = "";
 
-        public Video VideoItem
+        /// <summary>
+        /// Property <c>ToolTipMessage</c> is the message which is shown in the videos list.
+        /// </summary>
+        public string ToolTipMessage
         {
-            get => videoItem;
+            get => _toolTipMessage;
             set
             {
-                videoItem = value;
+                _toolTipMessage = value;
                 OnPropertyChanged();
             }
         }
 
-        #endregion videoItem
-
-        #region toolTipMessage
-
-        private string toolTipMessage = "";
-
-        public string ToolTipMessage
+        /// <summary>
+        /// Method <c>AppendToToolTipMessage</c> wraps appending to  <see cref="ToolTipMessage"/> with adding newline if needed.
+        /// </summary>
+        /// <param name="message">the string which should be added.</param>
+        private void AppendToToolTipMessage(string message)
         {
-            get => toolTipMessage;
-            set
-            {
-                toolTipMessage = value;
-                OnPropertyChanged();
-            }
+            if (!string.IsNullOrEmpty(ToolTipMessage))
+                ToolTipMessage += "\r\n";
+            ToolTipMessage += message;
         }
 
         #endregion toolTipMessage

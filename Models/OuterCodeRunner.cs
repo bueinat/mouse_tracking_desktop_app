@@ -8,45 +8,38 @@ using System.Threading;
 
 namespace mouse_tracking_web_app.Models
 {
-    public static class VisualStudioProvider
-    {
-        public static DirectoryInfo TryGetSolutionDirectoryInfo(string currentPath = null)
-        {
-            DirectoryInfo directory = new DirectoryInfo(
-                currentPath ?? Directory.GetCurrentDirectory());
-            while (directory != null && !directory.GetFiles("*.sln").Any())
-            {
-                directory = directory.Parent;
-            }
-            return directory;
-        }
-    }
-
+    /// <summary>
+    /// Class <c>OuterCodeRunner</c> is helpout class for running Python scripts.
+    /// </summary>
     public class OuterCodeRunner
     {
+        /// <summary>
+        /// Property <c>SM</c> is a <paramref name="SettingsManager"/> from which you get the relevant settings properties.
+        /// </summary>
         public SettingsManager SM;
 
+        /// <summary>
+        /// This constructor only gets a <paramref name="SettingsManager"/>.
+        /// </summary>
+        /// <param name="sManager"></param>
         public OuterCodeRunner(SettingsManager sManager)
         {
             SM = sManager;
         }
 
-        public static string WriteDictToCSV(Dictionary<string, string> data)
-        {
-            string csv = string.Join(
-                Environment.NewLine,
-                data.Select(d => $"{d.Key},{d.Value}")
-            );
-            string fileName = CreateTmpFile();
-            File.WriteAllText(fileName, csv);
-            return fileName;
-        }
-
+        /// <summary>
+        /// Method <c>RunCmd</c> run a given python code and process its output and error
+        /// </summary>
+        /// <param name="scriptName">the script which you want to run</param>
+        /// <param name="argv">dictionary of arguments which will be passed to the script</param>
+        /// <param name="outputHandler">handler which will treat the standard output</param>
+        /// <param name="errorHandler">handler which will treat the standard error</param>
+        /// <param name="cToken">cancellation token that will kill the script</param>
         public void RunCmd(string scriptName, Dictionary<string, string> argv,
                     DataReceivedEventHandler outputHandler, DataReceivedEventHandler errorHandler, CancellationToken cToken)
         {
             // set variables for process
-            string startupPath = VisualStudioProvider.TryGetSolutionDirectoryInfo().FullName;
+            string startupPath = Utils.UtilMethods.TryGetSolutionDirectoryInfo().FullName;
             string pythonScript = $"{startupPath}\\{scriptName}";
 
             string fileName = WriteDictToCSV(argv);
@@ -70,35 +63,48 @@ namespace mouse_tracking_web_app.Models
             // registrations
             process.ErrorDataReceived += errorHandler;
             process.OutputDataReceived += outputHandler;
-            _ = cToken.Register(() => process.Kill());
+            cToken.Register(() => process.Kill());
 
             // start the process
-            _ = process.Start();
+            process.Start();
             process.BeginErrorReadLine();
             process.BeginOutputReadLine();
 
             // wait for the process to exit
             process.WaitForExit();
         }
+        /// <summary>
+        /// Method <c>WriteDictToCSV</c> write a dictionary to <c>csv</c> file.
+        /// </summary>
+        /// <param name="data">dictionary to be saved.</param>
+        /// <returns>Path of the file in which the data was saved.</returns>
+        private static string WriteDictToCSV(Dictionary<string, string> data)
+        {
+            // convert dictionary to string
+            string csv = string.Join(
+                Environment.NewLine,
+                data.Select(d => $"{d.Key},{d.Value}")
+            );
 
-        // the following method was taken from here: https://www.daveoncsharp.com/2009/09/how-to-use-temporary-files-in-csharp/
+            // create a temp file and write to it
+            string fileName = CreateTmpFile();
+            File.WriteAllText(fileName, csv);
+            return fileName;
+        }
+        /// <summary>
+        /// Method <c>CreateTmpFile</c> create a temporary file and returns its path.
+        /// </summary>
+        /// <returns>Path of the generated file.</returns>
         private static string CreateTmpFile()
         {
             string fileName = string.Empty;
 
             try
             {
-                // Get the full name of the newly created Temporary file.
-                // Note that the GetTempFileName() method actually creates
-                // a 0-byte file and returns the name of the created file.
+                // create a temp file
                 fileName = Path.GetTempFileName();
-
-                // Craete a FileInfo object to set the file's attributes
                 FileInfo fileInfo = new FileInfo(fileName)
                 {
-                    // Set the Attribute property of this file to Temporary.
-                    // Although this is not completely necessary, the .NET Framework is able
-                    // to optimize the use of Temporary files by keeping them cached in memory.
                     Attributes = FileAttributes.Temporary
                 };
             }
@@ -107,6 +113,7 @@ namespace mouse_tracking_web_app.Models
                 Console.WriteLine("Unable to create TEMP file or set its attributes: " + ex.Message);
             }
 
+            // return the name of the created file.
             return fileName;
         }
     }
