@@ -1,4 +1,5 @@
 ﻿using mouse_tracking_web_app.DataBase;
+using mouse_tracking_web_app.UtilTypes;
 using mouse_tracking_web_app.ViewModels;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,76 +10,11 @@ namespace mouse_tracking_web_app.Models
 {
     public class MainControllerModel : INotifyPropertyChanged
     {
-        public List<string> VideoTypesList => SM.VideoTypesList;
-
-        #region selectedVideo
-
-        private DisplayableVideo selectedVideo;
-
-        public DisplayableVideo SelectedVideo
-        {
-            get => selectedVideo;
-            set
-            {
-                selectedVideo = value;
-                NotifyPropertyChanged("SelectedVideo");
-                NotifyPropertyChanged("VideoName");
-            }
-        }
-
-        public string VideoName => SelectedVideo.ReducedName;
-
-        #endregion selectedVideo
-
-        #region videosPath
-
-        private string videosPath;
-
-        public string VideosPath
-        {
-            get => videosPath;
-            set
-            {
-                videosPath = value;
-                VideosList = GetVideosList();
-                NotifyPropertyChanged("VideosPath");
-                NotifyPropertyChanged("VideosList");
-                //_ = ProcessFolder();
-            }
-        }
-
-        public List<string> VideosList { get; set; }
-
-        public string CachePath => VideosPath is null
-                    ? ""
-                    : File.GetAttributes(VideosPath).HasFlag(FileAttributes.Directory)
-                    ? $"{VideosPath}\\.cache"
-                    : $"{Path.GetDirectoryName(VideosPath)}\\.cache";
-
-        private List<string> GetVideosList()
-        {
-            if (File.GetAttributes(VideosPath).HasFlag(FileAttributes.Directory))
-            {
-                List<string> l = new List<string>();
-                foreach (string file in Directory.EnumerateFiles(VideosPath, "*.*", SearchOption.AllDirectories))
-                {
-                    if (!file.Contains(CachePath) && VideoTypesList.Any(s => file.EndsWith(s)))
-                        l.Add(file);
-                }
-                return l;
-            }
-            else
-            {
-                return new List<string>() { VideosPath };
-            }
-        }
-
-        #endregion videosPath
-
         private Analysis analysis;
         private bool dragEnabled = false;
         private bool isLoading = false;
         private bool pause = true;
+        private bool stop = false;
         private bool videoProcessed = false;
 
         public MainControllerModel(SettingsManager sManager)
@@ -94,21 +30,15 @@ namespace mouse_tracking_web_app.Models
             {
                 NotifyPropertyChanged(e.PropertyName);
             };
-
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         public DataRows AnalysisDataRows => VideoStats?.DataRows;
-
         public double AverageAcceleration => VideoStats is null ? 0 : VideoStats.AverageAcceleration;
-
         public double AverageSpeed => VideoStats is null ? 0 : VideoStats.AverageSpeed;
-
         public OuterCodeRunner CodeRunner { get; }
-
         public string CSVString => VideoAnalysis.GetCSVString(CachePath);
-
         public DataBaseHandler DBHandler { get; }
 
         public bool DragEnabled
@@ -121,7 +51,8 @@ namespace mouse_tracking_web_app.Models
             }
         }
 
-        public string WorkingPath => SM.WorkingPath;
+        public double IsDrinkingPercent => VideoStats is null ? 0 : VideoStats.IsDrinkingPercent;
+
         //{
         //    get => SM.WorkingPath;
         //    set
@@ -130,9 +61,6 @@ namespace mouse_tracking_web_app.Models
         //        NotifyPropertyChanged("FileExplorerDirectory");
         //    }
         //}
-
-        public double IsDrinkingPercent => VideoStats is null ? 0 : VideoStats.IsDrinkingPercent;
-
         public bool IsLoading
         {
             get => isLoading;
@@ -144,20 +72,9 @@ namespace mouse_tracking_web_app.Models
         }
 
         public double IsNoseCastingPercent => VideoStats is null ? 0 : VideoStats.IsNoseCastingPercent;
-
         public double IsSniffingPercent => VideoStats is null ? 0 : VideoStats.IsSniffingPercent;
-
         public int NSteps => VideoStats is null ? 0 : VideoStats.NSteps;
-
         public bool OverrideDB => SM.OverrideDB;
-        //{
-        //    get => overrideInDB;
-        //    set
-        //    {
-        //        overrideInDB = value;
-        //        NotifyPropertyChanged("OverrideInDB");
-        //    }
-        //}
 
         public bool Pause
         {
@@ -169,10 +86,18 @@ namespace mouse_tracking_web_app.Models
             }
         }
 
+        //{
+        //    get => overrideInDB;
+        //    set
+        //    {
+        //        overrideInDB = value;
+        //        NotifyPropertyChanged("OverrideInDB");
+        //    }
+        //}
         public PlottingControllerModel PC { get; }
+
         public SettingsManager SM { get; }
 
-        private bool stop = false;
         public bool Stop
         {
             get => stop;
@@ -184,7 +109,6 @@ namespace mouse_tracking_web_app.Models
         }
 
         public double TotalDistance => VideoStats is null ? 0 : VideoStats.TotalDistance;
-
         public VideoControllerModel VC { get; }
 
         public Analysis VideoAnalysis
@@ -220,6 +144,73 @@ namespace mouse_tracking_web_app.Models
         }
 
         public AnalysisStats VideoStats { get; set; }
+        public List<string> VideoTypesList => SM.VideoTypesList;
+
+        #region selectedVideo
+
+        private DisplayableVideo selectedVideo;
+
+        public DisplayableVideo SelectedVideo
+        {
+            get => selectedVideo;
+            set
+            {
+                selectedVideo = value;
+                NotifyPropertyChanged("SelectedVideo");
+                NotifyPropertyChanged("VideoName");
+            }
+        }
+
+        public string VideoName => SelectedVideo.ReducedName;
+
+        #endregion selectedVideo
+
+        #region videosPath
+
+        private string videosPath;
+
+        public string CachePath => VideosPath is null
+                    ? ""
+                    : File.GetAttributes(VideosPath).HasFlag(FileAttributes.Directory)
+                    ? $"{VideosPath}\\.cache"
+                    : $"{Path.GetDirectoryName(VideosPath)}\\.cache";
+
+        public List<string> VideosList { get; set; }
+
+        public string VideosPath
+        {
+            get => videosPath;
+            set
+            {
+                videosPath = value;
+                VideosList = GetVideosList();
+                NotifyPropertyChanged("VideosPath");
+                NotifyPropertyChanged("VideosList");
+                //_ = ProcessFolder();
+            }
+        }
+
+        private List<string> GetVideosList()
+        {
+            if (File.GetAttributes(VideosPath).HasFlag(FileAttributes.Directory))
+            {
+                List<string> l = new List<string>();
+                foreach (string file in Directory.EnumerateFiles(VideosPath, "*.*", SearchOption.AllDirectories))
+                {
+                    if (!file.Contains(CachePath) && VideoTypesList.Any(s => file.EndsWith(s)))
+                        l.Add(file);
+                }
+                return l;
+            }
+            else
+            {
+                return new List<string>() { VideosPath };
+            }
+        }
+
+        #endregion videosPath
+
+        public string WorkingPath => SM.WorkingPath;
 
         public void NotifyPropertyChanged(string propertyName)
         {

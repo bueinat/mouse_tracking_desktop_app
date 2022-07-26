@@ -1,4 +1,4 @@
-﻿using mouse_tracking_web_app.DataBase;
+﻿using mouse_tracking_web_app.UtilTypes;
 using System.ComponentModel;
 
 namespace mouse_tracking_web_app.ViewModels

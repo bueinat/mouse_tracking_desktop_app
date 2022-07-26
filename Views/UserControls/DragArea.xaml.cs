@@ -8,7 +8,6 @@ namespace mouse_tracking_web_app.Views
     /// </summary>
     public partial class DragArea : UserControl
     {
-        //private readonly
         public DragArea()
         {
             InitializeComponent();
@@ -18,8 +17,7 @@ namespace mouse_tracking_web_app.Views
         {
             object data = e.Data.GetData(DataFormats.Serializable);
             if (data is string fileName)
-                (DataContext as ViewModels.MainControllerViewModel).VM_VideosPath = fileName;
-            //(DataContext as ViewModels.MainControllerViewModel).VM_VideoName = fileName;
+                (DataContext as ViewModels.MainControllerViewModel).VM_VideosPath = fileName; // TODO: make it happen on a different thread
         }
     }
 }

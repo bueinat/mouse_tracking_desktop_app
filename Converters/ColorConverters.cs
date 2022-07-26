@@ -20,39 +20,40 @@ namespace mouse_tracking_web_app.Converters
         }
     }
 
-    [ValueConversion(typeof(DataBase.DisplayableVideo.State), typeof(SolidColorBrush))]
+    [ValueConversion(typeof(UtilTypes.DisplayableVideo.State), typeof(SolidColorBrush))]
     public class StateToColorConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             string colorCode;
-            switch ((DataBase.DisplayableVideo.State)value)
+            switch ((UtilTypes.DisplayableVideo.State)value)
             {
-                case DataBase.DisplayableVideo.State.Waiting:
+                case UtilTypes.DisplayableVideo.State.Waiting:
                     colorCode = "#BEE5F7";
                     break;
 
-                case DataBase.DisplayableVideo.State.ExtractVideo:
+                case UtilTypes.DisplayableVideo.State.ExtractVideo:
                     colorCode = "#F9D2A8";
                     break;
 
-                case DataBase.DisplayableVideo.State.FindRatPath:
+                case UtilTypes.DisplayableVideo.State.FindRatPath:
                     colorCode = "#EEEF9B";
                     break;
 
-                case DataBase.DisplayableVideo.State.FindRatFeatues:
+                case UtilTypes.DisplayableVideo.State.FindRatFeatues:
                     colorCode = "#E8FDAC";
                     break;
 
-                case DataBase.DisplayableVideo.State.SaveToDataBase:
+                case UtilTypes.DisplayableVideo.State.SaveToDataBase:
                     colorCode = "#C5FDA2";
                     break;
 
-                case DataBase.DisplayableVideo.State.Successful:
+                case UtilTypes.DisplayableVideo.State.Successful:
                     colorCode = "#86FD8D";
                     break;
 
-                case DataBase.DisplayableVideo.State.Failed:
+                case UtilTypes.DisplayableVideo.State.Failed:
+                case UtilTypes.DisplayableVideo.State.Canceled:
                     colorCode = "#FD9584";
                     break;
 
@@ -69,19 +70,20 @@ namespace mouse_tracking_web_app.Converters
         }
     }
 
-    [ValueConversion(typeof(DataBase.DisplayableVideo.State), typeof(SolidColorBrush))]
+    [ValueConversion(typeof(UtilTypes.DisplayableVideo.State), typeof(SolidColorBrush))]
     public class StateToProgColorConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             string colorCode;
-            switch ((DataBase.DisplayableVideo.State)value)
+            switch ((UtilTypes.DisplayableVideo.State)value)
             {
-                case DataBase.DisplayableVideo.State.Successful:
+                case UtilTypes.DisplayableVideo.State.Successful:
                     colorCode = "#5DA84A";
                     break;
 
-                case DataBase.DisplayableVideo.State.Failed:
+                case UtilTypes.DisplayableVideo.State.Failed:
+                case UtilTypes.DisplayableVideo.State.Canceled:
                     colorCode = "#C7191A";
                     break;
 

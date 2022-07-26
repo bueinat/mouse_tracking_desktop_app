@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using mouse_tracking_web_app.UtilTypes;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace mouse_tracking_web_app.ViewModels
@@ -104,7 +105,6 @@ namespace mouse_tracking_web_app.ViewModels
                 updatableSettings = value;
                 updatableSettings.OverrideDB = CurrentSettings.OverrideDB;
                 NotifyPropertyChanged("UpdatableSettings");
-
             }
         }
 

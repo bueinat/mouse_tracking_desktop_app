@@ -1,4 +1,4 @@
-﻿using mouse_tracking_web_app.DataBase;
+﻿using mouse_tracking_web_app.UtilTypes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -132,7 +132,7 @@ namespace mouse_tracking_web_app.ViewModels
             }
         }
 
-        public void ProcessSingleVideo(object videoPath)
+        public void ProcessSingleVideo(object videoPath, object cancellationToken)
         {
             // initialization
             string vidPath = (string)videoPath;
@@ -149,11 +149,9 @@ namespace mouse_tracking_web_app.ViewModels
                 ["connection_string"] = $"{connectionString}/{dbName}"
             };
 
-            // run first
-            currentVideo.ProcessingState = DisplayableVideo.State.ExtractVideo;
-            model.CodeRunner.RunCmd(@"OutsideCode\FullCode.py", argv, currentVideo.OutputHandler, currentVideo.ErrorHandler);
-            if (currentVideo.ProcessingState != DisplayableVideo.State.Successful)
-                currentVideo.ProcessingState = DisplayableVideo.State.Failed;
+            // run algorithm
+            model.CodeRunner.RunCmd(@"OutsideCode\FullCode.py", argv, currentVideo.OutputHandler, currentVideo.ErrorHandler,
+                                                                    (CancellationToken)cancellationToken);
         }
 
         #endregion processingMethods

@@ -45,11 +45,7 @@ namespace mouse_tracking_web_app.UtilTypes
                 {
                     ProgressString = e.Data.Substring(10);
                     if (!ToolTipMessage.Contains("progress:"))
-                    {
-                        if (!string.IsNullOrEmpty(ToolTipMessage))
-                            ToolTipMessage += "\r\n";
-                        ToolTipMessage += $"nose detection progress: {ProgressString}";
-                    }
+                        AppendToToolTipMessage($"nose detection progress: {ProgressString}");
                     else
                     {
                         string pattern = "\\d+/\\d+";
@@ -70,11 +66,7 @@ namespace mouse_tracking_web_app.UtilTypes
                     if (e.Data.StartsWith("message"))
                         errorMessage = e.Data.Substring(9);
                     if (!string.IsNullOrEmpty(errorMessage))
-                    {
-                        if (ProcessingState != State.ExtractVideo)
-                            ToolTipMessage += "\r\n";
-                        ToolTipMessage += $"{ProcessingState}: {errorMessage}";
-                    }
+                        AppendToToolTipMessage($"{ProcessingState}: {errorMessage}");
                 }
 
                 Console.WriteLine($"o: {e.Data}");
@@ -84,8 +76,19 @@ namespace mouse_tracking_web_app.UtilTypes
         #region startStop
 
         private CancellationTokenSource cancellationToken;
+        private Process process;
 
-        public Task Start(Action<object> action, string videoName, SemaphoreSlim semaphore)
+        public Process Process
+        {
+            get => process;
+            set
+            {
+                process = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public Task Start(Action<object, object> action, string videoName, SemaphoreSlim semaphore)
         {
             cancellationToken = new CancellationTokenSource();
             return Task.Factory.StartNew(() =>
@@ -94,7 +97,10 @@ namespace mouse_tracking_web_app.UtilTypes
 
                 try
                 {
-                    action(videoName);
+                    ProcessingState = State.ExtractVideo;
+                    action(videoName, cancellationToken.Token);
+                    if (ProcessingState != State.Successful)
+                        ProcessingState = State.Failed;
                 }
                 finally
                 {
@@ -106,7 +112,18 @@ namespace mouse_tracking_web_app.UtilTypes
         public void Stop()
         {
             if (cancellationToken != null)
+            {
                 cancellationToken.Cancel();
+                ProcessingState = State.Canceled;
+                AppendToToolTipMessage("process was canceled.");
+            }
+        }
+
+        private void AppendToToolTipMessage(string message)
+        {
+            if (!string.IsNullOrEmpty(ToolTipMessage))
+                ToolTipMessage += "\r\n";
+            ToolTipMessage += message;
         }
 
         #endregion startStop
@@ -114,13 +131,12 @@ namespace mouse_tracking_web_app.UtilTypes
         protected void OnPropertyChanged([CallerMemberName] string name = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-            //if (name == "ProcessingState" || name == "ProgressString")
-            //    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Progress"));
         }
 
         #region progress
 
-        private string progress = null;
+        private double progress;
+        private string progressString = null;
 
         public double Progress
         {
@@ -129,36 +145,43 @@ namespace mouse_tracking_web_app.UtilTypes
                 switch (ProcessingState)
                 {
                     case State.ExtractVideo:
-                        return 1;
+                        progress = 1;
+                        break;
 
                     case State.FindRatPath:
                         if (string.IsNullOrEmpty(ProgressString))
-                            return 1;
-                        return 1 + 2 * double.Parse(ProgressString.Split('/')[0]) / double.Parse(ProgressString.Split('/')[1]);
+                            progress = 1;
+                        else
+                            progress = 1 + 2 * double.Parse(ProgressString.Split('/')[0]) / double.Parse(ProgressString.Split('/')[1]);
+                        break;
 
                     case State.FindRatFeatues:
-                        return 3;
+                        progress = 3;
+                        break;
 
                     case State.SaveToDataBase:
-                        return 4;
+                        progress = 4;
+                        break;
 
                     case State.Successful:
                     case State.Failed:
-                        return 5;
+                        progress = 5;
+                        break;
 
                     case State.Waiting:
-                    default:
-                        return 0;
+                        progress = 0;
+                        break;
                 }
+                return progress;
             }
         }
 
         private string ProgressString
         {
-            get => progress;
+            get => progressString;
             set
             {
-                progress = value;
+                progressString = value;
                 OnPropertyChanged();
                 OnPropertyChanged("Progress");
             }
@@ -171,7 +194,7 @@ namespace mouse_tracking_web_app.UtilTypes
         private State processingState;
 
         public enum State
-        { Waiting, ExtractVideo, FindRatPath, FindRatFeatues, SaveToDataBase, Successful, Failed };
+        { Waiting, ExtractVideo, FindRatPath, FindRatFeatues, SaveToDataBase, Successful, Failed, Canceled };
 
         public State ProcessingState
         {
@@ -182,16 +205,6 @@ namespace mouse_tracking_web_app.UtilTypes
                 OnPropertyChanged();
                 OnPropertyChanged("Progress");
             }
-        }
-
-        public bool HasFailed()
-        {
-            return ProcessingState == State.Failed;
-        }
-
-        public bool HasTerminated()
-        {
-            return ProcessingState == State.Failed || ProcessingState == State.Successful;
         }
 
         #endregion processingState

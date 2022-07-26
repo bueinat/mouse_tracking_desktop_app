@@ -1,11 +1,10 @@
 ﻿using mouse_tracking_web_app.ViewModels;
-using RunProcessAsTask;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Threading;
 
 namespace mouse_tracking_web_app.Models
 {
@@ -44,16 +43,16 @@ namespace mouse_tracking_web_app.Models
         }
 
         public void RunCmd(string scriptName, Dictionary<string, string> argv,
-                    DataReceivedEventHandler outputHandler, DataReceivedEventHandler errorHandler)
+                    DataReceivedEventHandler outputHandler, DataReceivedEventHandler errorHandler, CancellationToken cToken)
         {
+            // set variables for process
             string startupPath = VisualStudioProvider.TryGetSolutionDirectoryInfo().FullName;
-
-            // python app to call
             string pythonScript = $"{startupPath}\\{scriptName}";
 
             string fileName = WriteDictToCSV(argv);
             string args = $"-u {pythonScript} \"{fileName}\"";
 
+            // create process
             Process process = new Process
             {
                 StartInfo = new ProcessStartInfo
@@ -67,58 +66,19 @@ namespace mouse_tracking_web_app.Models
                 },
                 EnableRaisingEvents = true
             };
+
+            // registrations
             process.ErrorDataReceived += errorHandler;
             process.OutputDataReceived += outputHandler;
+            _ = cToken.Register(() => process.Kill());
 
+            // start the process
             _ = process.Start();
             process.BeginErrorReadLine();
             process.BeginOutputReadLine();
+
+            // wait for the process to exit
             process.WaitForExit();
-        }
-
-        public List<string> RunCmd_(string scriptName, Dictionary<string, string> argv)
-        {
-            string startupPath = VisualStudioProvider.TryGetSolutionDirectoryInfo().FullName;
-
-            // python app to call
-            string pythonScript = $"{startupPath}\\{scriptName}";
-
-            string fileName = WriteDictToCSV(argv);
-            string args = $"{pythonScript} \"{fileName}\"";
-
-            // Create new process start info
-            Process process = new Process
-            {
-                StartInfo = new ProcessStartInfo(SM.PythonPath)
-                {
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    CreateNoWindow = true,
-                    Arguments = args
-                }
-            };
-
-            _ = process.Start();
-
-            // Synchronously read the standard output of the spawned process.
-            StreamReader reader = process.StandardOutput;
-            string line = reader.ReadLine();
-            List<string> output = new List<string>();
-            while (!string.IsNullOrEmpty(line))
-            {
-                output.Add(line);
-                line = reader.ReadLine();
-            }
-            //string output = reader.ReadToEnd();
-
-            // Write the redirected output to this application's window.
-            //Console.WriteLine(output);
-
-            process.WaitForExit();
-
-            return output;
-            //return processResults.StandardOutput;
         }
 
         // the following method was taken from here: https://www.daveoncsharp.com/2009/09/how-to-use-temporary-files-in-csharp/

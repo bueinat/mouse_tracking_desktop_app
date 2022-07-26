@@ -22,50 +22,12 @@ namespace mouse_tracking_web_app.Converters
         }
     }
 
-    public class PositionConverter : IMultiValueConverter
-    {
-        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
-
-        {
-            float x = (float)values[0];
-            float y = (float)values[1];
-            Image baseImage = values[2] as Image;
-
-            double nx = (1 - x / baseImage.Source.Width) * baseImage.ActualWidth;
-            double nx_fix = (baseImage.Parent as Grid).ActualWidth - baseImage.ActualWidth;
-            double ny = y / baseImage.Source.Height * baseImage.ActualHeight;
-            double ny_fix = (baseImage.Parent as Grid).ActualHeight - baseImage.ActualHeight;
-
-            return new Thickness(0, ny + ny_fix / 2, nx + nx_fix, 0);
-        }
-
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
     [ValueConversion(typeof(string), typeof(bool))]
     public class DoesStringExist : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return !string.IsNullOrEmpty((string)value);
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    [ValueConversion(typeof(float), typeof(string))]
-    public class FillnaConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            float v = (float)value;
-            return float.IsNaN(v) ? "-" : v.ToString();
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -88,6 +50,21 @@ namespace mouse_tracking_web_app.Converters
             if (string.IsNullOrEmpty((string)value))
                 return double.NaN;
             return double.Parse((string)value);
+        }
+    }
+
+    [ValueConversion(typeof(float), typeof(string))]
+    public class FillnaConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            float v = (float)value;
+            return float.IsNaN(v) ? "-" : v.ToString();
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
         }
     }
 
@@ -121,6 +98,29 @@ namespace mouse_tracking_web_app.Converters
         }
 
         object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class PositionConverter : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+
+        {
+            float x = (float)values[0];
+            float y = (float)values[1];
+            Image baseImage = values[2] as Image;
+
+            double nx = (1 - x / baseImage.Source.Width) * baseImage.ActualWidth;
+            double nx_fix = (baseImage.Parent as Grid).ActualWidth - baseImage.ActualWidth;
+            double ny = y / baseImage.Source.Height * baseImage.ActualHeight;
+            double ny_fix = (baseImage.Parent as Grid).ActualHeight - baseImage.ActualHeight;
+
+            return new Thickness(0, ny + ny_fix / 2, nx + nx_fix, 0);
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }
@@ -170,26 +170,27 @@ namespace mouse_tracking_web_app.Converters
         }
     }
 
-    [ValueConversion(typeof(DataBase.DisplayableVideo.State), typeof(bool))]
+    [ValueConversion(typeof(UtilTypes.DisplayableVideo.State), typeof(bool))]
     public class StateToBoolConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            switch ((DataBase.DisplayableVideo.State)value)
+            switch ((UtilTypes.DisplayableVideo.State)value)
             {
-                case DataBase.DisplayableVideo.State.ExtractVideo:
+                case UtilTypes.DisplayableVideo.State.ExtractVideo:
 
-                case DataBase.DisplayableVideo.State.FindRatPath:
+                case UtilTypes.DisplayableVideo.State.FindRatPath:
 
-                case DataBase.DisplayableVideo.State.FindRatFeatues:
+                case UtilTypes.DisplayableVideo.State.FindRatFeatues:
 
-                case DataBase.DisplayableVideo.State.SaveToDataBase:
+                case UtilTypes.DisplayableVideo.State.SaveToDataBase:
                     return true;
-                case DataBase.DisplayableVideo.State.Waiting:
 
-                case DataBase.DisplayableVideo.State.Successful:
+                case UtilTypes.DisplayableVideo.State.Waiting:
 
-                case DataBase.DisplayableVideo.State.Failed:
+                case UtilTypes.DisplayableVideo.State.Successful:
+
+                case UtilTypes.DisplayableVideo.State.Failed:
 
                 default:        // includes waiting
                     return false;
@@ -201,30 +202,31 @@ namespace mouse_tracking_web_app.Converters
             throw new NotImplementedException();
         }
     }
-    [ValueConversion(typeof(DataBase.DisplayableVideo.State), typeof(Visibility))]
+
+    [ValueConversion(typeof(UtilTypes.DisplayableVideo.State), typeof(Visibility))]
     public class StateToVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            switch ((DataBase.DisplayableVideo.State)value)
+            switch ((UtilTypes.DisplayableVideo.State)value)
             {
-                case DataBase.DisplayableVideo.State.ExtractVideo:
+                case UtilTypes.DisplayableVideo.State.ExtractVideo:
 
-                case DataBase.DisplayableVideo.State.FindRatPath:
+                case UtilTypes.DisplayableVideo.State.FindRatPath:
 
-                case DataBase.DisplayableVideo.State.FindRatFeatues:
+                case UtilTypes.DisplayableVideo.State.FindRatFeatues:
 
-                case DataBase.DisplayableVideo.State.SaveToDataBase:
+                case UtilTypes.DisplayableVideo.State.SaveToDataBase:
 
-                case DataBase.DisplayableVideo.State.Waiting:
+                case UtilTypes.DisplayableVideo.State.Waiting:
 
                     return Visibility.Visible;
 
-                case DataBase.DisplayableVideo.State.Successful:
+                case UtilTypes.DisplayableVideo.State.Successful:
 
-                case DataBase.DisplayableVideo.State.Failed:
+                case UtilTypes.DisplayableVideo.State.Failed:
 
-                default:        
+                default:
                     return Visibility.Collapsed;
             }
         }

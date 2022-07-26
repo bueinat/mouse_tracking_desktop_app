@@ -1,4 +1,4 @@
-﻿using mouse_tracking_web_app.DataBase;
+﻿using mouse_tracking_web_app.UtilTypes;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -30,7 +30,6 @@ namespace mouse_tracking_web_app.Views
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
-            //System.Console.WriteLine("item clicked");
             DisplayableVideo video = ((Grid)((ContextMenu)((MenuItem)sender).Parent).PlacementTarget).DataContext as DisplayableVideo;
             video.Stop();
         }
