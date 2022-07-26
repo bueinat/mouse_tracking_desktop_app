@@ -33,6 +33,7 @@
                 ItemsSource="{Binding VideosCollection}"
                 SelectedItem="{Binding VPM_SelectedVideo}">
                 <ListBox.ItemContainerStyle>
+                    <!--  having the style here is the right decision due to performance issues  -->
                     <Style BasedOn="{StaticResource {x:Type ListBoxItem}}" TargetType="{x:Type ListBoxItem}">
                         <Style.Triggers>
                             <Trigger Property="IsSelected" Value="True">
@@ -91,15 +92,15 @@
                 </ListBox.ItemContainerStyle>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
+                        <!--  this grid item contains all data that should be shown  -->
                         <Grid
                             Height="30"
                             Margin="2"
                             Background="{Binding Path=ProcessingState, Converter={StaticResource StateToColorConverter}}"
                             MouseDown="ListBoxItem_MouseDown">
+                            <!--  allows the cancel menu  -->
                             <Grid.ContextMenu>
                                 <ContextMenu
-                                    Margin="0,0,0,0"
-                                    Padding="0,0,0,0"
                                     FontSize="14"
                                     Style="{DynamicResource MaterialDesignContextMenu}"
                                     Visibility="{Binding Path=ProcessingState, Converter={StaticResource StateToVisibilityConverter}}">
@@ -107,10 +108,10 @@
                                         Click="MenuItem_Click"
                                         CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}"
                                         Header="Stop" />
-
                                 </ContextMenu>
                             </Grid.ContextMenu>
 
+                            <!--  shows the hover message  -->
                             <ToolTipService.ToolTip>
                                 <StackPanel>
                                     <TextBlock
@@ -120,15 +121,19 @@
                                     <TextBlock FontSize="11" Text="{Binding ToolTipMessage}" />
                                 </StackPanel>
                             </ToolTipService.ToolTip>
+
+                            <!--  progress indicator  -->
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="70" />
                                 <ColumnDefinition Width="auto" />
                             </Grid.ColumnDefinitions>
+                            <!--  video name  -->
                             <TextBlock
                                 Margin="2"
                                 VerticalAlignment="Center"
                                 Text="{Binding Path=ReducedName}" />
+                            <!--  both progress bars indicate progress  -->
                             <ProgressBar
                                 Grid.Row="0"
                                 Grid.Column="1"

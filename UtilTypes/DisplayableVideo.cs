@@ -36,7 +36,7 @@ namespace mouse_tracking_web_app.UtilTypes
         {
             if (!string.IsNullOrEmpty(e.Data))
             {
-                Console.WriteLine($"e: {e.Data}");
+                Console.WriteLine($"{ReducedName}, e: {e.Data}");
             }
         }
 
@@ -94,7 +94,7 @@ namespace mouse_tracking_web_app.UtilTypes
                         AppendToToolTipMessage($"{ProcessingState}: {errorMessage}");
                 }
 
-                Console.WriteLine($"o: {e.Data}");
+                Console.WriteLine($"{ReducedName}, o: {e.Data}");
             }
         }
 
@@ -125,7 +125,9 @@ namespace mouse_tracking_web_app.UtilTypes
                 {
                     ProcessingState = State.ExtractVideo;
                     action(videoName, _cancellationToken.Token);
-                    if ((ProcessingState != State.Successful) || (ProcessingState != State.Canceled))
+                    if (_cancellationToken.IsCancellationRequested)
+                        ProcessingState = State.Canceled;
+                    else if (ProcessingState != State.Successful)
                         ProcessingState = State.Failed;
                 }
                 finally
