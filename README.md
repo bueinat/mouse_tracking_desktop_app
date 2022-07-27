@@ -49,7 +49,7 @@ Make sure to add anaconda's directory to the path. You can do this in one of the
 
 The app uses MongoDB as its database. Follow the instructions [here](https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-windows/) to install it.
 
-In short, you first install [mongosh](https://www.mongodb.com/docs/mongodb-shell/install/#std-label-mdb-shell-install)
+In short, you first install latest version of [mongosh](https://www.mongodb.com/docs/mongodb-shell/install/#std-label-mdb-shell-install) (platform Windows 64-bit (8.1+) (MSI)), and then install [mongodb](https://www.mongodb.com/try/download/community?tck=docs_server). Just follow the instructions and make sure to install MongoDB as a service.
 
 ### [CUDA Tooklit](https://developer.nvidia.com/cuda-downloads)
 
