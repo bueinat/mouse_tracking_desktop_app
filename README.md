@@ -7,32 +7,33 @@ Developed by Einat Buznach for Prof. Rafi Haddad's Lab.
 <!-- TOC -->
 
 - [Mouse Tracking Application](#mouse-tracking-application)
+  - [Requriements](#requriements)
   - [Installments](#installments)
-    - [Preceding Installments](#preceding-installments)
-      - [Git](#git)
-      - [Anaconda](#anaconda)
-      - [Compass](#compass)
-      - [CUDA Tooklit](#cuda-tooklit)
-      - [Pytorch](#pytorch)
-      - [yolov5](#yolov5)
-      - [DeepEthogram](#deepethogram)
+    - [Git](#git)
+    - [Anaconda](#anaconda)
+    - [MongoDB](#mongodb)
+    - [CUDA Tooklit](#cuda-tooklit)
+    - [Pytorch](#pytorch)
+    - [yolov5](#yolov5)
+    - [DeepEthogram](#deepethogram)
   - [Train DeepEthogram Model](#train-deepethogram-model)
 
 <!-- /TOC -->
 
-## Installments
+## Requriements
 
 In order to run this app you need to have GPU on your computer which supports CUDA.
 
-### Preceding Installments
+## Installments
 
 Install the followings, by clicking the links and following the instructions.
+**Note:** in the future I wish to make all of this much simpler by writing a script which does all that.
 
-#### [Git](https://git-scm.com/download/win)
+### [Git](https://git-scm.com/download/win)
 
 Follow the provided instructions.
 
-#### [Anaconda](https://www.anaconda.com/)
+### [Anaconda](https://www.anaconda.com/)
 
 Make sure to add anaconda's directory to the path. You can do this in one of the following ways:
 
@@ -44,12 +45,13 @@ Make sure to add anaconda's directory to the path. You can do this in one of the
   setx /M path "%path%;path_to_anaconda"
   ```
 
-#### [Compass](https://www.mongodb.com/try/download/compass)
+### [MongoDB](https://www.mongodb.com/)
 
-This is the database which we're going to use.
-Note for the testers: this is temporary, and after I finish everything up, I'm going to make the installation as easy as possible.
+The app uses MongoDB as its database. Follow the instructions [here](https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-windows/) to install it.
 
-#### [CUDA Tooklit](https://developer.nvidia.com/cuda-downloads)
+In short, you first install [mongosh](https://www.mongodb.com/docs/mongodb-shell/install/#std-label-mdb-shell-install)
+
+### [CUDA Tooklit](https://developer.nvidia.com/cuda-downloads)
 
 You can install the network version. Detailed installation guidance is provided [here](https://docs.nvidia.com/cuda/cuda-installation-guide-microsoft-windows/index.html).
 
@@ -62,11 +64,11 @@ You can install the network version. Detailed installation guidance is provided 
   pip install nvidia-cuda-runtime-cu11
   ```
 
-#### [Pytorch](https://pytorch.org/get-started/locally/)
+### [Pytorch](https://pytorch.org/get-started/locally/)
 
 Just pick the right setup for you. You should use pip (and not anaconda), and pick the newest cuda version available. Then copy the given line and change the cuda version according to the one you installed (I changed `116` -> `117`). You can try the tests presented later on in the page.
 
-#### [yolov5](https://github.com/ultralytics/yolov5)
+### [yolov5](https://github.com/ultralytics/yolov5)
 
 If you installed `git`, all you have to do is run the following commands in your command line:
 
@@ -79,7 +81,7 @@ pip install -r requirements.txt  # install
 you have to make sure that where running those commands, you're in the right folder, where you want `yolov5` to be.
 <!--comment: it's better if I do it myself and install it in the place I find better (i.e. ProgramData) -->
 
-#### DeepEthogram
+### [DeepEthogram](https://github.com/jbohnslav/deepethogram)
 
 You simply install by typing:
 
