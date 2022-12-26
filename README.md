@@ -1,8 +1,8 @@
-﻿# Mouse Tracking Application
+# Mouse Tracking Application
 
 Developed by Einat Buznach for Prof. Rafi Haddad's Lab.
 
-<!-- For any questions or technical help: @bueinat. -->
+For any questions or technical help: bueinat@gmail.com.
 
 <!-- TOC -->
 
