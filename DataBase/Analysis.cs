@@ -53,7 +53,7 @@ namespace mouse_tracking_web_app.DataBase
         [BsonElement("is_drinking")]
         public List<bool> IsDrinking { get; set; }
 
-        [BsonElement("is_nose_casting")]
+        [BsonElement("is_noseCasting")]
         public List<bool> IsNoseCasting { get; set; }
 
         [BsonElement("video")]

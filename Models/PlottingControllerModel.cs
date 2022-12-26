@@ -23,7 +23,7 @@ namespace mouse_tracking_web_app.Models
         private readonly Dictionary<string, MarkerType> scatterTypes = new Dictionary<string, MarkerType>
         {
             ["none"] = MarkerType.Circle,
-            ["sniffing"] = MarkerType.Cross,
+            ["sniffing"] = MarkerType.Triangle,
             ["drinking"] = MarkerType.Diamond,
             ["noseCasting"] = MarkerType.Square
         };

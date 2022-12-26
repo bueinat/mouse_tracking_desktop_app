@@ -4,17 +4,133 @@ import shutil
 import datetime
 
 import pandas
-import numpy
+import numpy as np
+from numpy_ext import rolling_apply
+
+import cv2
+from PIL import Image
 
 import torch
 import mongoengine as mnge
-from utilityFunctions import *
+# from utilityFunctions import *
+
+import deepethogram # import configuration, postprocessing, projects
+from deepethogram.sequence.inference import sequence_inference
+from deepethogram.feature_extractor.inference import feature_extractor_inference
 
 # suppress all warnings
 import warnings
 warnings.filterwarnings("ignore")
 
-def create_data_path_directory():
+# %%
+# those are just for introducing purposes
+# running the full classes ends up with errors because they don't know each other
+class Analysis(mnge.Document):
+    timestep = mnge.ListField(mnge.IntField())
+    
+class Video(mnge.Document):
+    registration_date = mnge.DateTimeField(default=datetime.datetime.now)
+    
+#%%
+class Analysis(mnge.Document):
+    timestep = mnge.ListField(mnge.IntField(), required=True)
+    
+    x = mnge.ListField(mnge.FloatField(), required=True)
+    y = mnge.ListField(mnge.FloatField(), required=True)
+    vx = mnge.ListField(mnge.FloatField(), required=True)
+    vy = mnge.ListField(mnge.FloatField(), required=True)
+    ax = mnge.ListField(mnge.FloatField(), required=True)
+    ay = mnge.ListField(mnge.FloatField(), required=True)
+    curviness = mnge.ListField(mnge.FloatField(), required=True)
+    
+    path = mnge.ListField(mnge.StringField(required=True))
+    is_sniffing = mnge.ListField(mnge.BooleanField(default=False))
+    is_drinking = mnge.ListField(mnge.BooleanField(default=False))
+    is_noseCasting = mnge.ListField(mnge.BooleanField(default=False))
+    video = mnge.ReferenceField(Video)
+    
+    meta = {
+        'db_alias': 'core',
+        'collection': 'analysis'
+    }
+
+# %%
+class Video(mnge.Document):
+    registration_date = mnge.DateTimeField(default=datetime.datetime.now)
+    modification_date = mnge.DateTimeField()
+    name = mnge.StringField(required=True)
+    nframes = mnge.IntField(reqiured=True)
+    length = mnge.StringField(required=True)
+    description = mnge.StringField(required=True)
+    link_to_data = mnge.StringField(required=True)
+    analysis = mnge.ReferenceField(Analysis)
+    
+    meta = {
+        'db_alias': 'core',
+        'collection': 'videos'
+    }
+
+def video_to_frames(video_path, frames_path, video_name=None, include_video_name=False, override=False):
+    # create filename if doesn't exist and capture whole video
+    if video_name == None:
+        video_name = video_path.split('/')[-1].split('.')[0]
+    vidcap = cv2.VideoCapture(video_path)
+    if os.path.exists(frames_path) and len(os.listdir(frames_path)) != 0:
+        print("frames directory already exists")
+        if override:
+            shutil.rmtree(frames_path)
+            os.makedirs(frames_path)
+        else:
+             raise FileExistsError(f"cache contains extracted frames already and override is false")
+    else:
+        os.makedirs(frames_path, exist_ok=True)
+    count = 0
+
+    # make sure the video wasn't extracted already
+    success, image = vidcap.read()
+    frame_name = u"{}\\frame{}.jpg".format(frames_path, count)
+    if os.path.exists(frame_name):
+        raise Exception('the video was already extracted')
+
+    # write all frames to images
+    while success:
+        frame_name = u"{}\\frame{}.jpg".format(frames_path, count)
+        Image.fromarray(image).save(frame_name)
+        success, image = vidcap.read()
+        count += 1
+    return count
+
+# %%
+def aireal_dist(dfx, dfy):
+    return np.sqrt((dfx.iloc[0] - dfx.iloc[-1]) ** 2 + (dfy.iloc[0] - dfy.iloc[-1]) ** 2)
+
+def analyze_raw_data(raw_data):
+    raw_data.index.name = 'timestep'
+    raw_data['time'] = raw_data.index
+    # path = raw_data.set_index('x').y
+
+    # %%
+    raw_data['vx'] = raw_data.x.diff() / raw_data.time.diff()
+    raw_data['vy'] = raw_data.y.diff() / raw_data.time.diff()
+    raw_data['r_tot'] = np.sqrt((raw_data.x - raw_data.x.iloc[0]) ** 2 + (raw_data.y - raw_data.y.iloc[0]) ** 2)
+    raw_data['r'] = np.sqrt(raw_data.x.diff() ** 2 + raw_data.y.diff() ** 2)
+    raw_data['v'] = np.sqrt(raw_data.vx ** 2 + raw_data.vy ** 2)
+
+    raw_data['ax'] = raw_data.vx.diff() / raw_data.time.diff()
+    raw_data['ay'] = raw_data.vy.diff() / raw_data.time.diff()
+    raw_data['a'] = np.sqrt(raw_data.ax ** 2 + raw_data.ay ** 2)
+
+    # %%
+    win_size = 100
+
+    raw_data["adist"] = rolling_apply(aireal_dist, win_size, raw_data.x, raw_data.y)
+    raw_data["rdist"] = raw_data.r.rolling(win_size).sum()
+    raw_data['curviness'] = (raw_data.adist / raw_data.rdist).shift(-win_size // 2)
+
+    raw_data = raw_data.fillna(method='bfill').fillna(method='ffill')
+    return raw_data # , path
+
+def create_data_path_directory(args, video_name):
     try:
         os.makedirs(args["data_path"])
         print("created new directory")
@@ -36,7 +152,7 @@ def create_data_path_directory():
             else:
                 os.makedirs(args["data_path"], exist_ok=True)
 
-def extract_video():
+def extract_video(args, video_name, frames_path):
     if not os.path.exists(os.path.join(args["data_path"], video_name)) or args["override"]:
         shutil.copy2(args["video_path"], args["data_path"])
     if not os.path.exists(frames_path) or len(os.listdir(frames_path)) == 0 or args["override"]:
@@ -49,19 +165,19 @@ def extract_video():
         raise Exception("error occured when trying to extract video")
     return nframes
 
-def run_inference(frames_path):
+def run_inference(frames_path, nframes):
     PATH = "C:/ProgramData/MouseApp/yolov5/models/best_trained_model.pt"
     model = torch.hub.load('ultralytics/yolov5', 'custom', path=PATH)  # local model
 
     dscript_detect = {}
     for i, filename in enumerate(os.listdir(frames_path)):
         dscript_detect[int(filename.split(".")[0][5:])] =  model(f"{frames_path}/{filename}")
-        if i % 10 == 0:
+        if i % 100 == 0:
             print(f"progress: {i}/{nframes}")
     print(f"progress: {nframes}/{nframes}")
     return dscript_detect
 
-def process_inference(dscript_detect):
+def process_inference(dscript_detect, frames_path):
     dff = pandas.concat({key: dscript_detect[key].pandas().xyxy[0] for key in dscript_detect.keys()})
     dff.insert(0, 'confidence', dff.pop('confidence'))
     dff = dff.sort_values("confidence").query("name == 'nose'").groupby(level=0).last()
@@ -101,57 +217,92 @@ def create_video_object(video_name, nframes, video_path):
     video.link_to_data = video_path
     return video
 
-
 # %%
-try:
-    # get run arguments
-    args = pandas.read_csv(sys.argv[1], header=None, index_col=0)[1]
-    args["override"] = eval(args["override"])
+def feature_extractor_inference_config(project_path):
+    preset = 'deg_f'
+    cfg = deepethogram.configuration.make_feature_extractor_inference_cfg(project_path=project_path, preset=preset)
+    cfg.feature_extractor.weights = 'latest'
+    cfg.flow_generator.weights = 'latest'
 
+    cfg.inference.overwrite = True
+    # make sure errors are thrown
+    cfg.inference.ignore_error = False
+    cfg.compute.num_workers = 2
+    return cfg
+
+def sequence_inference_config(project_path):
+    ncpus = 4
+    cfg = deepethogram.configuration.make_sequence_inference_cfg(project_path)
+    cfg.sequence.weights = 'latest'
+    cfg.compute.num_workers = ncpus
+    cfg.inference.overwrite = True
+    cfg.inference.ignore_error = False
+    return cfg
+
+def run(args):
     print("ExtractVideo")
     # create needed folders
     video_name = args["video_path"].split('\\')[-1].split('.')[0] 
     frames_path = u"{}\\frames".format(args['data_path'])
 
     # create a folder for cache
-    create_data_path_directory()
+    create_data_path_directory(args, video_name)
     
     # copy video to cache and extract frames
-    nframes = extract_video()
+    nframes = extract_video(args, video_name, frames_path)
 
     print("FindRatPath")
-
-    dscript_detect = run_inference(frames_path)
-    uploadable_data = process_inference(dscript_detect)
-
-    # # save data to csv
-    # uploadable_data.to_csv(f"{args['data_path']}\\uploadable_data.csv")
+    dscript_detect = run_inference(frames_path, nframes)
+    uploadable_data = process_inference(dscript_detect, frames_path)
     
     print("FindRatFeatures") 
-    run_num = args['video_path'].split("\\")[-1].split(".")[0]
-    if "6" in run_num:
-        pred_df = pandas.read_csv("C:/Users/buein/OneDrive - Bar-Ilan University/שנה ג/פרוייקט שנתי/mouse_tracking/cv/videos/examples/testing_project_deepethogram" + f"/DATA/{run_num}/{run_num}_predictions.csv",
-                                index_col=0).drop('background', axis=1).astype(bool)
+    if torch.cuda.is_available():
+        # if not override, get predictions if exist
+        pname = f"{args['de_project_path']}\\DATA\\{video_name}\\{video_name}_predictions.csv"
+        print("predname", pname)
+        if not args["override"] and os.path.exists(pname):
+            predictions_filename = pname
+            print(f"message: loading existing predictions of {video_name} which already exist in DeepEthogram.")
+        else:
+            # add video to project
+            project_config = deepethogram.projects.load_config(f"{args['de_project_path']}\\project_config.yaml")
+            try:
+                # TODO: add only if doesn't exist, and take care of the difference in override
+                deepethogram.projects.add_video_to_project(project_config, args["video_path"], mode='copy')
+            except:
+                shutil.rmtree(f"{args['de_project_path']}\\DATA\\{video_name}")
+            # feature extractor
+            cfg = feature_extractor_inference_config(project_path=args['de_project_path'])
+            feature_extractor_inference(cfg)
+            # sequence model
+            cfg = sequence_inference_config(project_path=args['de_project_path'])
+            sequence_inference(cfg)
+            # post process
+            cfg = deepethogram.configuration.make_postprocessing_cfg(project_path=args['de_project_path'])
+            deepethogram.postprocessing.postprocess_and_save(cfg)
+            # get predictions
+            key = args["video_path"].split('\\')[-1].split(".")[0]
+            record = deepethogram.projects.get_records_from_datadir(os.path.join(args['de_project_path'], 'DATA'))[key]
+            predictions_filename = os.path.join(os.path.dirname(record['rgb']), record['key'] + '_predictions.csv') 
     else:
-        pred_df = pandas.read_csv('C:/Users/buein/OneDrive - Bar-Ilan University/שנה ג/פרוייקט שנתי/mouse_tracking/cv/videos/examples/testing_project_deepethogram/DATA/odor28/odor28_predictions.csv',
-                            index_col=0).drop('background', axis=1).astype(bool)
-    pred_df.columns = pred_df.columns.map(lambda s: "is_" + s.replace(' ', '_'))
+        run_num = args['video_path'].split("\\")[-1].split(".")[0]
+        if "6" in run_num:
+            predictions_filename = "C:/Users/buein/OneDrive - Bar-Ilan University/שנה ג/פרוייקט שנתי/mouse_tracking/cv/videos/examples/testing_project_deepethogram" + f"/DATA/{run_num}/{run_num}_predictions.csv"
+        else:
+            predictions_filename = 'C:/Users/buein/OneDrive - Bar-Ilan University/שנה ג/פרוייקט שנתי/mouse_tracking/cv/videos/examples/testing_project_deepethogram/DATA/odor28/odor28_predictions.csv'
+    
+    pred_df = pandas.read_csv(predictions_filename, index_col=0).drop('background', axis=1).astype(bool)
+    if pred_df.columns[0].endswith("ing"):
+        pred_df.columns = pred_df.columns.map(lambda s: "is_" + s.replace(' ', '_'))
+    else:
+        pred_df.columns = pred_df.columns.map(lambda s: "is_" + s.replace(' ', '_') + "ing")
 
     save_path = args["video_path"][:args["video_path"].rindex("\\")]
     video_name = args["video_path"].split("\\")[-1].split(".")[0]
-    uploadable_data.to_csv(f"{save_path}\\{video_name}_processed_data.csv") # TODO: check if this is okay
-
-    if len(uploadable_data) != len(pred_df):
-        pred_df = pandas.DataFrame(numpy.zeros((len(uploadable_data), len(pred_df.columns))), columns=pred_df.columns).astype(bool)
-        print("message: features and path files are not in the same length. No support of features exists in such case.")
-        # raise Exception("features and path files are not in the same length. Are you sure they were generated for the same video?")
-
     uploadable_data = pandas.concat([uploadable_data, pred_df], axis=1)
-    uploadable_data.to_csv(f"{args['data_path']}\\uploadable_data.csv")
-    uploadable_data.to_csv(f"{save_path}\\{video_name}_processed_data.csv")
-    
+    uploadable_data.to_csv(f"{args['data_path']}\\processed_data.csv")
+
     print("SaveToDataBase")
-    
     # %%
     # the commented line is used for server storage, but we prefer saving on this computer.
     # cluster = "mongodb+srv://john:1234@cluster0.9txls.mongodb.net/real_test?retryWrites=true&w=majority" 
@@ -175,12 +326,11 @@ try:
 
     # %%
     video = Video.objects(id=video_id).first()
-
-    uploadabale_data = pandas.read_csv(f"{args['data_path']}\\uploadable_data.csv", index_col=0)
+    
     ana = Analysis()
-    ana.timestep = list(uploadabale_data.index)
-    for c in uploadabale_data.columns:
-        exec(f"ana.{c} = list(uploadabale_data['{c}'])")
+    ana.timestep = list(uploadable_data.index)
+    for c in uploadable_data.columns:
+        exec(f"ana.{c} = list(uploadable_data['{c}'])")
 
     if args["override"]:
         try:
@@ -195,14 +345,23 @@ try:
     video.save()
     print(f"analysis id: {ana.id}")
     print("success")
+
+if __name__ == '__main__':
+    # %%
+    args = pandas.read_csv(sys.argv[1], header=None, index_col=0)[1]
+    args["override"] = eval(args["override"])
+    run(args)
+    print("exit")
     sys.exit(0)
+    #try:
+    #    run(args)
+    #except Exception as e:
+    #    if str(e).startswith("message"):
+    #        print(e)
+    #    else:
+    #        exc_type, exc_obj, exc_tb = sys.exc_info()
+    #        print(f"error in line {exc_tb.tb_lineno}: {e.__class__.__name__}: {e}")
 
-
-except Exception as e:
-    if str(e).startswith("message"):
-        print(e)
-        sys.exit(0)
-    else:
-        exc_type, exc_obj, exc_tb = sys.exc_info()
-        print(f"error in line {exc_tb.tb_lineno}: {e.__class__.__name__}: {e}")
-        sys.exit(0)
+    #finally:
+    #    print("exit")
+    #    sys.exit(0)

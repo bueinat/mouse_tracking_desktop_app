@@ -36,42 +36,18 @@ def video_to_frames(video_path, frames_path, video_name=None, include_video_name
              raise FileExistsError(f"cache contains extracted frames already and override is false")
     else:
         os.makedirs(frames_path, exist_ok=True)
-
-    # try:
-    #     os.makedirs(frames_path)
-    # except Exception as e:
-    #     print(e)
-    #     if override:
-    #        shutil.rmtree(frames_path)
-    #        os.makedirs(frames_path)
-    #    else:
-    #        raise Exception(e)
-    # os.makedirs(frames_path, exist_ok=True)
     count = 0
 
     # make sure the video wasn't extracted already
     success, image = vidcap.read()
-    # frame_name = f"{frames_path}\\{video_name}_frame{count}.jpg" if include_video_name else f"{frames_path}\\frame{count}.jpg"
     frame_name = u"{}\\frame{}.jpg".format(frames_path, count)
-    # print(frame_name)
     if os.path.exists(frame_name):
         raise Exception('the video was already extracted')
 
     # write all frames to images
     while success:
         frame_name = u"{}\\frame{}.jpg".format(frames_path, count)
-        # frame_name = f"{frames_path}\\{video_name}_frame{count}.jpg" if include_video_name else f"{frames_path}\\frame{count}.jpg"
-        # frame_name = os.path.join(u'', frame_name)
-        # frame_name = frame_name.encode('utf-8')
-        # print(os.path.join(u'', frame_name))
-        # print(frame_name.encode('utf-8'))
-        # print(frame_name)
-        
         Image.fromarray(image).save(frame_name)
-        # s = cv2.imwrite(frame_name, image)
-        # s2 = cv2.imencode(".jpg", image)[1].tofile(frame_name)
-        # if not s:
-        #    raise Exception(f'frame {count} was not written, name: {frame_name}')
         success, image = vidcap.read()
         count += 1
     return count
@@ -353,7 +329,7 @@ class Analysis(mnge.Document):
     path = mnge.ListField(mnge.StringField(required=True))
     is_sniffing = mnge.ListField(mnge.BooleanField(default=False))
     is_drinking = mnge.ListField(mnge.BooleanField(default=False))
-    is_nose_casting = mnge.ListField(mnge.BooleanField(default=False))
+    is_nosecasting = mnge.ListField(mnge.BooleanField(default=False))
     video = mnge.ReferenceField(Video)
     
     meta = {
