@@ -20,6 +20,7 @@ namespace mouse_tracking_web_app.UtilTypes
             {
                 PythonPath = ConfigurationManager.AppSettings.Get("PythonPath");
                 WorkingPath = ConfigurationManager.AppSettings.Get("WorkingPath");
+                DEPath = ConfigurationManager.AppSettings.Get("DEPath");
                 ConnectionString = ConfigurationManager.AppSettings.Get("ConnectionString");
                 DatabaseName = ConfigurationManager.AppSettings.Get("DatabaseName");
                 FeaturesList = ConfigurationManager.AppSettings.Get("FeaturesList");
@@ -32,6 +33,7 @@ namespace mouse_tracking_web_app.UtilTypes
             {
                 PythonPath = "";
                 WorkingPath = "";
+                DEPath = "";
                 ConnectionString = "";
                 DatabaseName = "";
                 FeaturesList = "";
@@ -73,6 +75,7 @@ namespace mouse_tracking_web_app.UtilTypes
             {
                 PythonPath = PythonPath,
                 WorkingPath = WorkingPath,
+                DEPath = DEPath,
                 ConnectionString = ConnectionString,
                 DatabaseName = DatabaseName,
                 FeaturesList = FeaturesList,
@@ -101,6 +104,8 @@ namespace mouse_tracking_web_app.UtilTypes
                 PythonPath = source.PythonPath;
             if (!string.IsNullOrEmpty(source.WorkingPath))
                 WorkingPath = source.WorkingPath;
+            if (!string.IsNullOrEmpty(source.DEPath))
+                DEPath = source.DEPath;
             if (!string.IsNullOrEmpty(source.ConnectionString))
                 ConnectionString = source.ConnectionString;
             if (!string.IsNullOrEmpty(source.DatabaseName))
@@ -173,6 +178,22 @@ namespace mouse_tracking_web_app.UtilTypes
         }
 
         #endregion workingPath
+
+        #region dePath
+
+        private string dePath;
+
+        public string DEPath
+        {
+            get => dePath;
+            set
+            {
+                dePath = value;
+                OnPropertyChanged("DEPath");
+            }
+        }
+
+        #endregion dePath
 
         #region connectionString
 

@@ -174,7 +174,7 @@ namespace mouse_tracking_web_app.ViewModels
                 ["video_path"] = vidPath,
                 ["data_path"] = $"{VPM_CachePath}\\{currentVideo.ReducedName.Split('.')[0]}",
                 ["connection_string"] = $"{connectionString}/{dbName}",
-                ["de_project_path"] = @"C:\Users\Public\MouseTracking\NewProject_deepethogram"
+                ["de_project_path"] = _model.SM.DEPath
             };
 
             // run algorithm

@@ -285,11 +285,8 @@ def run(args):
             record = deepethogram.projects.get_records_from_datadir(os.path.join(args['de_project_path'], 'DATA'))[key]
             predictions_filename = os.path.join(os.path.dirname(record['rgb']), record['key'] + '_predictions.csv') 
     else:
-        run_num = args['video_path'].split("\\")[-1].split(".")[0]
-        if "6" in run_num:
-            predictions_filename = "C:/Users/buein/OneDrive - Bar-Ilan University/שנה ג/פרוייקט שנתי/mouse_tracking/cv/videos/examples/testing_project_deepethogram" + f"/DATA/{run_num}/{run_num}_predictions.csv"
-        else:
-            predictions_filename = 'C:/Users/buein/OneDrive - Bar-Ilan University/שנה ג/פרוייקט שנתי/mouse_tracking/cv/videos/examples/testing_project_deepethogram/DATA/odor28/odor28_predictions.csv'
+        # handle the case where CUDA is not available
+        print("message: no CUDA hardware exists. Can't run DeepEthogram.")
     
     pred_df = pandas.read_csv(predictions_filename, index_col=0).drop('background', axis=1).astype(bool)
     if pred_df.columns[0].endswith("ing"):
@@ -297,7 +294,7 @@ def run(args):
     else:
         pred_df.columns = pred_df.columns.map(lambda s: "is_" + s.replace(' ', '_') + "ing")
 
-    save_path = args["video_path"][:args["video_path"].rindex("\\")]
+    # save_path = args["video_path"][:args["video_path"].rindex("\\")]
     video_name = args["video_path"].split("\\")[-1].split(".")[0]
     uploadable_data = pandas.concat([uploadable_data, pred_df], axis=1)
     uploadable_data.to_csv(f"{args['data_path']}\\processed_data.csv")
@@ -353,15 +350,3 @@ if __name__ == '__main__':
     run(args)
     print("exit")
     sys.exit(0)
-    #try:
-    #    run(args)
-    #except Exception as e:
-    #    if str(e).startswith("message"):
-    #        print(e)
-    #    else:
-    #        exc_type, exc_obj, exc_tb = sys.exc_info()
-    #        print(f"error in line {exc_tb.tb_lineno}: {e.__class__.__name__}: {e}")
-
-    #finally:
-    #    print("exit")
-    #    sys.exit(0)

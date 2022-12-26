@@ -53,14 +53,6 @@ namespace mouse_tracking_web_app.Models
 
         public double IsDrinkingPercent => VideoStats is null ? 0 : VideoStats.IsDrinkingPercent;
 
-        //{
-        //    get => SM.WorkingPath;
-        //    set
-        //    {
-        //        SM.WorkingPath = value;
-        //        NotifyPropertyChanged("FileExplorerDirectory");
-        //    }
-        //}
         public bool IsLoading
         {
             get => isLoading;
@@ -86,14 +78,6 @@ namespace mouse_tracking_web_app.Models
             }
         }
 
-        //{
-        //    get => overrideInDB;
-        //    set
-        //    {
-        //        overrideInDB = value;
-        //        NotifyPropertyChanged("OverrideInDB");
-        //    }
-        //}
         public PlottingControllerModel PC { get; }
 
         public SettingsManager SM { get; }
@@ -211,6 +195,7 @@ namespace mouse_tracking_web_app.Models
         #endregion videosPath
 
         public string WorkingPath => SM.WorkingPath;
+        public string DEPath => SM.DEPath;
 
         public void NotifyPropertyChanged(string propertyName)
         {

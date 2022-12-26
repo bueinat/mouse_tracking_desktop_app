@@ -53,6 +53,8 @@ namespace mouse_tracking_web_app.ViewModels
                 NotifyPropertyChanged("PythonPath");
             if (CurrentSettings.WorkingPath != oldSettings.WorkingPath)
                 NotifyPropertyChanged("WorkingPath");
+            if (CurrentSettings.DEPath != oldSettings.DEPath)
+                NotifyPropertyChanged("DEPath");
             if (CurrentSettings.ConnectionString != oldSettings.ConnectionString)
                 NotifyPropertyChanged("ConnectionString");
             if (CurrentSettings.DatabaseName != oldSettings.DatabaseName)
@@ -87,6 +89,7 @@ namespace mouse_tracking_web_app.ViewModels
                 NotifyPropertyChanged("CurrentSettings");
                 NotifyPropertyChanged("PythonPath");
                 NotifyPropertyChanged("WorkingPath");
+                NotifyPropertyChanged("DEPath");
                 NotifyPropertyChanged("ConnectionString");
                 NotifyPropertyChanged("DatabaseName");
                 NotifyPropertyChanged("FeaturesList");
@@ -127,6 +130,7 @@ namespace mouse_tracking_web_app.ViewModels
         public List<string> VideoTypesList => new List<string>(CurrentSettings.VideoTypesList.Split(','));
 
         public string WorkingPath => CurrentSettings.WorkingPath;
+        public string DEPath => CurrentSettings.DEPath;
 
         public string FirstCharToUpperCase(string str)
         {
