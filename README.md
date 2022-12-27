@@ -125,6 +125,7 @@ You see we have one flow generator which needs to be trained once, and feature e
 The training of the flow generator should be done in the `DeepEthogram` GUI, and it might take quite long. You can also run the next steps in the GUI if you wish, but the mouse tracking app should do it for you as well.
 
 To train the model you have to click on the `Train` button in the `FlowGenerator` box on the left side of the app, below the video info. Notice you can pick an existing model to train on if you wish.
+
 ![image](https://user-images.githubusercontent.com/62245924/209649536-61508df4-e882-461d-a95d-45696128bc65.png)
 
 If you want to do the whole training on the GUI, you should look into [this link](https://github.com/jbohnslav/deepethogram/blob/master/docs/using_gui.md) again.
