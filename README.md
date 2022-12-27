@@ -17,6 +17,10 @@ For any questions or technical help: bueinat@gmail.com.
     - [yolov5](#yolov5)
     - [DeepEthogram](#deepethogram)
   - [Train DeepEthogram Model](#train-deepethogram-model)
+    - [Create a Model](#create-a-model)
+    - [Train the Model](#train-the-model)
+    - [Finalize Labels](#finalize-labels)
+    - [For More Info](#for-more-info)
 
 <!-- /TOC -->
 
