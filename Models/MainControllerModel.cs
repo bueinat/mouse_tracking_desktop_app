@@ -153,11 +153,12 @@ namespace mouse_tracking_web_app.Models
 
         private string videosPath;
 
-        public string CachePath => VideosPath is null
-                    ? ""
-                    : File.GetAttributes(VideosPath).HasFlag(FileAttributes.Directory)
-                    ? $"{VideosPath}\\.cache"
-                    : $"{Path.GetDirectoryName(VideosPath)}\\.cache";
+        //public string CachePath => VideosPath is null
+        //            ? ""
+        //            : File.GetAttributes(VideosPath).HasFlag(FileAttributes.Directory)
+        //            ? $"{VideosPath}\\.cache"
+        //            : $"{Path.GetDirectoryName(VideosPath)}\\.cache";
+        public string CachePath => DEPath;
 
         public List<string> VideosList { get; set; }
 

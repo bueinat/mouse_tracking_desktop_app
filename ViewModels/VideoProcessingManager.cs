@@ -172,7 +172,7 @@ namespace mouse_tracking_web_app.ViewModels
             {
                 ["override"] = _model.OverrideDB ? "True" : "False",
                 ["video_path"] = vidPath,
-                ["data_path"] = $"{VPM_CachePath}\\{currentVideo.ReducedName.Split('.')[0]}",
+                ["data_path"] = $"{VPM_CachePath}\\{currentVideo.ReducedName.Split('.')[0]}", // this data_path, I'm not sure it should be used... Instead. I want to add the video to the deepethogram project
                 ["connection_string"] = $"{connectionString}/{dbName}",
                 ["de_project_path"] = _model.SM.DEPath
             };

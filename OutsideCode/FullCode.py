@@ -2,6 +2,7 @@
 import os
 import shutil
 import datetime
+# import multiprocessing
 
 import pandas
 import numpy as np
@@ -15,8 +16,12 @@ import mongoengine as mnge
 # from utilityFunctions import *
 
 import deepethogram # import configuration, postprocessing, projects
+from deepethogram import projects
+# from deepethogram.flow_generator.train import flow_generator_train
 from deepethogram.sequence.inference import sequence_inference
 from deepethogram.feature_extractor.inference import feature_extractor_inference
+# from deepethogram.feature_extractor.train import feature_extractor_train
+
 
 # suppress all warnings
 import warnings
@@ -31,7 +36,7 @@ class Analysis(mnge.Document):
 class Video(mnge.Document):
     registration_date = mnge.DateTimeField(default=datetime.datetime.now)
     
-#%%
+# %% Analysis
 class Analysis(mnge.Document):
     timestep = mnge.ListField(mnge.IntField(), required=True)
     
@@ -54,7 +59,7 @@ class Analysis(mnge.Document):
         'collection': 'analysis'
     }
 
-# %%
+# %% Video
 class Video(mnge.Document):
     registration_date = mnge.DateTimeField(default=datetime.datetime.now)
     modification_date = mnge.DateTimeField()
@@ -70,6 +75,7 @@ class Video(mnge.Document):
         'collection': 'videos'
     }
 
+# %% video to frames
 def video_to_frames(video_path, frames_path, video_name=None, include_video_name=False, override=False):
     # create filename if doesn't exist and capture whole video
     if video_name == None:
@@ -100,10 +106,11 @@ def video_to_frames(video_path, frames_path, video_name=None, include_video_name
         count += 1
     return count
 
-# %%
+# %% aireal_dist
 def aireal_dist(dfx, dfy):
     return np.sqrt((dfx.iloc[0] - dfx.iloc[-1]) ** 2 + (dfy.iloc[0] - dfy.iloc[-1]) ** 2)
 
+# %% analyze_raw_data
 def analyze_raw_data(raw_data):
     raw_data.index.name = 'timestep'
     raw_data['time'] = raw_data.index
@@ -128,14 +135,15 @@ def analyze_raw_data(raw_data):
     raw_data['curviness'] = (raw_data.adist / raw_data.rdist).shift(-win_size // 2)
 
     raw_data = raw_data.fillna(method='bfill').fillna(method='ffill')
-    return raw_data # , path
+    return raw_data
 
+# %% create_data_path_directory
 def create_data_path_directory(args, video_name):
     try:
         os.makedirs(args["data_path"])
         print("created new directory")
         args["override"] = False
-    except Exception as e:
+    except Exception:
         if args["override"]:
             print(f"message: note: overriding {video_name} which already existed in the archive.")
         else:
@@ -144,13 +152,43 @@ def create_data_path_directory(args, video_name):
             # return an already existing video
             if len(videoq) > 0:
                 video_id = videoq.first().id
-                analysis_id = videoq.first().analysis.id
+                # analysis_id = videoq.first().analysis.id
                 print(f"message: loading existing data of {video_name} which already exists in the cache.")
                 print(f"video id: {video_id}")
                 print("success")
                 exit(0)
             else:
                 os.makedirs(args["data_path"], exist_ok=True)
+
+def add_video_to_de_project(args):
+    """return video name"""
+    project_config_path = u"{}\\project_config.yaml".format(args['de_project_path'])
+    project_config = projects.load_config(project_config_path)
+    try:
+        new_path = projects.add_video_to_project(project_config, args["video_path"], mode="copy")
+        return os.path.dirname(new_path), new_path.split("\\")[-1]
+    except ValueError as e:
+        video_name = str(e).split("Directory ")[1].split(" already")[0]
+        if args["override"]:
+            print(f"message: note: overriding {video_name} which already existed in the archive.")
+            shutil.rmtree(f"{args['de_project_path']}\\DATA\\{video_name}")
+            new_path = projects.add_video_to_project(project_config, args["video_path"], mode="copy")
+            return os.path.dirname(new_path), new_path.split("\\")[-1]
+        else:
+            mnge.register_connection(alias='core', host=args["connection_string"])
+            videoq = Video.objects(link_to_data=args["video_path"], analysis__exists=1).order_by('-registered_date')
+            # return an already existing video
+            if len(videoq) > 0:
+                video_id = videoq.first().id
+                print(f"message: loading existing data of {video_name} which already exists in the cache.")
+                print(f"video id: {video_id}")
+                print("success")
+                exit(0)
+            else:
+                # there was some kind of error
+                shutil.rmtree(f"{args['de_project_path']}\\DATA\\{video_name}")
+                new_path = projects.add_video_to_project(project_config, args["video_path"], mode="copy")
+                return os.path.dirname(new_path), new_path.split("\\")[-1]
 
 def extract_video(args, video_name, frames_path):
     if not os.path.exists(os.path.join(args["data_path"], video_name)) or args["override"]:
@@ -218,7 +256,7 @@ def create_video_object(video_name, nframes, video_path):
     return video
 
 # %%
-def feature_extractor_inference_config(project_path):
+def feature_extractor_inference_config(project_path, video_path):
     preset = 'deg_f'
     cfg = deepethogram.configuration.make_feature_extractor_inference_cfg(project_path=project_path, preset=preset)
     cfg.feature_extractor.weights = 'latest'
@@ -228,61 +266,85 @@ def feature_extractor_inference_config(project_path):
     # make sure errors are thrown
     cfg.inference.ignore_error = False
     cfg.compute.num_workers = 2
+
+    # run inference only on the given file
+    cfg.inference.directory_list = [video_path]
     return cfg
 
-def sequence_inference_config(project_path):
+def sequence_inference_config(project_path, video_path):
     ncpus = 4
     cfg = deepethogram.configuration.make_sequence_inference_cfg(project_path)
     cfg.sequence.weights = 'latest'
     cfg.compute.num_workers = ncpus
     cfg.inference.overwrite = True
     cfg.inference.ignore_error = False
+
+    # run inference only on the given file
+    cfg.inference.directory_list = [video_path]
+    return cfg
+
+def flow_generator_train_config(project_path):
+    # this function is actually not needed since this training is supposed to be done in the DE app.
+    preset = 'deg_f'
+    cfg = deepethogram.configuration.make_flow_generator_train_cfg(project_path, preset=preset)
+    n_cpus = 2 # multiprocessing.cpu_count()
+    cfg.compute.num_workers = n_cpus
+    return cfg
+
+def feature_extractor_train_config(project_path):
+    preset = 'deg_f'
+    cfg = deepethogram.configuration.make_feature_extractor_train_cfg(project_path, preset=preset)
+    cfg.flow_generator.weights = 'latest'
+    n_cpus = 2 # multiprocessing.cpu_count()
+    cfg.compute.num_workers = n_cpus
     return cfg
 
 def run(args):
     print("ExtractVideo")
-    # create needed folders
-    video_name = args["video_path"].split('\\')[-1].split('.')[0] 
-    frames_path = u"{}\\frames".format(args['data_path'])
+
+    # add video to deepethogram project
+    # video_name = args["video_path"].split('\\')[-1].split('.')[0] 
 
     # create a folder for cache
-    create_data_path_directory(args, video_name)
+    # create_data_path_directory(args, video_name)
+    args["data_path"], video_path = add_video_to_de_project(args)
+    video_name = video_path.split('\\')[-1].split('.')[0] 
+    frames_path = u"{}\\.frames".format(args['data_path'])
     
-    # copy video to cache and extract frames
-    nframes = extract_video(args, video_name, frames_path)
-
-    print("FindRatPath")
-    dscript_detect = run_inference(frames_path, nframes)
-    uploadable_data = process_inference(dscript_detect, frames_path)
     
-    print("FindRatFeatures") 
+    # TODO: fix this switching
+    print("FindRatPath") 
     if torch.cuda.is_available():
-        # if not override, get predictions if exist
-        pname = f"{args['de_project_path']}\\DATA\\{video_name}\\{video_name}_predictions.csv"
-        print("predname", pname)
-        if not args["override"] and os.path.exists(pname):
+        # if not override, get labels / predictions if exist
+        lname = f"{args['de_project_path']}\\DATA\\{video_name}\\{video_name}_labels.csv"
+        pname = lname.replace("labels", "predictions")
+        if not args["override"] and os.path.exists(lname):
+            predictions_filename = lname
+            print(f"message: loading existing predictions of {video_name} which already exist in DeepEthogram.")
+        elif os.path.exists(pname):
             predictions_filename = pname
             print(f"message: loading existing predictions of {video_name} which already exist in DeepEthogram.")
         else:
-            # add video to project
-            project_config = deepethogram.projects.load_config(f"{args['de_project_path']}\\project_config.yaml")
-            try:
-                # TODO: add only if doesn't exist, and take care of the difference in override
-                deepethogram.projects.add_video_to_project(project_config, args["video_path"], mode='copy')
-            except:
-                shutil.rmtree(f"{args['de_project_path']}\\DATA\\{video_name}")
+            # # train flow generator - happens once
+            # cfg = flow_generator_train_config(project_path=args['de_project_path'])
+            # flow_generator_train(cfg)
+
+            # train feature extractor - more times
+            # cfg = feature_extractor_train_config(project_path=args['de_project_path'])
+            # feature_extractor_train(cfg)
+    
             # feature extractor
-            cfg = feature_extractor_inference_config(project_path=args['de_project_path'])
+            cfg = feature_extractor_inference_config(project_path=args['de_project_path'], video_path=args["data_path"])
             feature_extractor_inference(cfg)
             # sequence model
-            cfg = sequence_inference_config(project_path=args['de_project_path'])
+            cfg = sequence_inference_config(project_path=args['de_project_path'], video_path=args["data_path"])
             sequence_inference(cfg)
             # post process
             cfg = deepethogram.configuration.make_postprocessing_cfg(project_path=args['de_project_path'])
             deepethogram.postprocessing.postprocess_and_save(cfg)
+
             # get predictions
-            key = args["video_path"].split('\\')[-1].split(".")[0]
-            record = deepethogram.projects.get_records_from_datadir(os.path.join(args['de_project_path'], 'DATA'))[key]
+            record = deepethogram.projects.get_records_from_datadir(os.path.join(args['de_project_path'], 'DATA'))[video_name]
             predictions_filename = os.path.join(os.path.dirname(record['rgb']), record['key'] + '_predictions.csv') 
     else:
         # handle the case where CUDA is not available
@@ -293,6 +355,15 @@ def run(args):
         pred_df.columns = pred_df.columns.map(lambda s: "is_" + s.replace(' ', '_'))
     else:
         pred_df.columns = pred_df.columns.map(lambda s: "is_" + s.replace(' ', '_') + "ing")
+
+        
+    print("FindRatFeatures")
+    
+    # copy video to cache and extract frames
+    nframes = extract_video(args, video_name, frames_path)
+
+    dscript_detect = run_inference(frames_path, nframes)
+    uploadable_data = process_inference(dscript_detect, frames_path)
 
     # save_path = args["video_path"][:args["video_path"].rindex("\\")]
     video_name = args["video_path"].split("\\")[-1].split(".")[0]

@@ -36,6 +36,7 @@ namespace mouse_tracking_web_app.UtilTypes
         {
             if (!string.IsNullOrEmpty(e.Data))
             {
+                // TODO: use this to update on 
                 Console.WriteLine($"{ReducedName}, e: {e.Data}");
             }
         }
