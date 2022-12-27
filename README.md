@@ -1,8 +1,8 @@
-﻿# Mouse Tracking Application
+# Mouse Tracking Application
 
 Developed by Einat Buznach for Prof. Rafi Haddad's Lab.
 
-<!-- For any questions or technical help: @bueinat. -->
+For any questions or technical help: bueinat@gmail.com.
 
 <!-- TOC -->
 
@@ -17,6 +17,10 @@ Developed by Einat Buznach for Prof. Rafi Haddad's Lab.
     - [yolov5](#yolov5)
     - [DeepEthogram](#deepethogram)
   - [Train DeepEthogram Model](#train-deepethogram-model)
+    - [Create a Model](#create-a-model)
+    - [Train the Model](#train-the-model)
+    - [Finalize Labels](#finalize-labels)
+    - [For More Info](#for-more-info)
 
 <!-- /TOC -->
 
@@ -96,10 +100,38 @@ pip install deepethogram
 
 The full instructions can be found [here](https://github.com/jbohnslav/deepethogram/blob/master/docs/using_gui.md), in `DeepEthogram`'s GitHub page. Here I will present the most important stuff, without much details.
 
+### Create a Model
 - Open any command line as you wish and type `DeepEthogram`. A window with the app will appear.
 - Open a new project by pressing `file -> new project`, and pick a folder in which you want to have your project. It is recommended to have all the project in the same directory.
-- Write a description as needed. Be careful with the features names - once you start training, adding a new features requires re-labeling the whole dataset. Write their names according to the right convension (presented in `DeepEthogram`'s GitHub page).
+- Write a description as needed. Be careful with the features names - once you start training, adding a new features requires re-labeling the whole dataset. Write their names according to the right convension, which is fully presented in `DeepEthogram`'s GitHub page. The main points are:
+  - the first behavior should be background (unnecessary when using the GUI)
+  - names should be written in snake_case
+  - no 'ing' suffix is needed
 - Add videos by pressing `Video -> Add or open` (in order to add a single video) or `Video -> Add multiple` (in order to add multiple videos). The uploading process may take a while.
 - Label the videos according to the instructions. The bare minimum is labelling 3 videos. Notice you don't have to do this a lot, but only once for each model (and I think you shouldn't have more than one). Don't forget to save the project once in a while.
 - Once you finished labeling a video, press `finalize labels`. In order to go to the next video, you can open it again from the project.
 - When creating a new model, you need to download the pretrained models from [here](https://drive.google.com/file/d/1ntIZVbOG1UAiFVlsAAuKEBEVCVevyets/view?usp=sharing) and put them in the `<project_name>/models` directory.
+
+### Train the Model
+Once you've created a model, you can train it. Before explaining about the training, I'd like to present the full workflow (pretty much taken from [here](https://colab.research.google.com/drive/1Nf9FU7FD77wgvbUFc608839v2jPYgDhd?usp=sharing#scrollTo=MDeo73x1dejq)):
+- Train the flow generator. Only really needs to happen once if you start with >10 decently sized videos. You can re-train if you get lots more data, or if you change the recording conditions: this can include color, resolution, background, arena type, etc.
+- Train the feature extractor
+- Run inference using the feature extractor
+- Train a sequence model
+- Run inference using the sequence model.
+
+You see we have one flow generator which needs to be trained once, and feature extractor and sequence model which are trained and make predictions. The training and predictions of them should happen any time you add a video.
+
+The training of the flow generator should be done in the `DeepEthogram` GUI, and it might take quite long. You can also run the next steps in the GUI if you wish, but the mouse tracking app should do it for you as well.
+
+To train the model you have to click on the `Train` button in the `FlowGenerator` box on the left side of the app, below the video info. Notice you can pick an existing model to train on if you wish.
+
+![image](https://user-images.githubusercontent.com/62245924/209649536-61508df4-e882-461d-a95d-45696128bc65.png)
+
+If you want to do the whole training on the GUI, you should look into [this link](https://github.com/jbohnslav/deepethogram/blob/master/docs/using_gui.md) again.
+ 
+ ### Finalize Labels
+ Once you completed the training, inferring and making predictions (doesn't matter if you used `DeepEthogram` or the mouse tracking app), there would be a prediction file for each video. You can use the same system of labelling as before, fix the predictions to get the real labels and finalize them (just as you did when creating the model).
+ 
+### For More Info
+as I mentioned, In [`DeepEthogram`'s GitHub page](https://github.com/jbohnslav/deepethogram/blob/master/docs/using_gui.md) you can find the full instructions for using the GUI. Plus, you can use [this](https://colab.research.google.com/drive/1Nf9FU7FD77wgvbUFc608839v2jPYgDhd?usp=sharing) uploaded notebook which has more details about the training process and how it's done.
