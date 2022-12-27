@@ -47,14 +47,8 @@ namespace mouse_tracking_web_app.DataBase
         [BsonElement("path")]
         public List<string> Path { get; set; }
 
-        [BsonElement("is_sniffing")]
-        public List<bool> IsSniffing { get; set; }
-
-        [BsonElement("is_drinking")]
-        public List<bool> IsDrinking { get; set; }
-
-        [BsonElement("is_noseCasting")]
-        public List<bool> IsNoseCasting { get; set; }
+        [BsonElement("features")]
+        public List<Dictionary<string, bool>> Features { get; set; }
 
         [BsonElement("video")]
         public ObjectId Video { get; set; }
@@ -90,9 +84,7 @@ namespace mouse_tracking_web_app.DataBase
             _ = dataTable.Columns.Add("AccelerationY", typeof(float));
             _ = dataTable.Columns.Add("Curviness", typeof(float));
             _ = dataTable.Columns.Add("Path", typeof(string));
-            _ = dataTable.Columns.Add("IsSniffing", typeof(bool));
-            _ = dataTable.Columns.Add("IsDrinking", typeof(bool));
-            _ = dataTable.Columns.Add("IsNoseCasting", typeof(bool));
+            _ = dataTable.Columns.Add("Features", typeof(bool));
 
 
             // TODO: try to make it more general
@@ -108,9 +100,7 @@ namespace mouse_tracking_web_app.DataBase
                 dr["AccelerationY"] = AccelerationY[i];
                 dr["Curviness"] = Curviness[i];
                 dr["Path"] = Path[i];
-                dr["IsSniffing"] = IsSniffing[i];
-                dr["IsDrinking"] = IsDrinking[i];
-                dr["IsNoseCasting"] = IsNoseCasting[i];
+                dr["Features"] = Features[i];
 
                 dataTable.Rows.Add(dr);
             }
