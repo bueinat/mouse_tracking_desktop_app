@@ -121,20 +121,20 @@ try:
 
     print("FindRatPath")
 
-    dscript_detect = run_inference(frames_path)
-    uploadable_data = process_inference(dscript_detect)
+    # dscript_detect = run_inference(frames_path)
+    # uploadable_data = process_inference(dscript_detect)
 
     # # save data to csv
     # uploadable_data.to_csv(f"{args['data_path']}\\uploadable_data.csv")
     
     print("FindRatFeatures") 
     run_num = args['video_path'].split("\\")[-1].split(".")[0]
-    if "6" in run_num:
-        pred_df = pandas.read_csv("C:/Users/buein/OneDrive - Bar-Ilan University/שנה ג/פרוייקט שנתי/mouse_tracking/cv/videos/examples/testing_project_deepethogram" + f"/DATA/{run_num}/{run_num}_predictions.csv",
+    try:
+        pred_df = pandas.read_csv("C:\\ProgramData\\MouseApp\\Predictions\\{run_num}_predictions.csv",
                                 index_col=0).drop('background', axis=1).astype(bool)
-    else:
-        pred_df = pandas.read_csv('C:/Users/buein/OneDrive - Bar-Ilan University/שנה ג/פרוייקט שנתי/mouse_tracking/cv/videos/examples/testing_project_deepethogram/DATA/odor28/odor28_predictions.csv',
-                            index_col=0).drop('background', axis=1).astype(bool)
+    except:
+        pred_df = pandas.read_csv("C:\\ProgramData\\MouseApp\\Predictions\\odor 24_predictions.csv",
+                                index_col=0).drop('background', axis=1).astype(bool)
     pred_df.columns = pred_df.columns.map(lambda s: "is_" + s.replace(' ', '_'))
 
     save_path = args["video_path"][:args["video_path"].rindex("\\")]
