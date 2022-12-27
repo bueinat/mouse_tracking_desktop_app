@@ -53,14 +53,6 @@ namespace mouse_tracking_web_app.Models
 
         public double IsDrinkingPercent => VideoStats is null ? 0 : VideoStats.IsDrinkingPercent;
 
-        //{
-        //    get => SM.WorkingPath;
-        //    set
-        //    {
-        //        SM.WorkingPath = value;
-        //        NotifyPropertyChanged("FileExplorerDirectory");
-        //    }
-        //}
         public bool IsLoading
         {
             get => isLoading;
@@ -86,14 +78,6 @@ namespace mouse_tracking_web_app.Models
             }
         }
 
-        //{
-        //    get => overrideInDB;
-        //    set
-        //    {
-        //        overrideInDB = value;
-        //        NotifyPropertyChanged("OverrideInDB");
-        //    }
-        //}
         public PlottingControllerModel PC { get; }
 
         public SettingsManager SM { get; }
@@ -169,11 +153,12 @@ namespace mouse_tracking_web_app.Models
 
         private string videosPath;
 
-        public string CachePath => VideosPath is null
-                    ? ""
-                    : File.GetAttributes(VideosPath).HasFlag(FileAttributes.Directory)
-                    ? $"{VideosPath}\\.cache"
-                    : $"{Path.GetDirectoryName(VideosPath)}\\.cache";
+        //public string CachePath => VideosPath is null
+        //            ? ""
+        //            : File.GetAttributes(VideosPath).HasFlag(FileAttributes.Directory)
+        //            ? $"{VideosPath}\\.cache"
+        //            : $"{Path.GetDirectoryName(VideosPath)}\\.cache";
+        public string CachePath => DEPath;
 
         public List<string> VideosList { get; set; }
 
@@ -211,6 +196,7 @@ namespace mouse_tracking_web_app.Models
         #endregion videosPath
 
         public string WorkingPath => SM.WorkingPath;
+        public string DEPath => SM.DEPath;
 
         public void NotifyPropertyChanged(string propertyName)
         {

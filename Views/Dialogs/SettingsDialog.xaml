@@ -9,8 +9,8 @@
     xmlns:valRules="clr-namespace:mouse_tracking_web_app.ValidationRules"
     xmlns:viewmodels="clr-namespace:mouse_tracking_web_app.ViewModels"
     Title="Settings"
-    Width="400"
-    Height="500"
+    Width="450"
+    Height="550"
     d:DataContext="{d:DesignInstance Type=viewmodels:SettingsManager}"
     Background="{DynamicResource MaterialDesignPaper}"
     FontFamily="{DynamicResource MaterialDesignFont}"
@@ -33,6 +33,7 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
@@ -69,7 +70,7 @@
             Orientation="Horizontal">
             <Button
                 materialDesign:RippleAssist.IsDisabled="True"
-                Click="Button_Click"
+                Click="WP_Button_Click"
                 Style="{DynamicResource MaterialDesignIconForegroundButton}"
                 ToolTip="select folder">
                 <materialDesign:PackIcon Kind="Laptop" />
@@ -92,11 +93,42 @@
             Grid.Column="0"
             Margin="5"
             VerticalAlignment="Center"
+            Content="DeepEthogram project path:"
+            Style="{StaticResource MaterialDesignLabel}" />
+        <StackPanel
+            Grid.Row="2"
+            Grid.Column="1"
+            Orientation="Horizontal">
+            <Button
+                materialDesign:RippleAssist.IsDisabled="True"
+                Click="DEP_Button_Click"
+                Style="{DynamicResource MaterialDesignIconForegroundButton}"
+                ToolTip="select folder">
+                <materialDesign:PackIcon Kind="Laptop" />
+            </Button>
+            <TextBox
+                x:Name="dePath"
+                VerticalAlignment="Center"
+                materialDesign:HintAssist.Hint="{Binding CurrentSettings.DEPath}">
+                <TextBox.Text>
+                    <Binding
+                        Delay="400"
+                        Mode="TwoWay"
+                        Path="UpdatableSettings.DEPath"
+                        UpdateSourceTrigger="PropertyChanged" />
+                </TextBox.Text>
+            </TextBox>
+        </StackPanel>
+        <Label
+            Grid.Row="3"
+            Grid.Column="0"
+            Margin="5"
+            VerticalAlignment="Center"
             Content="python path:"
             Style="{StaticResource MaterialDesignLabel}" />
         <TextBox
             x:Name="pythonPath"
-            Grid.Row="2"
+            Grid.Row="3"
             Grid.Column="1"
             VerticalAlignment="Center"
             materialDesign:HintAssist.Hint="{Binding CurrentSettings.PythonPath}">
@@ -113,14 +145,14 @@
             </TextBox.Text>
         </TextBox>
         <Label
-            Grid.Row="3"
+            Grid.Row="4"
             Grid.Column="0"
             Margin="5"
             VerticalAlignment="Center"
             Content="connection string:" />
         <TextBox
             x:Name="connectionString"
-            Grid.Row="3"
+            Grid.Row="4"
             Grid.Column="1"
             VerticalAlignment="Center"
             materialDesign:HintAssist.Hint="{Binding CurrentSettings.ConnectionString}">
@@ -136,14 +168,14 @@
             </TextBox.Text>
         </TextBox>
         <Label
-            Grid.Row="4"
+            Grid.Row="5"
             Grid.Column="0"
             Margin="5"
             VerticalAlignment="Center"
             Content="database name:" />
         <TextBox
             x:Name="databaseName"
-            Grid.Row="4"
+            Grid.Row="5"
             Grid.Column="1"
             VerticalAlignment="Center"
             materialDesign:HintAssist.Hint="{Binding CurrentSettings.DatabaseName}">
@@ -159,14 +191,14 @@
             </TextBox.Text>
         </TextBox>
         <Label
-            Grid.Row="5"
+            Grid.Row="6"
             Grid.Column="0"
             Margin="5"
             VerticalAlignment="Center"
             Content="features:" />
         <TextBox
             x:Name="featuresList"
-            Grid.Row="5"
+            Grid.Row="6"
             Grid.Column="1"
             VerticalAlignment="Center"
             materialDesign:HintAssist.Hint="{Binding CurrentSettings.FeaturesList}">
@@ -182,14 +214,14 @@
             </TextBox.Text>
         </TextBox>
         <Label
-            Grid.Row="6"
+            Grid.Row="7"
             Grid.Column="0"
             Margin="5"
             VerticalAlignment="Center"
             Content="files types:" />
         <TextBox
             x:Name="fileTypesList"
-            Grid.Row="6"
+            Grid.Row="7"
             Grid.Column="1"
             VerticalAlignment="Center"
             materialDesign:HintAssist.Hint="{Binding CurrentSettings.FileTypesList}">
@@ -205,14 +237,14 @@
             </TextBox.Text>
         </TextBox>
         <Label
-            Grid.Row="7"
+            Grid.Row="8"
             Grid.Column="0"
             Margin="5"
             VerticalAlignment="Center"
             Content="videos types:" />
         <TextBox
             x:Name="videoTypesList"
-            Grid.Row="7"
+            Grid.Row="8"
             Grid.Column="1"
             VerticalAlignment="Center"
             materialDesign:HintAssist.Hint="{Binding CurrentSettings.VideoTypesList}">
@@ -228,14 +260,14 @@
             </TextBox.Text>
         </TextBox>
         <Label
-            Grid.Row="8"
+            Grid.Row="9"
             Grid.Column="0"
             Margin="5"
             VerticalAlignment="Center"
             Content="marker size in plot:" />
         <TextBox
             x:Name="plotMarkerSize"
-            Grid.Row="8"
+            Grid.Row="9"
             Grid.Column="1"
             VerticalAlignment="Center"
             materialDesign:HintAssist.Hint="{Binding CurrentSettings.PlotMarkerSize}">
@@ -253,16 +285,16 @@
         </TextBox>
 
         <CheckBox
-            Grid.Row="9"
+            Grid.Row="10"
             Grid.ColumnSpan="2"
             Margin="15,5,0,0"
             Content="Override Data in Cache"
             IsChecked="{Binding UpdatableSettings.OverrideDB, Mode=TwoWay}" />
 
         <WrapPanel
-            Grid.Row="10"
+            Grid.Row="11"
             Grid.ColumnSpan="3"
-            Margin="0,20,5,0"
+            Margin="0,20,5,0" VerticalAlignment="Center"
             HorizontalAlignment="Right">
             <Button
                 Name="btnReset"

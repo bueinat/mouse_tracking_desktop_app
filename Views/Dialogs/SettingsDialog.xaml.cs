@@ -28,7 +28,7 @@ namespace mouse_tracking_web_app.Views
             (DataContext as SettingsManager).ResetToDefaultSettings();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void WP_Button_Click(object sender, RoutedEventArgs e)
         {
             var window = Application.Current.Windows.OfType<Window>().SingleOrDefault(w => w.IsActive);
             CommonOpenFileDialog dialog = new CommonOpenFileDialog
@@ -37,8 +37,17 @@ namespace mouse_tracking_web_app.Views
             };
             if (dialog.ShowDialog(window) == CommonFileDialogResult.Ok)
                 workingPath.Text = dialog.FileName;
-            //this.bri
-            //BringIntoView();
+        }
+
+        private void DEP_Button_Click(object sender, RoutedEventArgs e)
+        {
+            var window = Application.Current.Windows.OfType<Window>().SingleOrDefault(w => w.IsActive);
+            CommonOpenFileDialog dialog = new CommonOpenFileDialog
+            {
+                IsFolderPicker = true
+            };
+            if (dialog.ShowDialog(window) == CommonFileDialogResult.Ok)
+                dePath.Text = dialog.FileName;
         }
     }
 }

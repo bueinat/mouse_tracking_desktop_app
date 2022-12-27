@@ -72,15 +72,7 @@ namespace mouse_tracking_web_app.ViewModels
 
         // constructor constructs Single Tree and TabbedNavTreesVm
 
-        public string NTVM_FileExplorerDirectory
-        {
-            get => model.WorkingPath;
-            //set
-            //{
-            //    model.FileExplorerDirectory = value;
-            //    NotifyPropertyChanged("NTVM_FileExplorerDirectory");
-            //}
-        }
+        public string NTVM_FileExplorerDirectory => model.WorkingPath;
 
         private readonly Models.MainControllerModel model;
 
