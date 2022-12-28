@@ -64,7 +64,7 @@ namespace mouse_tracking_web_app.ViewModels
             {
                 _model.SelectedVideo = value;
                 NotifyPropertyChanged("VPM_SelectedVideo");
-                if (!(VPM_SelectedVideo is null) && (_model.VC.InitializeVideo(VPM_SelectedVideo.VideoID)))
+                if (!(VPM_SelectedVideo is null) && _model.VC.InitializeVideo(VPM_SelectedVideo.VideoID))
                     _model.VC.Run();
             }
         }

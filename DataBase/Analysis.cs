@@ -1,6 +1,5 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -84,7 +83,8 @@ namespace mouse_tracking_web_app.DataBase
             _ = dataTable.Columns.Add("AccelerationY", typeof(float));
             _ = dataTable.Columns.Add("Curviness", typeof(float));
             _ = dataTable.Columns.Add("Path", typeof(string));
-            _ = dataTable.Columns.Add("Features", typeof(bool));
+            //_ = dataTable.Columns.Add("Features", typeof(bool));
+            _ = dataTable.Columns.Add("Features", typeof(Dictionary<string, bool>));
 
             // TODO: try to make it more general
             for (int i = 0; i < TimeStep.Count; i++)
@@ -107,55 +107,19 @@ namespace mouse_tracking_web_app.DataBase
             return dataTable;
         }
 
-        public Dictionary<string, List<Tuple<int, int>>> GetFeaturesTimes(List<string> featuresNames)
+        public Dictionary<string, List<bool>> FeaturesDictionary()
         {
-            Dictionary<string, List<Tuple<int, int>>> featuresTimes = new Dictionary<string, List<Tuple<int, int>>>();
-            bool isOpen;
-            int openingIndex;
-            int closingIndex;
-            int i;
+            Dictionary<string, List<bool>> featuresDictionary = new Dictionary<string, List<bool>>();
 
-            foreach (string name in featuresNames)
+            foreach (KeyValuePair<string, bool> item in Features[0])
+                featuresDictionary.Add(item.Key, new List<bool>());
+
+            foreach (Dictionary<string, bool> dict in Features)
             {
-                featuresTimes.Add(name, new List<Tuple<int, int>>());
-                List<bool> featureList = (List<bool>)GetType().GetProperty(name).GetValue(this);
-
-                isOpen = false;
-                openingIndex = 0;
-                closingIndex = 0;
-                i = 0;
-                while (i < featureList.Count)
-                {
-                    if (!isOpen)
-                    {
-                        isOpen = featureList[i];
-
-                        if (isOpen)
-                        {
-                            openingIndex = i;
-                            closingIndex = i + 1;
-                        }
-                        i++;
-                    }
-                    else
-                    {
-                        if (featureList[i])
-                        {
-                            closingIndex++;
-                            i++;
-                        }
-                        else
-                        {
-                            featuresTimes[name].Add(new Tuple<int, int>(openingIndex, closingIndex));
-                            isOpen = false;
-                        }
-                    }
-                }
-                if (isOpen)
-                    featuresTimes[name].Add(new Tuple<int, int>(openingIndex, closingIndex));
+                foreach (KeyValuePair<string, bool> feat in dict)
+                    featuresDictionary[feat.Key].Add(feat.Value);
             }
-
-            return featuresTimes;
+            return featuresDictionary;
         }
     }
 }

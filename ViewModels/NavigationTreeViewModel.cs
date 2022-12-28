@@ -83,19 +83,20 @@ namespace mouse_tracking_web_app.ViewModels
             model = mainController;
             SingleTree = new NavTreeVm(model.SM, NTVM_FileExplorerDirectory, 0, true);
             model.SM.PropertyChanged +=
-            delegate (object sender, PropertyChangedEventArgs e)
-            {
-                NotifyPropertyChanged("NTVM_" + e.PropertyName);
-                if (e.PropertyName == "WorkingPath" || e.PropertyName == "FileTypesList")
-                    SingleTree = new NavTreeVm(model.SM, NTVM_FileExplorerDirectory, 0, true);
-            };
-            model.PropertyChanged +=
                 delegate (object sender, PropertyChangedEventArgs e)
                 {
                     NotifyPropertyChanged("NTVM_" + e.PropertyName);
-                    if (e.PropertyName == "FileExplorerDirectory")
+                    if (e.PropertyName == "WorkingPath" || e.PropertyName == "FileTypesList")
                         SingleTree = new NavTreeVm(model.SM, NTVM_FileExplorerDirectory, 0, true);
                 };
+            // TODO: fix the unknown bug which prevent the whole tree thing from working :(
+            //model.PropertyChanged +=
+            //    delegate (object sender, PropertyChangedEventArgs e)
+            //    {
+            //        NotifyPropertyChanged("NTVM_" + e.PropertyName);
+            //        if (e.PropertyName == "FileExplorerDirectory")
+            //            SingleTree = new NavTreeVm(model.SM, NTVM_FileExplorerDirectory, 0, true);
+            //    };
             settingManager = sManager;
 
             // Construct Single tree

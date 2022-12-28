@@ -108,16 +108,16 @@
             FontWeight="SemiBold"
             Foreground="{StaticResource SecondaryHueDarkBrush}"
             Style="{StaticResource MaterialDesignCaptionTextBlock}"
-            Text="sniffing time:" />
+            Text="{Binding VMPC_FeaturesPercents.Keys[0]}" />
         <TextBlock
             Grid.Row="4"
             Grid.Column="1"
             VerticalAlignment="Center"
             Foreground="#646464"
             Style="{StaticResource MaterialDesignCaptionTextBlock}"
-            Text="{Binding VMPC_IsSniffingPercent, StringFormat={}{0:0.00}%}" />
+            Text="{Binding VMPC_FeaturesPercents.Values[0], StringFormat={}{0:0.00}%}" />
 
-        <TextBlock
+        <!--<TextBlock
             Grid.Row="5"
             Grid.Column="0"
             Margin="0,0,5,0"
@@ -148,6 +148,6 @@
             VerticalAlignment="Center"
             Foreground="#646464"
             Style="{StaticResource MaterialDesignCaptionTextBlock}"
-            Text="{Binding VMPC_IsNoseCastingPercent, StringFormat={}{0:0.00}%}" />
+            Text="{Binding VMPC_IsNoseCastingPercent, StringFormat={}{0:0.00}%}" />-->
     </Grid>
 </UserControl>

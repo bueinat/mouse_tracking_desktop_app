@@ -179,15 +179,15 @@
                     FontWeight="SemiBold"
                     Foreground="{StaticResource SecondaryHueDarkBrush}"
                     Style="{StaticResource MaterialDesignCaptionTextBlock}"
-                    Text="is sniffing:" />
+                    Text="{Binding VMVC_FeaturesList[0]}" />
                 <TextBlock
                     Grid.Row="8"
                     Grid.Column="2"
                     VerticalAlignment="Center"
-                    Foreground="{Binding VMVC_IsSniffing, Converter={StaticResource BoolToColorConverter}}"
+                    Foreground="{Binding VMVC_Features[VMVC_FeaturesList[0]], Converter={StaticResource BoolToColorConverter}}"
                     Style="{StaticResource MaterialDesignCaptionTextBlock}"
-                    Text="{Binding VMVC_IsSniffing}" />
-                <TextBlock
+                    Text="{Binding VMVC_Features[VMVC_FeaturesList[0]]}" />
+                <!--<TextBlock
                     Grid.Row="9"
                     Grid.Column="0"
                     Margin="5,0,15,0"
@@ -218,7 +218,7 @@
                     VerticalAlignment="Center"
                     Foreground="{Binding VMVC_IsNoseCasting, Converter={StaticResource BoolToColorConverter}}"
                     Style="{StaticResource MaterialDesignCaptionTextBlock}"
-                    Text="{Binding VMVC_IsNoseCasting}" />
+                    Text="{Binding VMVC_IsNoseCasting}" />-->
             </Grid>
         </GroupBox>
     </Grid>

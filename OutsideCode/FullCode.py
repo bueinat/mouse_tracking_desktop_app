@@ -60,20 +60,15 @@ def run(args):
         # allow case when there's no cuda to work
         run_num = args['video_path'].split("\\")[-1].split(".")[0]
         if "6" in run_num:
-            pred_df = pandas.read_csv("C:/Users/buein/OneDrive - Bar-Ilan University/שנה ג/פרוייקט שנתי/mouse_tracking/cv/videos/examples/testing_project_deepethogram" + f"/DATA/{run_num}/{run_num}_predictions.csv",
-                                    index_col=0).drop('background', axis=1).astype(bool)
+            predictions_filename = "C:/Users/buein/OneDrive - Bar Ilan University/תואר ראשון/שנה ג/פרוייקט שנתי/mouse_tracking/cv/videos/examples/testing_project_deepethogram" + f"/DATA/{run_num}/{run_num}_predictions.csv"
         else:
-            pred_df = pandas.read_csv('C:/Users/buein/OneDrive - Bar-Ilan University/שנה ג/פרוייקט שנתי/mouse_tracking/cv/videos/examples/testing_project_deepethogram/DATA/odor28/odor28_predictions.csv',
-                                index_col=0).drop('background', axis=1).astype(bool)
+            predictions_filename = "C:/Users/buein/OneDrive - Bar Ilan University/תואר ראשון/שנה ג/פרוייקט שנתי/mouse_tracking/cv/videos/examples/odor28_features.csv"
         # handle the case where CUDA is not available
         print("message: no CUDA hardware exists. Can't run DeepEthogram.")
         # TODO: raise exception
     
     pred_df = pandas.read_csv(predictions_filename, index_col=0).drop('background', axis=1).astype(bool)
-    if pred_df.columns[0].endswith("ing"):
-        pred_df.columns = pred_df.columns.map(lambda s: "is_" + s.replace(' ', '_'))
-    else:
-        pred_df.columns = pred_df.columns.map(lambda s: "is_" + s.replace(' ', '_') + "ing")
+
 
         
     print("FindRatFeatures")
@@ -86,7 +81,7 @@ def run(args):
 
     # save_path = args["video_path"][:args["video_path"].rindex("\\")]
     video_name = args["video_path"].split("\\")[-1].split(".")[0]
-    uploadable_data = pandas.concat([uploadable_data, pred_df], axis=1)
+    uploadable_data = pandas.concat([uploadable_data, pred_df], axis=1).dropna()
     uploadable_data.to_csv(f"{args['data_path']}\\processed_data.csv")
 
     print("SaveToDataBase")
@@ -117,11 +112,11 @@ def run(args):
     ana = Analysis()
     ana.timestep = list(uploadable_data.index)
 
-    for c in uploadabale_data.columns:
+    for c in uploadable_data.columns:
         if c not in features_list:
-            exec(f"ana.{c} = list(uploadabale_data['{c}'])")
+            exec(f"ana.{c} = list(uploadable_data['{c}'])")
         
-    for i, r in uploadabale_data[features_list].iterrows():
+    for i, r in uploadable_data[features_list].iterrows():
         exec("ana.features.append(FeatureItem({}))".format(str(r.to_dict())[1:-1].replace('\'', '').replace(': ', '=')))
 
     if args["override"]:
@@ -146,5 +141,9 @@ if __name__ == '__main__':
     args = pandas.read_csv(sys.argv[1], header=None, index_col=0)[1]
     args["override"] = eval(args["override"])
     run(args)
+    # try:
+    #     run(args)
+    # except Exception as e:
+    #     print(f"error: {e.__class__.__name__}: {e}")
     print("exit")
     sys.exit(0)

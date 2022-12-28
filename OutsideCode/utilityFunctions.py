@@ -104,7 +104,7 @@ def analyze_raw_data(raw_data):
 
 
 def add_video_to_de_project(args):
-    """return video name"""
+    """returns video name"""
     project_config_path = u"{}\\project_config.yaml".format(args['de_project_path'])
     project_config = deepethogram.projects.load_config(project_config_path)
     try:
@@ -179,6 +179,7 @@ def process_inference(dscript_detect, frames_path):
     # create uploadabe data
     raw_data['path'] = [f"{frames_path}\\frame{i}.jpg"
                                     for i in raw_data.index]
+    print(raw_data['path'].head())
 
     uploadable_data = raw_data[['x', 'y', 'vx', 'vy', 'ax', 'ay', 'curviness', 'path']]
     return uploadable_data

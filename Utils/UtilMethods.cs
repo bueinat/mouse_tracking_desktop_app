@@ -19,7 +19,7 @@ namespace mouse_tracking_web_app.Utils
         {
             Uri fileUri = new Uri(filePath);
             Uri referenceUri = new Uri(referencePath);
-            string relativePath =  Uri.UnescapeDataString(referenceUri.MakeRelativeUri(fileUri).ToString()).Replace('/', Path.DirectorySeparatorChar);
+            string relativePath = Uri.UnescapeDataString(referenceUri.MakeRelativeUri(fileUri).ToString()).Replace('/', Path.DirectorySeparatorChar);
             return relativePath.Substring(relativePath.IndexOf('\\') + 1);
         }
 

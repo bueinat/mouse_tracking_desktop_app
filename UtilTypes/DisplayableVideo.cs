@@ -36,7 +36,7 @@ namespace mouse_tracking_web_app.UtilTypes
         {
             if (!string.IsNullOrEmpty(e.Data))
             {
-                // TODO: use this to update on 
+                // TODO: use this to update on
                 Console.WriteLine($"{ReducedName}, e: {e.Data}");
             }
         }
@@ -63,7 +63,6 @@ namespace mouse_tracking_web_app.UtilTypes
                 else if (e.Data.StartsWith("video id"))
                 {
                     VideoID = e.Data.Substring(10);
-                    ProcessingState = State.Successful;
                 }
 
                 // update progress if given
@@ -91,8 +90,10 @@ namespace mouse_tracking_web_app.UtilTypes
                         errorMessage = e.Data.Substring(7);
                     if (e.Data.StartsWith("message"))
                         errorMessage = e.Data.Substring(9);
-                    if (!string.IsNullOrEmpty(errorMessage))
+                    if (string.IsNullOrEmpty(errorMessage))
                         AppendToToolTipMessage($"{ProcessingState}: {errorMessage}");
+                    else if (ProcessingState == State.Failed)
+                        AppendToToolTipMessage($"{ProcessingState}: unknown error occured");
                 }
 
                 Console.WriteLine($"{ReducedName}, o: {e.Data}");

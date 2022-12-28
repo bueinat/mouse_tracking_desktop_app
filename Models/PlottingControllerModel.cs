@@ -66,10 +66,10 @@ namespace mouse_tracking_web_app.Models
             {
                 ["none"] = mTypes[i++]
             };
-            foreach (var item in PC_FeaturesPercents)
+            foreach (string feature in SM.FeaturesList)
             {
                 if (i < mTypes.Count)
-                    scatterTypes.Add(item.Key, mTypes[i++]);
+                    scatterTypes.Add(feature, mTypes[i++]);
             }
 
             // create plot controller
@@ -314,6 +314,7 @@ namespace mouse_tracking_web_app.Models
                 {
                     MarkerType = keyVal.Value,
                     MarkerStroke = OxyColors.White,
+                    MarkerStrokeThickness = 0,
                     TrackerFormatString = "position = ({X:0.##}, {Y:0.##})"
                 };
             }

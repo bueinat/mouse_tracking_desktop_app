@@ -47,7 +47,9 @@ namespace mouse_tracking_web_app.Models
             }
         }
 
-        public Dictionary<string, List<Tuple<int, int>>> VC_FeaturesTimeRanges => VC_VideoAnalysis?.GetFeaturesTimes(model.SM.FeaturesList);
+        public AnalysisStats VC_VideoStats => model.VideoStats;
+
+        public Dictionary<string, List<Tuple<int, int>>> VC_FeaturesTimeRanges => VC_VideoStats?.FeaturesTimes;
 
         public string VC_FramePath
         {

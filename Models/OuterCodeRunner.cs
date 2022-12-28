@@ -73,6 +73,7 @@ namespace mouse_tracking_web_app.Models
             // wait for the process to exit
             process.WaitForExit();
         }
+
         /// <summary>
         /// Method <c>WriteDictToCSV</c> write a dictionary to <c>csv</c> file.
         /// </summary>
@@ -91,6 +92,7 @@ namespace mouse_tracking_web_app.Models
             File.WriteAllText(fileName, csv);
             return fileName;
         }
+
         /// <summary>
         /// Method <c>CreateTmpFile</c> create a temporary file and returns its path.
         /// </summary>
