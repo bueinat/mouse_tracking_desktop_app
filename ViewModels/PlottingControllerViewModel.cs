@@ -2,6 +2,7 @@
 using mouse_tracking_web_app.Models;
 using OxyPlot;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -38,17 +39,13 @@ namespace mouse_tracking_web_app.ViewModels
             set => Model.PC_ColorParameter = value;
         }
 
-        public double VMPC_IsDrinkingPercent => Model.PC_IsDrinkingPercent;
+        public Dictionary<string, double> VMPC_FeaturesPercents => Model.PC_FeaturesPercents;
 
         public bool VMPC_IsLoading
         {
             get => Model.PC_IsLoading;
             set => Model.PC_IsLoading = value;
         }
-
-        public double VMPC_IsNoseCastingPercent => Model.PC_IsNoseCastingPercent;
-
-        public double VMPC_IsSniffingPercent => Model.PC_IsSniffingPercent;
 
         public double VMPC_MaxSize => Model.PC_MaxSize;
 

@@ -41,6 +41,8 @@ namespace mouse_tracking_web_app.Models
         public string CSVString => VideoAnalysis.GetCSVString(CachePath);
         public DataBaseHandler DBHandler { get; }
 
+        public string DEPath => SM.DEPath;
+
         public bool DragEnabled
         {
             get => dragEnabled;
@@ -51,7 +53,7 @@ namespace mouse_tracking_web_app.Models
             }
         }
 
-        public double IsDrinkingPercent => VideoStats is null ? 0 : VideoStats.IsDrinkingPercent;
+        public Dictionary<string, double> FeaturesPercents => VideoStats?.FeaturesPercents;
 
         public bool IsLoading
         {
@@ -63,8 +65,6 @@ namespace mouse_tracking_web_app.Models
             }
         }
 
-        public double IsNoseCastingPercent => VideoStats is null ? 0 : VideoStats.IsNoseCastingPercent;
-        public double IsSniffingPercent => VideoStats is null ? 0 : VideoStats.IsSniffingPercent;
         public int NSteps => VideoStats is null ? 0 : VideoStats.NSteps;
         public bool OverrideDB => SM.OverrideDB;
 
@@ -107,9 +107,8 @@ namespace mouse_tracking_web_app.Models
                 NotifyPropertyChanged("AverageSpeed");
                 NotifyPropertyChanged("AverageAcceleration");
                 NotifyPropertyChanged("NSteps");
-                NotifyPropertyChanged("IsDrinkingPercent");
-                NotifyPropertyChanged("IsNoseCastingPercent");
-                NotifyPropertyChanged("IsSniffingPercent");
+                NotifyPropertyChanged("FeaturesPercents");
+                NotifyPropertyChanged("FeaturesDictionary");
                 NotifyPropertyChanged("TotalDistance");
                 NotifyPropertyChanged("AnalysisDataRows");
                 NotifyPropertyChanged("CSVString");
@@ -196,7 +195,6 @@ namespace mouse_tracking_web_app.Models
         #endregion videosPath
 
         public string WorkingPath => SM.WorkingPath;
-        public string DEPath => SM.DEPath;
 
         public void NotifyPropertyChanged(string propertyName)
         {

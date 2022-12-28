@@ -24,6 +24,7 @@ namespace mouse_tracking_web_app.ViewModels
         public float VMVC_AccelerationY => Model.VC_AccelerationY;
         public float VMVC_Curviness => Model.VC_Curviness;
         public bool VMVC_DragEnabled => Model.VC_DragEnabled;
+        public Dictionary<string, bool> VMVC_Features => Model.VC_Features;
         public List<string> VMVC_FeaturesList => Model.VC_FeaturesList;
 
         public bool VMVC_FeaturesPanelFlag
@@ -34,11 +35,6 @@ namespace mouse_tracking_web_app.ViewModels
 
         public Dictionary<string, List<Tuple<int, int>>> VMVC_FeaturesTimeRanges => Model.VC_FeaturesTimeRanges;
         public string VMVC_FramePath => Model.VC_FramePath;
-        public bool VMVC_IsDrinking => Model.VC_IsDrinking;
-        public bool VMVC_IsNoseCasting => Model.VC_IsNoseCasting;
-        public bool VMVC_IsSniffing => Model.VC_IsSniffing;
-
-        //public bool VMVC_IsVideoLoaded => Model.VC_IsVideoLoaded;
         public int VMVC_NFeatures => Model.VC_NFeatures;
 
         //

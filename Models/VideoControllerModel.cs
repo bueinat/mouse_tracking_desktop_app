@@ -30,15 +30,11 @@ namespace mouse_tracking_web_app.Models
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public string VC_VideoName => model.VideoName;
-
         public float VC_AccelerationX => (VC_VideoAnalysis is null) ? 0 : VC_VideoAnalysis.AccelerationX[VC_StepCounter];
-
         public float VC_AccelerationY => (VC_VideoAnalysis is null) ? 0 : VC_VideoAnalysis.AccelerationY[VC_StepCounter];
-
         public float VC_Curviness => (VC_VideoAnalysis is null) ? 0 : VC_VideoAnalysis.Curviness[VC_StepCounter];
-
         public bool VC_DragEnabled => model.DragEnabled;
+        public Dictionary<string, bool> VC_Features => VC_VideoAnalysis?.Features[VC_StepCounter];
         public List<string> VC_FeaturesList => model.SM.FeaturesList;
 
         public bool VC_FeaturesPanelFlag
@@ -63,16 +59,7 @@ namespace mouse_tracking_web_app.Models
             }
         }
 
-        public bool VC_IsDrinking => !(VC_VideoAnalysis is null) && VC_VideoAnalysis.IsDrinking[VC_StepCounter];
-
-        public bool VC_IsNoseCasting => !(VC_VideoAnalysis is null) && VC_VideoAnalysis.IsNoseCasting[VC_StepCounter];
-
-        public bool VC_IsSniffing => !(VC_VideoAnalysis is null) && VC_VideoAnalysis.IsSniffing[VC_StepCounter];
-
-        //public bool VC_IsVideoLoaded => model.IsVideoLoaded;
         public int VC_NFeatures => model.SM.FeaturesList.Count;
-
-        //public DisplayableVideo VC_SelectedVideo => model.SelectedVideo;
 
         public int VC_NFrames
         {
@@ -111,7 +98,6 @@ namespace mouse_tracking_web_app.Models
             {
                 stepCounter = value;
                 VC_FramePath = VC_VideoAnalysis?.Path[VC_StepCounter].Replace("@WORKING_PATH", model.CachePath);
-                //Console.WriteLine(VC_FramePath);
 
                 NotifyPropertyChanged("VC_StepCounter");
                 NotifyPropertyChanged("VC_TimeStep");
@@ -122,10 +108,7 @@ namespace mouse_tracking_web_app.Models
                 NotifyPropertyChanged("VC_AccelerationX");
                 NotifyPropertyChanged("VC_AccelerationY");
                 NotifyPropertyChanged("VC_Curviness");
-
-                NotifyPropertyChanged("VC_IsSniffing");
-                NotifyPropertyChanged("VC_IsDrinking");
-                NotifyPropertyChanged("VC_IsNoseCasting");
+                NotifyPropertyChanged("VC_Features");
             }
         }
 
@@ -140,9 +123,7 @@ namespace mouse_tracking_web_app.Models
         }
 
         public int VC_TimeStep => (VC_VideoAnalysis is null) ? 0 : VC_VideoAnalysis.TimeStep[VC_StepCounter];
-
         public float VC_VelocityX => (VC_VideoAnalysis is null) ? 0 : VC_VideoAnalysis.VelocityX[VC_StepCounter];
-
         public float VC_VelocityY => (VC_VideoAnalysis is null) ? 0 : VC_VideoAnalysis.VelocityY[VC_StepCounter];
 
         public Analysis VC_VideoAnalysis
@@ -158,6 +139,7 @@ namespace mouse_tracking_web_app.Models
             }
         }
 
+        public string VC_VideoName => model.VideoName;
         public float VC_X => (VC_VideoAnalysis is null) ? 0 : VC_VideoAnalysis.X[VC_StepCounter];
 
         public float VC_Y => (VC_VideoAnalysis is null) ? 0 : VC_VideoAnalysis.Y[VC_StepCounter];

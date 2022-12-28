@@ -86,7 +86,6 @@ namespace mouse_tracking_web_app.DataBase
             _ = dataTable.Columns.Add("Path", typeof(string));
             _ = dataTable.Columns.Add("Features", typeof(bool));
 
-
             // TODO: try to make it more general
             for (int i = 0; i < TimeStep.Count; i++)
             {

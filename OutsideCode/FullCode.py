@@ -57,8 +57,17 @@ def run(args):
             record = deepethogram.projects.get_records_from_datadir(os.path.join(args['de_project_path'], 'DATA'))[video_name]
             predictions_filename = os.path.join(os.path.dirname(record['rgb']), record['key'] + '_predictions.csv') 
     else:
+        # allow case when there's no cuda to work
+        run_num = args['video_path'].split("\\")[-1].split(".")[0]
+        if "6" in run_num:
+            pred_df = pandas.read_csv("C:/Users/buein/OneDrive - Bar-Ilan University/שנה ג/פרוייקט שנתי/mouse_tracking/cv/videos/examples/testing_project_deepethogram" + f"/DATA/{run_num}/{run_num}_predictions.csv",
+                                    index_col=0).drop('background', axis=1).astype(bool)
+        else:
+            pred_df = pandas.read_csv('C:/Users/buein/OneDrive - Bar-Ilan University/שנה ג/פרוייקט שנתי/mouse_tracking/cv/videos/examples/testing_project_deepethogram/DATA/odor28/odor28_predictions.csv',
+                                index_col=0).drop('background', axis=1).astype(bool)
         # handle the case where CUDA is not available
         print("message: no CUDA hardware exists. Can't run DeepEthogram.")
+        # TODO: raise exception
     
     pred_df = pandas.read_csv(predictions_filename, index_col=0).drop('background', axis=1).astype(bool)
     if pred_df.columns[0].endswith("ing"):

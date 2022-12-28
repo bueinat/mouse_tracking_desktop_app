@@ -17,27 +17,31 @@ namespace mouse_tracking_web_app.Models
 
         public SettingsManager SM;
 
-        //public double DefaultMarkerSize;
         private readonly MainControllerModel model;
 
-        private readonly Dictionary<string, MarkerType> scatterTypes = new Dictionary<string, MarkerType>
+        private readonly List<MarkerType> mTypes = new List<MarkerType>
         {
-            ["none"] = MarkerType.Circle,
-            ["sniffing"] = MarkerType.Triangle,
-            ["drinking"] = MarkerType.Diamond,
-            ["noseCasting"] = MarkerType.Square
+            MarkerType.Circle,
+            MarkerType.Square,
+            MarkerType.Diamond,
+            MarkerType.Triangle,
+            MarkerType.Cross,
+            MarkerType.Plus,
+            MarkerType.Star
         };
 
         private string colorParam;
         private bool isLoading = false;
 
         private PlotModel plotModel;
+        private Dictionary<string, MarkerType> scatterTypes;
         private string sizeParam;
         private Tuple<double, double> sizeRange = new Tuple<double, double>(double.NaN, double.NaN);
         private string stringSizeRange;
 
         public PlottingControllerModel(MainControllerModel model, SettingsManager sManager)
         {
+            // track changes in model
             this.model = model;
             model.PropertyChanged +=
             delegate (object sender, PropertyChangedEventArgs e)
@@ -45,8 +49,8 @@ namespace mouse_tracking_web_app.Models
                 NotifyPropertyChanged("PC_" + e.PropertyName);
             };
 
+            // track changes in settings
             SM = sManager;
-            //DefaultMarkerSize = SM.PlotMarkerSize;
             SM.PropertyChanged +=
             delegate (object sender, PropertyChangedEventArgs e)
             {
@@ -54,16 +58,27 @@ namespace mouse_tracking_web_app.Models
                 if (e.PropertyName == "PlotMarkerSize" && double.IsNaN(PC_SizeRange.Item1))
                 {
                     new Task(UpdateModel).Start();
-                    //NotifyPropertyChanged("DefaultMarkerSize");
-                    //DefaultMarkerSize = SM.PlotMarkerSize;
                 }
             };
 
+            int i = 0;
+            scatterTypes = new Dictionary<string, MarkerType>
+            {
+                ["none"] = mTypes[i++]
+            };
+            foreach (var item in PC_FeaturesPercents)
+            {
+                if (i < mTypes.Count)
+                    scatterTypes.Add(item.Key, mTypes[i++]);
+            }
+
+            // create plot controller
             PC_PlotController = new PlotController();
 
             PC_PlotController.BindMouseDown(OxyMouseButton.Left, PlotCommands.ZoomRectangle);
             PC_PlotController.BindMouseEnter(PlotCommands.HoverSnapTrack);
 
+            // create plot model and set it up
             PC_PlotModel = new PlotModel
             {
                 PlotType = PlotType.Cartesian
@@ -107,7 +122,7 @@ namespace mouse_tracking_web_app.Models
             }
         }
 
-        public double PC_IsDrinkingPercent => model.IsDrinkingPercent;
+        public Dictionary<string, double> PC_FeaturesPercents => model.FeaturesPercents;
 
         public bool PC_IsLoading
         {
@@ -119,16 +134,11 @@ namespace mouse_tracking_web_app.Models
             }
         }
 
-        public double PC_IsNoseCastingPercent => model.IsNoseCastingPercent;
-
-        public double PC_IsSniffingPercent => model.IsSniffingPercent;
-
         public double PC_MaxSize => double.IsNaN(PC_SizeRange.Item2) ? DefaultMarkerSize : PC_SizeRange.Item2;
 
         public double PC_MinSize => double.IsNaN(PC_SizeRange.Item1) ? DefaultMarkerSize : PC_SizeRange.Item1;
 
         public int PC_NSteps => model.NSteps;
-
         public PlotController PC_PlotController { get; private set; }
 
         public PlotModel PC_PlotModel
@@ -207,36 +217,28 @@ namespace mouse_tracking_web_app.Models
 
             for (int i = 0; i < PC_AnalysisDataRows.X.Count; i++)
             {
-                if (PC_VideoAnalysis.IsDrinking[i])
-                    pathPoints["drinking"].Points.Add(new ScatterPoint(PC_AnalysisDataRows.X[i], 480 - PC_AnalysisDataRows.Y[i]) { });
-                else if (PC_VideoAnalysis.IsSniffing[i])
-                    pathPoints["sniffing"].Points.Add(new ScatterPoint(PC_AnalysisDataRows.X[i], 480 - PC_AnalysisDataRows.Y[i]) { });
-                else if (PC_VideoAnalysis.IsNoseCasting[i])
-                    pathPoints["noseCasting"].Points.Add(new ScatterPoint(PC_AnalysisDataRows.X[i], 480 - PC_AnalysisDataRows.Y[i]) { });
-                else
-                    pathPoints["none"].Points.Add(new ScatterPoint(PC_AnalysisDataRows.X[i], 480 - PC_AnalysisDataRows.Y[i]) { });
-
-                if (!IsNullOrEmpty(PC_ColorList))
+                bool wasAdded = false;
+                foreach (KeyValuePair<string, bool> item in PC_VideoAnalysis.Features[i])
                 {
-                    if (PC_VideoAnalysis.IsDrinking[i])
-                        pathPoints["drinking"].Points[pathPoints["drinking"].Points.Count - 1].Value = PC_ColorList[i];
-                    else if (PC_VideoAnalysis.IsSniffing[i])
-                        pathPoints["sniffing"].Points[pathPoints["sniffing"].Points.Count - 1].Value = PC_ColorList[i];
-                    else if (PC_VideoAnalysis.IsNoseCasting[i])
-                        pathPoints["noseCasting"].Points[pathPoints["noseCasting"].Points.Count - 1].Value = PC_ColorList[i];
-                    else
-                        pathPoints["none"].Points[pathPoints["none"].Points.Count - 1].Value = PC_ColorList[i];
+                    if (item.Value)
+                    {
+                        pathPoints[item.Key].Points.Add(new ScatterPoint(PC_AnalysisDataRows.X[i], 480 - PC_AnalysisDataRows.Y[i]) { });
+                        if (!IsNullOrEmpty(PC_ColorList))
+                            pathPoints[item.Key].Points[pathPoints[item.Key].Points.Count - 1].Value = PC_ColorList[i];
+
+                        if (!IsNullOrEmpty(PC_SizeList))
+                            pathPoints[item.Key].Points[pathPoints[item.Key].Points.Count - 1].Size = PC_SizeList[i];
+
+                        wasAdded = true;
+                    }
                 }
-
-                if (!IsNullOrEmpty(PC_SizeList))
+                if (!wasAdded)
                 {
-                    if (PC_VideoAnalysis.IsDrinking[i])
-                        pathPoints["drinking"].Points[pathPoints["drinking"].Points.Count - 1].Size = PC_SizeList[i];
-                    else if (PC_VideoAnalysis.IsSniffing[i])
-                        pathPoints["sniffing"].Points[pathPoints["sniffing"].Points.Count - 1].Size = PC_SizeList[i];
-                    else if (PC_VideoAnalysis.IsNoseCasting[i])
-                        pathPoints["noseCasting"].Points[pathPoints["noseCasting"].Points.Count - 1].Size = PC_SizeList[i];
-                    else
+                    pathPoints["none"].Points.Add(new ScatterPoint(PC_AnalysisDataRows.X[i], 480 - PC_AnalysisDataRows.Y[i]) { });
+                    if (!IsNullOrEmpty(PC_ColorList))
+                        pathPoints["none"].Points[pathPoints["none"].Points.Count - 1].Value = PC_ColorList[i];
+
+                    if (!IsNullOrEmpty(PC_SizeList))
                         pathPoints["none"].Points[pathPoints["none"].Points.Count - 1].Size = PC_SizeList[i];
                 }
             }
@@ -248,8 +250,6 @@ namespace mouse_tracking_web_app.Models
                 foreach (KeyValuePair<string, ScatterSeries> keyVal in pathPoints)
                 {
                     keyVal.Value.TrackerFormatString += "\n" + PC_ColorParameter + " = {Value:0.##}";
-                    //for (int i = 0; i < PC_AnalysisDataRows.X.Count; i++)
-                    //    keyVal.Value.Points[i].Value = PC_ColorList[i];
                 }
             }
             else
@@ -257,7 +257,7 @@ namespace mouse_tracking_web_app.Models
                 PC_PlotModel.Axes.Clear();
                 SetUpModel();
                 foreach (KeyValuePair<string, ScatterSeries> keyVal in pathPoints)
-                    keyVal.Value.MarkerFill = OxyColors.MediumSeaGreen;
+                    keyVal.Value.MarkerFill = OxyColors.MediumSeaGreen; // ******* //
             }
 
             if (!IsNullOrEmpty(PC_SizeList) && (PC_MaxSize > PC_MinSize))
@@ -265,8 +265,6 @@ namespace mouse_tracking_web_app.Models
                 foreach (KeyValuePair<string, ScatterSeries> keyVal in pathPoints)
                 {
                     keyVal.Value.TrackerFormatString += "\nsize = {Size:0.##}";
-                    //for (int i = 0; i < PC_AnalysisDataRows.X.Count; i++)
-                    //    keyVal.Value.Points[i].Size = PC_SizeList[i];
                 }
             }
             else
@@ -311,11 +309,15 @@ namespace mouse_tracking_web_app.Models
         {
             Dictionary<string, ScatterSeries> pathPoints = new Dictionary<string, ScatterSeries>();
             foreach (KeyValuePair<string, MarkerType> keyVal in scatterTypes)
+            {
                 pathPoints[keyVal.Key] = new ScatterSeries()
                 {
                     MarkerType = keyVal.Value,
+                    MarkerStroke = OxyColors.White,
                     TrackerFormatString = "position = ({X:0.##}, {Y:0.##})"
                 };
+            }
+
             return pathPoints;
         }
 
