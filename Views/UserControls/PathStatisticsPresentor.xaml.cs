@@ -15,6 +15,7 @@ namespace mouse_tracking_web_app.Views
     {
         private Color textColor;
         private PlottingControllerViewModel vm;
+
         public PathStatisticsPresentor()
         {
             InitializeComponent();
@@ -36,7 +37,6 @@ namespace mouse_tracking_web_app.Views
                 Reload();
             }
         }
-
 
         private void Reload()
         {
@@ -70,7 +70,6 @@ namespace mouse_tracking_web_app.Views
                 Grid.SetRow(tb_label, i + 4);
                 Grid.SetColumn(tb_label, 0);
                 _ = layoutRoot.Children.Add(tb_label);
-
 
                 TextBlock tb_value = new TextBlock()
                 {

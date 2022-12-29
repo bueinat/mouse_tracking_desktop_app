@@ -129,6 +129,7 @@ namespace mouse_tracking_web_app.ViewModels
         public List<string> VideoTypesList => new List<string>(CurrentSettings.VideoTypesList.Split(','));
 
         public string WorkingPath => CurrentSettings.WorkingPath;
+
         public string FirstCharToUpperCase(string str)
         {
             return !string.IsNullOrEmpty(str) && char.IsLower(str[0])

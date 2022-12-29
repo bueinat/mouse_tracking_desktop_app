@@ -1,6 +1,5 @@
 ﻿using Microsoft.WindowsAPICodePack.Dialogs;
 using mouse_tracking_web_app.ViewModels;
-using System;
 using System.Linq;
 using System.Windows;
 

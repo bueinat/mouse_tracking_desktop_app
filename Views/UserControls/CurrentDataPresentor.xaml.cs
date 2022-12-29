@@ -14,6 +14,7 @@ namespace mouse_tracking_web_app.Views
     {
         private Color textColor;
         private VideoControllerViewModel vm;
+
         public CurrentDataPresentor()
         {
             InitializeComponent();

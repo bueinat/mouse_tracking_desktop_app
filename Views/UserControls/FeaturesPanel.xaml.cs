@@ -17,12 +17,12 @@ namespace mouse_tracking_web_app.Views
     {
         private VideoControllerViewModel vm;
         private Color textColor;
+
         public FeaturesPanel()
         {
             InitializeComponent();
             textColor = new PaletteHelper().GetTheme().SecondaryDark.Color;
         }
-
 
         private void Reload()
         {
@@ -75,7 +75,6 @@ namespace mouse_tracking_web_app.Views
                     };
                 Reload();
             }
-
         }
 
         #region TimesDictionary DP

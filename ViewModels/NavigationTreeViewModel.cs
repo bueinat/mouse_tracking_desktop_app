@@ -47,6 +47,7 @@ namespace mouse_tracking_web_app.ViewModels
 
         // Single tree for Demo
         private NavTreeVm singleTree;
+
         public NavTreeVm SingleTree
         {
             get => singleTree;
