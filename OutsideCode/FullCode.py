@@ -21,6 +21,14 @@ warnings.filterwarnings("ignore")
 def run(args):
     print("ExtractVideo")
 
+    # create feaures list
+    project_config_path = u"{}\\project_config.yaml".format(args['de_project_path'])
+    project_config = deepethogram.projects.load_config(project_config_path)
+    features_list = project_config.project.class_names[1:]
+
+    # create documents
+    Video, Analysis, FeatureItem = get_documents_classes(features_list)
+
     # needed paths
     args["data_path"], video_path = add_video_to_de_project(args)
     video_name = video_path.split('\\')[-1].split('.')[0] 

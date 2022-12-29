@@ -107,6 +107,8 @@ def add_video_to_de_project(args):
     """returns video name"""
     project_config_path = u"{}\\project_config.yaml".format(args['de_project_path'])
     project_config = deepethogram.projects.load_config(project_config_path)
+    features_list = project_config.project.class_names[1:]
+    Video, Analysis, FeatureItem = get_documents_classes(features_list)
     try:
         new_path = deepethogram.projects.add_video_to_project(project_config, args["video_path"], mode="copy")
         return os.path.dirname(new_path), new_path.split("\\")[-1]
@@ -256,52 +258,59 @@ class Analysis(mnge.Document):
 class Video(mnge.Document):
     registration_date = mnge.DateTimeField(default=datetime.datetime.now)
 
-# TODO: make the user be able to pass this list
-features_list = ["sniff", "drink", "nose_cast"]
-
 class FeatureItem(mnge.EmbeddedDocument):
-    for feature in features_list:
-        exec(f"{feature} = mnge.BooleanField(default=False)")
+    dummy_field = mnge.BinaryField();
+
+
+def get_FeatureItem(features_list):
+    class FeatureItem(mnge.EmbeddedDocument):
+        for feature in features_list:
+            exec(f"{feature} = mnge.BooleanField(default=False)")
         
-    meta = {
-        'db_alias': 'core',
-        'collection': 'features'
-    }
-    
+        meta = {
+            'db_alias': 'core',
+            'collection': 'features'
+        }
+    return FeatureItem
 
-# %% Analysis
-class Analysis(mnge.Document):
-    timestep = mnge.ListField(mnge.IntField(), required=True)
+def get_Analysis(features_list):
+    class Analysis(mnge.Document):
+        timestep = mnge.ListField(mnge.IntField(), required=True)
     
-    x = mnge.ListField(mnge.FloatField(), required=True)
-    y = mnge.ListField(mnge.FloatField(), required=True)
-    vx = mnge.ListField(mnge.FloatField(), required=True)
-    vy = mnge.ListField(mnge.FloatField(), required=True)
-    ax = mnge.ListField(mnge.FloatField(), required=True)
-    ay = mnge.ListField(mnge.FloatField(), required=True)
-    curviness = mnge.ListField(mnge.FloatField(), required=True)
+        x = mnge.ListField(mnge.FloatField(), required=True)
+        y = mnge.ListField(mnge.FloatField(), required=True)
+        vx = mnge.ListField(mnge.FloatField(), required=True)
+        vy = mnge.ListField(mnge.FloatField(), required=True)
+        ax = mnge.ListField(mnge.FloatField(), required=True)
+        ay = mnge.ListField(mnge.FloatField(), required=True)
+        curviness = mnge.ListField(mnge.FloatField(), required=True)
     
-    path = mnge.ListField(mnge.StringField(required=True))
-    video = mnge.ReferenceField(Video)
-    features = mnge.EmbeddedDocumentListField(FeatureItem)
+        path = mnge.ListField(mnge.StringField(required=True))
+        video = mnge.ReferenceField(Video)
+        features = mnge.EmbeddedDocumentListField(get_FeatureItem(features_list))
     
-    meta = {
-        'db_alias': 'core',
-        'collection': 'analysis'
-    }
+        meta = {
+            'db_alias': 'core',
+            'collection': 'analysis'
+        }
+    return Analysis
 
-# %% Video
-class Video(mnge.Document):
-    registration_date = mnge.DateTimeField(default=datetime.datetime.now)
-    modification_date = mnge.DateTimeField()
-    name = mnge.StringField(required=True)
-    nframes = mnge.IntField(reqiured=True)
-    length = mnge.StringField(required=True)
-    description = mnge.StringField(required=True)
-    link_to_data = mnge.StringField(required=True)
-    analysis = mnge.ReferenceField(Analysis)
+def get_Video(features_list):
+    class Video(mnge.Document):
+        registration_date = mnge.DateTimeField(default=datetime.datetime.now)
+        modification_date = mnge.DateTimeField()
+        name = mnge.StringField(required=True)
+        nframes = mnge.IntField(reqiured=True)
+        length = mnge.StringField(required=True)
+        description = mnge.StringField(required=True)
+        link_to_data = mnge.StringField(required=True)
+        analysis = mnge.ReferenceField(get_Analysis(features_list))
     
-    meta = {
-        'db_alias': 'core',
-        'collection': 'videos'
-    }
+        meta = {
+            'db_alias': 'core',
+            'collection': 'videos'
+        }
+    return Video
+
+def get_documents_classes(features_list):
+    return get_Video(features_list), get_Analysis(features_list), get_FeatureItem(features_list)

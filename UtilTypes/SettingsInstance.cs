@@ -23,7 +23,6 @@ namespace mouse_tracking_web_app.UtilTypes
                 DEPath = ConfigurationManager.AppSettings.Get("DEPath");
                 ConnectionString = ConfigurationManager.AppSettings.Get("ConnectionString");
                 DatabaseName = ConfigurationManager.AppSettings.Get("DatabaseName");
-                FeaturesList = ConfigurationManager.AppSettings.Get("FeaturesList");
                 FileTypesList = ConfigurationManager.AppSettings.Get("FileTypesList");
                 VideoTypesList = ConfigurationManager.AppSettings.Get("VideoTypesList");
                 OverrideDB = bool.Parse(ConfigurationManager.AppSettings.Get("OverrideDB"));
@@ -36,7 +35,6 @@ namespace mouse_tracking_web_app.UtilTypes
                 DEPath = "";
                 ConnectionString = "";
                 DatabaseName = "";
-                FeaturesList = "";
                 FileTypesList = "";
                 VideoTypesList = "";
                 OverrideDB = false;
@@ -78,7 +76,6 @@ namespace mouse_tracking_web_app.UtilTypes
                 DEPath = DEPath,
                 ConnectionString = ConnectionString,
                 DatabaseName = DatabaseName,
-                FeaturesList = FeaturesList,
                 FileTypesList = FileTypesList,
                 VideoTypesList = VideoTypesList,
                 PlotMarkerSize = PlotMarkerSize,
@@ -110,8 +107,6 @@ namespace mouse_tracking_web_app.UtilTypes
                 ConnectionString = source.ConnectionString;
             if (!string.IsNullOrEmpty(source.DatabaseName))
                 DatabaseName = source.DatabaseName;
-            if (!string.IsNullOrEmpty(source.FeaturesList))
-                FeaturesList = source.FeaturesList;
             if (!string.IsNullOrEmpty(source.FileTypesList))
                 FileTypesList = source.FileTypesList;
             if (!string.IsNullOrEmpty(source.VideoTypesList))
@@ -226,22 +221,6 @@ namespace mouse_tracking_web_app.UtilTypes
         }
 
         #endregion databaseName
-
-        #region featuresList
-
-        private string featuresList;
-
-        public string FeaturesList
-        {
-            get => featuresList;
-            set
-            {
-                featuresList = value;
-                OnPropertyChanged("FeaturesList");
-            }
-        }
-
-        #endregion featuresList
 
         #region fileTypesList
 

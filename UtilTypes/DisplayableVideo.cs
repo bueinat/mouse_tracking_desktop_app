@@ -90,7 +90,7 @@ namespace mouse_tracking_web_app.UtilTypes
                         errorMessage = e.Data.Substring(7);
                     if (e.Data.StartsWith("message"))
                         errorMessage = e.Data.Substring(9);
-                    if (string.IsNullOrEmpty(errorMessage))
+                    if (!string.IsNullOrEmpty(errorMessage))
                         AppendToToolTipMessage($"{ProcessingState}: {errorMessage}");
                     else if (ProcessingState == State.Failed)
                         AppendToToolTipMessage($"{ProcessingState}: unknown error occured");

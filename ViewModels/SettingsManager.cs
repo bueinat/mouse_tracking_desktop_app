@@ -1,6 +1,7 @@
 ﻿using mouse_tracking_web_app.UtilTypes;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 
 namespace mouse_tracking_web_app.ViewModels
 {
@@ -59,19 +60,18 @@ namespace mouse_tracking_web_app.ViewModels
                 NotifyPropertyChanged("ConnectionString");
             if (CurrentSettings.DatabaseName != oldSettings.DatabaseName)
                 NotifyPropertyChanged("DatabaseName");
-            if (CurrentSettings.FeaturesList != oldSettings.FeaturesList)
-                NotifyPropertyChanged("FeaturesList");
             if (CurrentSettings.FileTypesList != oldSettings.FileTypesList)
                 NotifyPropertyChanged("FileTypesList");
             if (CurrentSettings.VideoTypesList != oldSettings.VideoTypesList)
                 NotifyPropertyChanged("VideoTypesList");
             if (CurrentSettings.PlotMarkerSize != oldSettings.PlotMarkerSize)
                 NotifyPropertyChanged("PlotMarkerSize");
-            //if (CurrentSettings.OverrideDB != oldSettings.OverrideDB)
             NotifyPropertyChanged("OverrideDB");
         }
 
         #endregion settingsMethods
+
+        private List<string> featuresList;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -92,7 +92,6 @@ namespace mouse_tracking_web_app.ViewModels
                 NotifyPropertyChanged("DEPath");
                 NotifyPropertyChanged("ConnectionString");
                 NotifyPropertyChanged("DatabaseName");
-                NotifyPropertyChanged("FeaturesList");
                 NotifyPropertyChanged("FileTypesList");
                 NotifyPropertyChanged("VideoTypesList");
                 NotifyPropertyChanged("PlotMarkerSize");
@@ -116,8 +115,8 @@ namespace mouse_tracking_web_app.ViewModels
         public string ConnectionString => CurrentSettings.ConnectionString;
 
         public string DatabaseName => CurrentSettings.DatabaseName;
-
-        public List<string> FeaturesList => new List<string>(CurrentSettings.FeaturesList.Split(','));
+        public string DEPath => CurrentSettings.DEPath;
+        public List<string> FeaturesList => featuresList;
 
         public List<string> FileTypesList => new List<string>(CurrentSettings.FullTypesList.Split(','));
 
@@ -130,8 +129,6 @@ namespace mouse_tracking_web_app.ViewModels
         public List<string> VideoTypesList => new List<string>(CurrentSettings.VideoTypesList.Split(','));
 
         public string WorkingPath => CurrentSettings.WorkingPath;
-        public string DEPath => CurrentSettings.DEPath;
-
         public string FirstCharToUpperCase(string str)
         {
             return !string.IsNullOrEmpty(str) && char.IsLower(str[0])
@@ -142,6 +139,35 @@ namespace mouse_tracking_web_app.ViewModels
         public void NotifyPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            if (propertyName == "DEPath")
+            {
+                SetFeaturesList();
+                NotifyPropertyChanged("FeaturesList");
+            }
+        }
+
+        private void SetFeaturesList()
+        {
+            string[] lines = File.ReadAllLines($"{DEPath}\\project_config.yaml");
+            featuresList = new List<string>();
+            bool flag = false;
+
+            foreach (string line in lines)
+            {
+                if (line.EndsWith("class_names:"))
+                    flag = true;
+                else if (flag)
+                {
+                    if (line.Contains("-") && !line.Contains(":"))
+                    {
+                        string[] fLine = line.Split(' ');
+                        string feature = fLine[fLine.Length - 1];
+                        if (feature != "background")
+                            featuresList.Add(feature);
+                    }
+                    else return;
+                }
+            }
         }
     }
 }

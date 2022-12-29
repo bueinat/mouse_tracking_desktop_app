@@ -9,8 +9,8 @@
     xmlns:valRules="clr-namespace:mouse_tracking_web_app.ValidationRules"
     xmlns:viewmodels="clr-namespace:mouse_tracking_web_app.ViewModels"
     Title="Settings"
-    Width="450"
-    Height="550"
+    Width="auto"
+    Height="auto"
     d:DataContext="{d:DesignInstance Type=viewmodels:SettingsManager}"
     Background="{DynamicResource MaterialDesignPaper}"
     FontFamily="{DynamicResource MaterialDesignFont}"
@@ -33,7 +33,6 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
@@ -195,33 +194,10 @@
             Grid.Column="0"
             Margin="5"
             VerticalAlignment="Center"
-            Content="features:" />
-        <TextBox
-            x:Name="featuresList"
-            Grid.Row="6"
-            Grid.Column="1"
-            VerticalAlignment="Center"
-            materialDesign:HintAssist.Hint="{Binding CurrentSettings.FeaturesList}">
-            <TextBox.Text>
-                <Binding
-                    Mode="TwoWay"
-                    Path="UpdatableSettings.FeaturesList"
-                    UpdateSourceTrigger="PropertyChanged">
-                    <Binding.ValidationRules>
-                        <valRules:CommaSeparatedListValidationRule />
-                    </Binding.ValidationRules>
-                </Binding>
-            </TextBox.Text>
-        </TextBox>
-        <Label
-            Grid.Row="7"
-            Grid.Column="0"
-            Margin="5"
-            VerticalAlignment="Center"
             Content="files types:" />
         <TextBox
             x:Name="fileTypesList"
-            Grid.Row="7"
+            Grid.Row="6"
             Grid.Column="1"
             VerticalAlignment="Center"
             materialDesign:HintAssist.Hint="{Binding CurrentSettings.FileTypesList}">
@@ -237,14 +213,14 @@
             </TextBox.Text>
         </TextBox>
         <Label
-            Grid.Row="8"
+            Grid.Row="7"
             Grid.Column="0"
             Margin="5"
             VerticalAlignment="Center"
             Content="videos types:" />
         <TextBox
             x:Name="videoTypesList"
-            Grid.Row="8"
+            Grid.Row="7"
             Grid.Column="1"
             VerticalAlignment="Center"
             materialDesign:HintAssist.Hint="{Binding CurrentSettings.VideoTypesList}">
@@ -260,14 +236,14 @@
             </TextBox.Text>
         </TextBox>
         <Label
-            Grid.Row="9"
+            Grid.Row="8"
             Grid.Column="0"
             Margin="5"
             VerticalAlignment="Center"
             Content="marker size in plot:" />
         <TextBox
             x:Name="plotMarkerSize"
-            Grid.Row="9"
+            Grid.Row="8"
             Grid.Column="1"
             VerticalAlignment="Center"
             materialDesign:HintAssist.Hint="{Binding CurrentSettings.PlotMarkerSize}">
@@ -285,17 +261,18 @@
         </TextBox>
 
         <CheckBox
-            Grid.Row="10"
+            Grid.Row="9"
             Grid.ColumnSpan="2"
             Margin="15,5,0,0"
-            Content="Override Data in Cache"
+            Content="override data in DeepEthogram project"
             IsChecked="{Binding UpdatableSettings.OverrideDB, Mode=TwoWay}" />
 
         <WrapPanel
-            Grid.Row="11"
+            Grid.Row="10"
             Grid.ColumnSpan="3"
-            Margin="0,20,5,0" VerticalAlignment="Center"
-            HorizontalAlignment="Right">
+            Margin="0,20,5,0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Center">
             <Button
                 Name="btnReset"
                 Margin="0,0,10,0"
