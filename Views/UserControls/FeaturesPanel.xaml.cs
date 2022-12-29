@@ -32,7 +32,7 @@ namespace mouse_tracking_web_app.Views
             {
                 TextBlock tb = new TextBlock()
                 {
-                    Text = FeaturesList[i].Substring(2) + ": ",
+                    Text = FeaturesList[i].Replace('_', ' ') + ": ",
                     VerticalAlignment = VerticalAlignment.Center,
                     FontWeight = FontWeights.Bold,
                     FontSize = 12,

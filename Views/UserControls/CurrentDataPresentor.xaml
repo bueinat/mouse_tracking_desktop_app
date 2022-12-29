@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:converters="clr-namespace:mouse_tracking_web_app.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:mouse_tracking_web_app.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewmodels="clr-namespace:mouse_tracking_web_app.ViewModels"
     d:DataContext="{d:DesignInstance Type=viewmodels:VideoControllerViewModel}"
@@ -13,6 +14,7 @@
             <converters:FillnaConverter x:Key="FillnaConverter" />
             <converters:ObjectToVisibilityConverter x:Key="ObjectToVisibilityConverter" />
             <converters:BoolToColorConverter x:Key="BoolToColorConverter" />
+            <converters:LengthRange x:Key="LengthRange" />
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
@@ -22,25 +24,17 @@
             Margin="5"
             Padding="5"
             Header="Info Panel">
-            <Grid Visibility="{Binding VMVC_VideoAnalysis, Converter={StaticResource ObjectToVisibilityConverter}}">
+            <Grid
+                x:Name="layoutRoot"
+                local:GridHelpers.RowCount="{Binding Path=VMVC_FeaturesList.Count, Converter={StaticResource MathAddConverter}, ConverterParameter=8}"
+                local:GridHelpers.StarRows="{Binding VMVC_FeaturesList.Count, Converter={StaticResource LengthRange}, ConverterParameter=8}"
+                Loaded="OnLoad"
+                Visibility="{Binding VMVC_VideoAnalysis, Converter={StaticResource ObjectToVisibilityConverter}}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto" />
                     <ColumnDefinition Width="30" />
                     <ColumnDefinition Width="auto" />
                 </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
                 <TextBlock
                     Grid.Row="0"
                     Grid.Column="0"
@@ -166,59 +160,11 @@
                 <TextBlock
                     Grid.Row="7"
                     Grid.Column="2"
-                    Grid.ColumnSpan="2"
                     VerticalAlignment="Center"
                     Foreground="#646464"
                     Style="{StaticResource MaterialDesignCaptionTextBlock}"
                     Text="{Binding VMVC_Curviness, Converter={StaticResource FillnaConverter}}" />
-                <TextBlock
-                    Grid.Row="8"
-                    Grid.Column="0"
-                    Margin="5,0,15,0"
-                    VerticalAlignment="Center"
-                    FontWeight="SemiBold"
-                    Foreground="{StaticResource SecondaryHueDarkBrush}"
-                    Style="{StaticResource MaterialDesignCaptionTextBlock}"
-                    Text="{Binding VMVC_FeaturesList[0]}" />
-                <TextBlock
-                    Grid.Row="8"
-                    Grid.Column="2"
-                    VerticalAlignment="Center"
-                    Foreground="{Binding VMVC_Features[VMVC_FeaturesList[0]], Converter={StaticResource BoolToColorConverter}}"
-                    Style="{StaticResource MaterialDesignCaptionTextBlock}"
-                    Text="{Binding VMVC_Features[VMVC_FeaturesList[0]]}" />
-                <!--<TextBlock
-                    Grid.Row="9"
-                    Grid.Column="0"
-                    Margin="5,0,15,0"
-                    VerticalAlignment="Center"
-                    FontWeight="SemiBold"
-                    Foreground="{StaticResource SecondaryHueDarkBrush}"
-                    Style="{StaticResource MaterialDesignCaptionTextBlock}"
-                    Text="is drinking:" />
-                <TextBlock
-                    Grid.Row="9"
-                    Grid.Column="2"
-                    VerticalAlignment="Center"
-                    Foreground="{Binding VMVC_IsDrinking, Converter={StaticResource BoolToColorConverter}}"
-                    Style="{StaticResource MaterialDesignCaptionTextBlock}"
-                    Text="{Binding VMVC_IsDrinking}" />
-                <TextBlock
-                    Grid.Row="10"
-                    Grid.Column="0"
-                    Margin="5,0,15,0"
-                    VerticalAlignment="Center"
-                    FontWeight="SemiBold"
-                    Foreground="{StaticResource SecondaryHueDarkBrush}"
-                    Style="{StaticResource MaterialDesignCaptionTextBlock}"
-                    Text="is nose casting:" />
-                <TextBlock
-                    Grid.Row="10"
-                    Grid.Column="2"
-                    VerticalAlignment="Center"
-                    Foreground="{Binding VMVC_IsNoseCasting, Converter={StaticResource BoolToColorConverter}}"
-                    Style="{StaticResource MaterialDesignCaptionTextBlock}"
-                    Text="{Binding VMVC_IsNoseCasting}" />-->
+
             </Grid>
         </GroupBox>
     </Grid>

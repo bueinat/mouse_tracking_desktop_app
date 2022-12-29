@@ -15,8 +15,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary>
-                    <converters:FillnaConverter x:Key="FillnaConverter" />
-                    <converters:BoolToColorConverter x:Key="BoolToColorConverter" />
+                    <converters:DictionaryItemToDoubleConverter x:Key="DictionaryItemToDoubleConverter" />
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -108,14 +107,25 @@
             FontWeight="SemiBold"
             Foreground="{StaticResource SecondaryHueDarkBrush}"
             Style="{StaticResource MaterialDesignCaptionTextBlock}"
-            Text="{Binding VMPC_FeaturesPercents.Keys[0]}" />
+            Text="{Binding VMPC_FeaturesList[0]}" />
         <TextBlock
             Grid.Row="4"
             Grid.Column="1"
             VerticalAlignment="Center"
             Foreground="#646464"
-            Style="{StaticResource MaterialDesignCaptionTextBlock}"
-            Text="{Binding VMPC_FeaturesPercents.Values[0], StringFormat={}{0:0.00}%}" />
+            Style="{StaticResource MaterialDesignCaptionTextBlock}">
+            <TextBlock.Text>
+                <MultiBinding StringFormat="{}{0:0.00}%">
+                    <MultiBinding.Converter>
+                        <converters:DictionaryItemToDoubleConverter />
+                    </MultiBinding.Converter>
+
+                    <Binding Path="VMPC_FeaturesPercents" />
+                    <Binding Path="VMPC_FeaturesList[1]" />
+                </MultiBinding>
+            </TextBlock.Text>
+        </TextBlock>
+        <!--  Text="{Binding Path=VMPC_FeaturesPercent, StringFormat={}{0:0.00}%}" />  -->
 
         <!--<TextBlock
             Grid.Row="5"

@@ -34,7 +34,7 @@ namespace mouse_tracking_web_app.Models
         private bool isLoading = false;
 
         private PlotModel plotModel;
-        private Dictionary<string, MarkerType> scatterTypes;
+        private readonly Dictionary<string, MarkerType> scatterTypes;
         private string sizeParam;
         private Tuple<double, double> sizeRange = new Tuple<double, double>(double.NaN, double.NaN);
         private string stringSizeRange;

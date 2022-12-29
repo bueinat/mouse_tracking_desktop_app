@@ -1,13 +1,72 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Media;
 
 namespace mouse_tracking_web_app.Converters
 {
+
+    public class DictionaryItemToDoubleConverter : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (values != null && values.Length >= 2)
+            {
+                if (values[0] is IDictionary myDict && values[1] is string myKey)
+                    return myDict[myKey];
+            }
+            return Binding.DoNothing;
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotSupportedException();
+        }
+    }
+
+    public class DictionaryItemToBoolConverter : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (values != null && values.Length >= 2)
+            {
+                if (values[0] is IDictionary myDict && values[1] is string myKey)
+                    return ((bool)myDict[myKey]).ToString();
+            }
+            return Binding.DoNothing;
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotSupportedException();
+        }
+    }
+
+    public class DictionaryItemToColorConverter : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (values != null && values.Length >= 2)
+            {
+                if (values[0] is IDictionary myDict && values[1] is string myKey)
+                {
+                    Color color = (bool)myDict[myKey] ? Colors.LimeGreen : Colors.IndianRed;
+                    return new SolidColorBrush(color);
+                }
+            }
+            return Binding.DoNothing;
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotSupportedException();
+        }
+    }
     public class Converter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -73,7 +132,9 @@ namespace mouse_tracking_web_app.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return string.Join(",", Enumerable.Range(0, (int)value));
+            if (parameter == null)
+                parameter = "0";
+            return string.Join(",", Enumerable.Range(0, (int)value + int.Parse((string)parameter)));
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

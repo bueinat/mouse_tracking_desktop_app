@@ -33,6 +33,8 @@ namespace mouse_tracking_web_app.ViewModels
 
         public double VMPC_AverageSpeed => Model.PC_AverageSpeed;
 
+        public List<string> VMPC_FeaturesList => Model.SM.FeaturesList;
+
         public string VMPC_ColorParameter
         {
             get => Model.PC_ColorParameter;
