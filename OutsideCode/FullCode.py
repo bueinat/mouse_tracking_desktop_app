@@ -77,7 +77,6 @@ def run(args):
     print(f"video name = {video_name}")
     frames_path = u"{}\\.frames".format(args['data_path'])
     
-    # TODO: fix this switching (pretty sure getting them back to the way they were would be enough)
     print("FindRatFeatures") 
     if torch.cuda.is_available():
         # if not override, get labels / predictions if exist

@@ -490,6 +490,7 @@
     <None Include="Core\Compression\Zstandard\lib\osx\libzstd.dylib" />
     <None Include="libmongocrypt.dylib" />
     <None Include="libmongocrypt.so" />
+    <Content Include="OutsideCode\findPath.py" />
     <None Include="packages.config" />
     <None Include="README.md" />
   </ItemGroup>

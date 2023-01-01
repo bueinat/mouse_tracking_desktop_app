@@ -63,7 +63,15 @@ namespace mouse_tracking_web_app.Models
             // registrations
             process.ErrorDataReceived += errorHandler;
             process.OutputDataReceived += outputHandler;
-            cToken.Register(() => process.Kill());
+            try
+            {
+                cToken.Register(() => process.Kill());
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("no process killed");
+            }
+            
 
             // start the process
             process.Start();
