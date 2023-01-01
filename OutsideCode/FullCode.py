@@ -190,10 +190,10 @@ if __name__ == '__main__':
     # %%
     args = pandas.read_csv(sys.argv[1], header=None, index_col=0)[1]
     args["override"] = eval(args["override"])
-    run(args)
-    #try:
-    #    run(args)
-    #except Exception as e:
-    #    print(f"error: {e.__class__.__name__}: {e}")
-    #print("exit")
+    # run(args)
+    try:
+        run(args)
+    except Exception as e:
+        print(f"error: {e.__class__.__name__}: {e}")
+    print("exit")
     sys.exit(0)

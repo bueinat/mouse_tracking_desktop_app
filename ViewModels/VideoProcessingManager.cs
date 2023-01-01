@@ -123,35 +123,24 @@ namespace mouse_tracking_web_app.ViewModels
         public void ProcessFolder()
         {
             _videosDictionary = new Dictionary<string, DisplayableVideo>();
-            List<Task> tasks = new List<Task>();
 
-            using (SemaphoreSlim concurrencySemaphore = new SemaphoreSlim(_maxConcurrency))
+            foreach (string videoPath in VPM_VideosList)
             {
-                foreach (string videoPath in VPM_VideosList)
+                // create video and add it to the list
+                string relativePath = Utils.UtilMethods.MakeRelative(videoPath, VPM_VideosPath);
+                if (string.IsNullOrEmpty(relativePath))
+                    relativePath = videoPath.Split('\\')[videoPath.Split('\\').Length - 1];
+                _videosDictionary.Add(videoPath, new DisplayableVideo()
                 {
-                    // create video and add it to the list
-                    string relativePath = Utils.UtilMethods.MakeRelative(videoPath, VPM_VideosPath);
-                    if (string.IsNullOrEmpty(relativePath))
-                        relativePath = videoPath.Split('\\')[videoPath.Split('\\').Length - 1];
-                    _videosDictionary.Add(videoPath, new DisplayableVideo()
-                    {
-                        ReducedName = relativePath,
-                        ProcessingState = DisplayableVideo.State.Waiting
-                    });
-                    // add the item to the videosCollection (could be done in parallel)
-                    lock (_lock)
-                    {
-                        VideosCollection.Add(_videosDictionary[videoPath]);
-                    }
-
-                    // add processing task to list
-                Task t = _videosDictionary[videoPath].Start(ProcessSingleVideo, videoPath);
-                // ProcessSingleVideo(videoPath);
-                    // tasks.Add(_videosDictionary[videoPath].Start(ProcessSingleVideo, videoPath, concurrencySemaphore));
-                }
-
-                // wait for all tasks to finish
-                Task.WaitAll(tasks.ToArray());
+                    ReducedName = relativePath,
+                    ProcessingState = DisplayableVideo.State.Waiting
+                });
+                VideosCollection.Add(_videosDictionary[videoPath]);
+            }
+            foreach (string videoPath in VPM_VideosList)
+            {
+                // create task and run it.
+                _videosDictionary[videoPath].Start(ProcessSingleVideo, videoPath).Wait();
             }
         }
 
@@ -179,8 +168,7 @@ namespace mouse_tracking_web_app.ViewModels
             };
 
             // run algorithm
-            _model.CodeRunner.RunCmd(@"OutsideCode\FullCode.py", argv, currentVideo.OutputHandler, currentVideo.ErrorHandler,
-                                                                    (CancellationToken)cancellationToken);
+            _model.CodeRunner.RunCmd(@"OutsideCode\FullCode.py", argv, currentVideo.OutputHandler, currentVideo.ErrorHandler, (CancellationToken)cancellationToken);
         }
 
         #endregion processingMethods

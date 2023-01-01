@@ -116,26 +116,17 @@ namespace mouse_tracking_web_app.UtilTypes
         /// <param name="videoName">the video on which <paramref name="action"/> runs.</param>
         /// <param name="semaphore">allows to limit parallelism.</param>
         /// <returns>A task to be ran.</returns>
-        public Task Start(Action<object, object> action, string videoName, SemaphoreSlim semaphore)
+        public Task Start(Action<object, object> action, string videoName)
         {
             _cancellationToken = new CancellationTokenSource();
             return Task.Factory.StartNew(() =>
             {
-                semaphore.Wait();
-
-                try
-                {
-                    ProcessingState = State.ExtractVideo;
-                    action(videoName, _cancellationToken.Token);
-                    if (_cancellationToken.IsCancellationRequested)
-                        ProcessingState = State.Canceled;
-                    else if (ProcessingState != State.Successful)
-                        ProcessingState = State.Failed;
-                }
-                finally
-                {
-                    _ = semaphore.Release();
-                }
+                ProcessingState = State.ExtractVideo;
+                action(videoName, _cancellationToken.Token);
+                if (_cancellationToken.IsCancellationRequested)
+                    ProcessingState = State.Canceled;
+                else if (ProcessingState != State.Successful)
+                    ProcessingState = State.Failed;
             }, _cancellationToken.Token);
         }
 
