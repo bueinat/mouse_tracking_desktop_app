@@ -36,11 +36,11 @@ namespace mouse_tracking_web_app.Converters
                     colorCode = "#F9D2A8";
                     break;
 
-                case UtilTypes.DisplayableVideo.State.FindRatPath:
+                case UtilTypes.DisplayableVideo.State.FindRatFeatures:
                     colorCode = "#EEEF9B";
                     break;
 
-                case UtilTypes.DisplayableVideo.State.FindRatFeatues:
+                case UtilTypes.DisplayableVideo.State.FindRatPath:
                     colorCode = "#E8FDAC";
                     break;
 

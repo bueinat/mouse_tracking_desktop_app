@@ -181,9 +181,9 @@ namespace mouse_tracking_web_app.Converters
             {
                 case UtilTypes.DisplayableVideo.State.ExtractVideo:
 
-                case UtilTypes.DisplayableVideo.State.FindRatPath:
+                case UtilTypes.DisplayableVideo.State.FindRatFeatures:
 
-                case UtilTypes.DisplayableVideo.State.FindRatFeatues:
+                case UtilTypes.DisplayableVideo.State.FindRatPath:
 
                 case UtilTypes.DisplayableVideo.State.SaveToDataBase:
                     return true;
@@ -214,9 +214,9 @@ namespace mouse_tracking_web_app.Converters
             {
                 case UtilTypes.DisplayableVideo.State.ExtractVideo:
 
-                case UtilTypes.DisplayableVideo.State.FindRatPath:
+                case UtilTypes.DisplayableVideo.State.FindRatFeatures:
 
-                case UtilTypes.DisplayableVideo.State.FindRatFeatues:
+                case UtilTypes.DisplayableVideo.State.FindRatPath:
 
                 case UtilTypes.DisplayableVideo.State.SaveToDataBase:
 

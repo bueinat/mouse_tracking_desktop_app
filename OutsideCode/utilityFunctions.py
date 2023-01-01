@@ -181,15 +181,13 @@ def process_inference(dscript_detect, frames_path):
     # create uploadabe data
     raw_data['path'] = [f"{frames_path}\\frame{i}.jpg"
                                     for i in raw_data.index]
-    print(raw_data['path'].head())
 
     uploadable_data = raw_data[['x', 'y', 'vx', 'vy', 'ax', 'ay', 'curviness', 'path']]
     return uploadable_data
 
 
 
-def create_video_object(video_name, nframes, video_path):
-    video = Video()
+def create_video_object(video_name, nframes, video_path, video):
     video.name = video_name
     frame_rate = 45
     total_length = nframes / frame_rate

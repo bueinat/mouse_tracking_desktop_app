@@ -52,10 +52,10 @@ namespace mouse_tracking_web_app.UtilTypes
             if (!string.IsNullOrEmpty(e.Data))
             {
                 // change state if needed (running states)
-                if (e.Data == "FindRatPath")
+                if (e.Data == "FindRatFeatures")
+                    ProcessingState = State.FindRatFeatures;
+                else if (e.Data == "FindRatPath")
                     ProcessingState = State.FindRatPath;
-                else if (e.Data == "FindRatFeatures")
-                    ProcessingState = State.FindRatFeatues;
                 else if (e.Data == "SaveToDataBase")
                     ProcessingState = State.SaveToDataBase;
 
@@ -172,6 +172,10 @@ namespace mouse_tracking_web_app.UtilTypes
                         _progress = 1;
                         break;
 
+                    case State.FindRatFeatures:
+                        _progress = 2;
+                        break;
+
                     case State.FindRatPath:
                         if (string.IsNullOrEmpty(ProgressString))
                         {
@@ -183,10 +187,6 @@ namespace mouse_tracking_web_app.UtilTypes
                             double denominator = double.Parse(ProgressString.Split('/')[1]);
                             _progress = 1 + (2 * numerator / denominator);
                         }
-                        break;
-
-                    case State.FindRatFeatues:
-                        _progress = 3;
                         break;
 
                     case State.SaveToDataBase:
@@ -231,7 +231,7 @@ namespace mouse_tracking_web_app.UtilTypes
         /// Enum <c>State</c> states different stages of processing
         /// </summary>
         public enum State
-        { Waiting, ExtractVideo, FindRatPath, FindRatFeatues, SaveToDataBase, Successful, Failed, Canceled };
+        { Waiting, ExtractVideo, FindRatFeatures, FindRatPath, SaveToDataBase, Successful, Failed, Canceled };
 
         /// <summary>
         /// Property <c>ProcessingState</c> states the processing state of the <see cref="DisplayableVideo"/>.
