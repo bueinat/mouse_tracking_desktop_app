@@ -135,3 +135,38 @@ If you want to do the whole training on the GUI, you should look into [this link
  
 ### For More Info
 as I mentioned, In [`DeepEthogram`'s GitHub page](https://github.com/jbohnslav/deepethogram/blob/master/docs/using_gui.md) you can find the full instructions for using the GUI. Plus, you can use [this](https://colab.research.google.com/drive/1Nf9FU7FD77wgvbUFc608839v2jPYgDhd?usp=sharing) uploaded notebook which has more details about the training process and how it's done.
+
+## The App
+Due to some problems, the app is not deployed, thus you have to open it directly from Visual Studio. Click the icon on the desktop:
+![image](https://user-images.githubusercontent.com/62245924/210171805-b6ed20c1-54e4-46c3-9caf-832933da7703.png)
+
+A window of the soultion will open. In order to run the app you press the start button in the upper row:
+![image](https://user-images.githubusercontent.com/62245924/210171843-40211fd1-d481-4e19-8dd2-7670eded1fa7.png)
+
+you will see the following image:
+![image](https://user-images.githubusercontent.com/62245924/210171898-7643d04c-a7da-4975-9750-197c6222db45.png)
+
+the window which opened is the app, and the output section below shows the output of the system. You can see if there are any errors or problems.
+
+### Setting
+if you press the setting button in the bottom you can change the settings of the project:
+![image](https://user-images.githubusercontent.com/62245924/210171949-2251c430-0e6c-4fa0-a6e8-ebec835b3f24.png)
+
+* **working path:** the path whose folders will be shown in the app
+* **deepethogram path:** the path of the deepethogram project that should be used
+* **python path:** path of python in this computer. Used in case you want to change the python version
+* **connection string and database name:** related to the database. shouldn't be relevant
+* **file types and videos types:** the relevant filetypes you want to use
+* **marker size in plot:** this is the default size in the plots, you can change this any time
+* **override:** whether you want to delete old files when introducing new ones, or keep the ones from before
+
+You can reset to default in case you need. You can also return to the settings section from the app itself.
+
+### Videos
+![image](https://user-images.githubusercontent.com/62245924/210172125-11c92a11-546e-46e2-824e-484295ead488.png)
+
+
+### Analyze
+![image](https://user-images.githubusercontent.com/62245924/210172161-77de33cc-e73f-427e-8fad-3e04eca3d955.png)
+
+
