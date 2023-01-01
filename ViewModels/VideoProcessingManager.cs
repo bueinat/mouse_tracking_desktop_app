@@ -145,7 +145,9 @@ namespace mouse_tracking_web_app.ViewModels
                     }
 
                     // add processing task to list
-                    tasks.Add(_videosDictionary[videoPath].Start(ProcessSingleVideo, videoPath, concurrencySemaphore));
+                Task t = _videosDictionary[videoPath].Start(ProcessSingleVideo, videoPath);
+                // ProcessSingleVideo(videoPath);
+                    // tasks.Add(_videosDictionary[videoPath].Start(ProcessSingleVideo, videoPath, concurrencySemaphore));
                 }
 
                 // wait for all tasks to finish
